@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         // Toggle cursor with ESC
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.F))
         {
             UnlockCursor();
         }
