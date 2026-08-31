@@ -5,7 +5,6 @@ using System.Collections;
 public class NeonGlitch : MonoBehaviour
 {
     public TMP_Text text;
-    public GameObject glitchBar;
 
     [Header("Flicker Settings")]
     public float minInterval = 0.5f;
@@ -18,17 +17,11 @@ public class NeonGlitch : MonoBehaviour
 
     public float glitchDistance = 0.02f;
 
-    [Header("Glitch Bar")]
-    public float glitchBarDuration = 0.06f;
-
     private Vector3 originalPosition;
 
     void Start()
     {
         originalPosition = transform.localPosition;
-
-        if (glitchBar != null)
-            glitchBar.SetActive(false);
 
         StartCoroutine(GlitchLoop());
     }
@@ -68,12 +61,6 @@ public class NeonGlitch : MonoBehaviour
     {
         float originalAlpha = text.color.a;
 
-        // Show glitch bar
-        if (glitchBar != null)
-        {
-            glitchBar.SetActive(true);
-        }
-
         for (int i = 0; i < 3; i++)
         {
             transform.localPosition = originalPosition +
@@ -90,19 +77,5 @@ public class NeonGlitch : MonoBehaviour
 
         transform.localPosition = originalPosition;
         text.alpha = originalAlpha;
-
-        yield return new WaitForSeconds(glitchBarDuration);
-
-        // Hide glitch bar
-        if (glitchBar != null)
-        {
-            glitchBar.transform.localPosition = new Vector3(
-                glitchBar.transform.localPosition.x,
-                Random.Range(-0.2f, 0.2f),
-                glitchBar.transform.localPosition.z
-            );
-
-            glitchBar.SetActive(false);
-        }
     }
 }
