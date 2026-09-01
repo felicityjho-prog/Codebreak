@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 4e66469219ac21c42bba94af14ae7fd2
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 301551
+  packageName: Adaptive Grid Template
+  packageVersion: 1.1
+  assetPath: Assets/Ostryzhnyi/AdaptiveGrid/Ostryzhnyi.AdaptiveGrid.asmdef
+  uploadId: 758713

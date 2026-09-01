@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 6ee9e5b4620fa574197611c3dc0d337c
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 301551
+  packageName: Adaptive Grid Template
+  packageVersion: 1.1
+  assetPath: Assets/Ostryzhnyi/AdaptiveGrid/CodeBase/Field/Prefabs/Background.prefab
+  uploadId: 758713

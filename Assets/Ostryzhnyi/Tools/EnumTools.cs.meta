@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: d07d9fd780154d2ab615c79f122b2b43
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 301551
+  packageName: Adaptive Grid Template
+  packageVersion: 1.1
+  assetPath: Assets/Ostryzhnyi/Tools/EnumTools.cs
+  uploadId: 758713

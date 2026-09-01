@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 37a7459b7900d3c47a4dd243b1b54fc0
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 301551
+  packageName: Adaptive Grid Template
+  packageVersion: 1.1
+  assetPath: Assets/Ostryzhnyi/AdaptiveGrid/CodeBase/Field/Grid/FieldGrid.cs
+  uploadId: 758713

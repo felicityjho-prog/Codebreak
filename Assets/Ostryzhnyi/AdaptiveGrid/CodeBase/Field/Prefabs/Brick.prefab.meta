@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 075db2baa65334245b32f5b86b4f3c9e
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 301551
+  packageName: Adaptive Grid Template
+  packageVersion: 1.1
+  assetPath: Assets/Ostryzhnyi/AdaptiveGrid/CodeBase/Field/Prefabs/Brick.prefab
+  uploadId: 758713

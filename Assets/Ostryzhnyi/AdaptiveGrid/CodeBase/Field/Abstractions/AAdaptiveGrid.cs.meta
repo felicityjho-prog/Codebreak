@@ -1,0 +1,10 @@
+﻿fileFormatVersion: 2
+guid: fa78bc38c37d4d41b7b785744e57d94d
+timeCreated: 1727479771
+AssetOrigin:
+  serializedVersion: 1
+  productId: 301551
+  packageName: Adaptive Grid Template
+  packageVersion: 1.1
+  assetPath: Assets/Ostryzhnyi/AdaptiveGrid/CodeBase/Field/Abstractions/AAdaptiveGrid.cs
+  uploadId: 758713

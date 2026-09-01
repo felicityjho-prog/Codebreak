@@ -1,0 +1,17 @@
+{
+    "name": "Ostryzhnyi.AdaptiveGrid",
+    "rootNamespace": "",
+    "references": [
+        "GUID:7333d7c3b7622e549892285964652f5f",
+        "GUID:809551c2c7fa4bbb82afb1b1f3062ef0"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

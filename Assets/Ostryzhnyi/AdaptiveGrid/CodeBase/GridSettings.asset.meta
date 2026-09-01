@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2f1a6523420bb32459faf31415a0c3fb
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 301551
+  packageName: Adaptive Grid Template
+  packageVersion: 1.1
+  assetPath: Assets/Ostryzhnyi/AdaptiveGrid/CodeBase/GridSettings.asset
+  uploadId: 758713

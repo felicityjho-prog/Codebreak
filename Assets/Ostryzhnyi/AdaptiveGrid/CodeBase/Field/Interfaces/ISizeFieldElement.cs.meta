@@ -1,0 +1,10 @@
+﻿fileFormatVersion: 2
+guid: 231e1d90318140089f9a058cd3d19978
+timeCreated: 1727476225
+AssetOrigin:
+  serializedVersion: 1
+  productId: 301551
+  packageName: Adaptive Grid Template
+  packageVersion: 1.1
+  assetPath: Assets/Ostryzhnyi/AdaptiveGrid/CodeBase/Field/Interfaces/ISizeFieldElement.cs
+  uploadId: 758713

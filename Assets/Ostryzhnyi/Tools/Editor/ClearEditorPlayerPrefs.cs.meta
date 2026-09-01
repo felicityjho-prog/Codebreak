@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 716ad1840535bd5429ed4e147bab46e5
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 301551
+  packageName: Adaptive Grid Template
+  packageVersion: 1.1
+  assetPath: Assets/Ostryzhnyi/Tools/Editor/ClearEditorPlayerPrefs.cs
+  uploadId: 758713

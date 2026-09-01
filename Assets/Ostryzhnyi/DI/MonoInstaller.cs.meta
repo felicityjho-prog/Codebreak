@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 5aa8c5f818aa401b8be0205ee9c71d0f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: -500
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 301551
+  packageName: Adaptive Grid Template
+  packageVersion: 1.1
+  assetPath: Assets/Ostryzhnyi/DI/MonoInstaller.cs
+  uploadId: 758713

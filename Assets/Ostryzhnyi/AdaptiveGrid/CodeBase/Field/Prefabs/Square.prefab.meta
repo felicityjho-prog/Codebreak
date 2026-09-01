@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 7d50dee6150078249abdbc002a00451f
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 301551
+  packageName: Adaptive Grid Template
+  packageVersion: 1.1
+  assetPath: Assets/Ostryzhnyi/AdaptiveGrid/CodeBase/Field/Prefabs/Square.prefab
+  uploadId: 758713

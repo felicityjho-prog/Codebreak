@@ -1,4 +1,8 @@
 ﻿<Solution>
+  <Project Path="Ostryzhnyi.AdaptiveGrid.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Ostryzhnyi.Tools.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="Ostryzhnyi.DI.csproj" />
+  <Project Path="Ostryzhnyi.Tools.Editor.csproj" />
 </Solution>
