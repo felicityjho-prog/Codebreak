@@ -6,7 +6,7 @@ public class GameTimer : MonoBehaviour
 {
     [Header("Timer")]
     public float timeRemaining = 300f;
-    private bool timerRunning = true;
+    private bool timerRunning = false;
 
     [Header("UI")]
     public TMP_Text timerText;
@@ -19,21 +19,28 @@ public class GameTimer : MonoBehaviour
     [Header("Sound")]
     private AudioSource tickSound;
 
-    void Start()
+    private void Start()
     {
-        gameOverPanel.SetActive(false);
+        // Hide Game Over at the beginning
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(false);
+        }
 
         // Get Audio Source
         tickSound = GetComponent<AudioSource>();
 
-        // Start Clock Ticking
-        if (tickSound != null)
+        // Timer is NOT running yet
+        timerRunning = false;
+
+        // Hide timer at the beginning
+        if (timerText != null)
         {
-            tickSound.Play();
+            timerText.gameObject.SetActive(false);
         }
     }
 
-    void Update()
+    private void Update()
     {
         if (!timerRunning)
             return;
@@ -42,12 +49,13 @@ public class GameTimer : MonoBehaviour
         {
             timeRemaining -= Time.deltaTime;
 
-            if (timeRemaining <= 30)
+            // Red when 30 seconds or less
+            if (timeRemaining <= 30 && timerText != null)
             {
                 timerText.color = Color.red;
             }
 
-            // FAST TICKING LAST 10 SECONDS
+            // Fast ticking during last 10 seconds
             if (timeRemaining <= 10 && tickSound != null)
             {
                 tickSound.pitch = 1.5f;
@@ -66,7 +74,40 @@ public class GameTimer : MonoBehaviour
         }
     }
 
-    void TimeUp()
+    // ==========================================
+    // START TIMER
+    // ==========================================
+
+    public void StartTimer()
+    {
+        if (timerRunning)
+            return;
+
+        timerRunning = true;
+
+        // Show timer
+        if (timerText != null)
+        {
+            timerText.gameObject.SetActive(true);
+            timerText.color = Color.white;
+        }
+
+        // Start ticking sound
+        if (tickSound != null)
+        {
+            tickSound.pitch = 1f;
+            tickSound.Play();
+        }
+
+        // Display 05:00 immediately
+        UpdateTimerDisplay(timeRemaining);
+    }
+
+    // ==========================================
+    // TIME UP
+    // ==========================================
+
+    private void TimeUp()
     {
         // Stop ticking sound
         if (tickSound != null)
@@ -75,7 +116,10 @@ public class GameTimer : MonoBehaviour
         }
 
         // Show Game Over Panel
-        gameOverPanel.SetActive(true);
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(true);
+        }
 
         // Unlock mouse
         Cursor.lockState = CursorLockMode.None;
@@ -83,14 +127,25 @@ public class GameTimer : MonoBehaviour
 
         // Freeze Player
         if (playerMove != null)
+        {
             playerMove.enabled = false;
+        }
 
         if (playerLook != null)
+        {
             playerLook.enabled = false;
+        }
     }
 
-    void UpdateTimerDisplay(float timeToDisplay)
+    // ==========================================
+    // TIMER DISPLAY
+    // ==========================================
+
+    private void UpdateTimerDisplay(float timeToDisplay)
     {
+        if (timerText == null)
+            return;
+
         timeToDisplay += 1;
 
         int minutes = Mathf.FloorToInt(timeToDisplay / 60);
@@ -98,6 +153,10 @@ public class GameTimer : MonoBehaviour
 
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
+
+    // ==========================================
+    // RESTART
+    // ==========================================
 
     public void RestartGame()
     {
