@@ -1,10 +1,12 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class HallwayInstructionController : MonoBehaviour
 {
     public GameObject instructionPanel;
-    public float displayTime = 5f;
+
+    [Header("Voice Over")]
+    public AudioSource voiceOver;
 
     [Header("Heartbeat Animation")]
     public float pulseSpeed = 2f;
@@ -21,16 +23,31 @@ public class HallwayInstructionController : MonoBehaviour
             originalScale = instructionPanel.transform.localScale;
 
             StartCoroutine(HeartbeatAnimation());
-
-            Invoke(nameof(HideInstruction), displayTime);
         }
+
+        if (voiceOver != null && voiceOver.clip != null)
+        {
+            voiceOver.Play();
+            StartCoroutine(WaitForVoiceToFinish());
+        }
+    }
+
+    IEnumerator WaitForVoiceToFinish()
+    {
+        // Wait until the voice-over completely finishes
+        while (voiceOver != null && voiceOver.isPlaying)
+        {
+            yield return null;
+        }
+
+        // Voice finished → hide the instruction
+        HideInstruction();
     }
 
     IEnumerator HeartbeatAnimation()
     {
         while (instructionPanel != null && instructionPanel.activeSelf)
         {
-            // Grow
             float time = 0f;
 
             while (time < 1f)
@@ -45,7 +62,6 @@ public class HallwayInstructionController : MonoBehaviour
                 yield return null;
             }
 
-            // Small pause
             yield return new WaitForSeconds(0.15f);
         }
     }

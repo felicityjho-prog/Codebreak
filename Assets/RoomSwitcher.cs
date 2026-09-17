@@ -24,6 +24,11 @@ public class RoomSwitcher : MonoBehaviour
     [Header("Next Room Manager")]
     public GameObject nextRoomManager;
 
+    [Header("Sudoku Interaction")]
+    public Transform sudokuTable;
+    public GameObject sudokuPanel;
+    public float sudokuInteractionDistance = 3f;
+
     [Header("Settings")]
     public bool canProceed = false;
 
@@ -31,20 +36,50 @@ public class RoomSwitcher : MonoBehaviour
 
     void Update()
     {
-        // Detect E key
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Debug.Log("E Pressed");
+        if (!Input.GetKeyDown(KeyCode.E))
+            return;
 
-            // Proceed only if allowed
-            if (canProceed && !switched)
+        Debug.Log("E Pressed");
+
+        // ==============================
+        // ROOM 2 - SUDOKU INTERACTION
+        // ==============================
+
+        if (currentRoom != null &&
+            currentRoom.name == "room2" &&
+            sudokuTable != null &&
+            sudokuPanel != null)
+        {
+            float distance = Vector3.Distance(
+                player.transform.position,
+                sudokuTable.position
+            );
+
+            Debug.Log("Distance from Sudoku Table: " + distance);
+
+            // If player is near Table 1
+            if (distance <= sudokuInteractionDistance)
             {
-                SwitchRoom();
+                sudokuPanel.SetActive(true);
+
+                Debug.Log("Sudoku Panel Opened!");
+
+                // IMPORTANT:
+                // Stop here so E does NOT switch to Room 3
+                return;
             }
+        }
+
+        // ==============================
+        // NORMAL ROOM SWITCHING
+        // ==============================
+
+        if (canProceed && !switched)
+        {
+            SwitchRoom();
         }
     }
 
-    // Unlock room transition
     public void EnableProceed()
     {
         canProceed = true;
@@ -70,33 +105,32 @@ public class RoomSwitcher : MonoBehaviour
             nextRoom.SetActive(true);
         }
 
-        // Disable current game manager
+        // Disable current Game Manager
         if (currentGameManager != null)
         {
             currentGameManager.SetActive(false);
         }
 
-        // Enable next game manager
+        // Enable next Game Manager
         if (nextGameManager != null)
         {
             nextGameManager.SetActive(true);
         }
 
-        // Disable character controller before teleport
-        CharacterController cc = player.GetComponent<CharacterController>();
+        // Teleport player
+        CharacterController cc =
+            player.GetComponent<CharacterController>();
 
         if (cc != null)
         {
             cc.enabled = false;
         }
 
-        // Teleport player
         if (spawnPoint != null)
         {
             player.transform.position = spawnPoint.position;
         }
 
-        // Re-enable character controller
         if (cc != null)
         {
             cc.enabled = true;
@@ -120,7 +154,7 @@ public class RoomSwitcher : MonoBehaviour
             nextChecklist.SetActive(true);
         }
 
-        // Enable next room manager
+        // Enable next Room Manager
         if (nextRoomManager != null)
         {
             nextRoomManager.SetActive(true);
@@ -128,7 +162,7 @@ public class RoomSwitcher : MonoBehaviour
 
         Debug.Log("Switched to next room!");
 
-        // Disable this room switcher after use
+        // Disable this RoomSwitcher
         gameObject.SetActive(false);
     }
 }
