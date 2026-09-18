@@ -70,7 +70,7 @@ public class GameTimer : MonoBehaviour
 
             UpdateTimerDisplay(timeRemaining);
 
-            TimeUp();
+            StopTimer();
         }
     }
 
@@ -104,36 +104,17 @@ public class GameTimer : MonoBehaviour
     }
 
     // ==========================================
-    // TIME UP
+    // STOP TIMER
     // ==========================================
 
-    private void TimeUp()
+    public void StopTimer()
     {
+        timerRunning = false;
+
         // Stop ticking sound
         if (tickSound != null)
         {
             tickSound.Stop();
-        }
-
-        // Show Game Over Panel
-        if (gameOverPanel != null)
-        {
-            gameOverPanel.SetActive(true);
-        }
-
-        // Unlock mouse
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-
-        // Freeze Player
-        if (playerMove != null)
-        {
-            playerMove.enabled = false;
-        }
-
-        if (playerLook != null)
-        {
-            playerLook.enabled = false;
         }
     }
 
