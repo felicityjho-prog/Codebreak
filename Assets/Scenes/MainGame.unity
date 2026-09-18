@@ -14653,6 +14653,52 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1739090985}
   m_SourcePrefab: {fileID: 100100000, guid: 747b2662eba846d43953b3eef63a53c6, type: 3}
+--- !u!1 &664374331
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 664374333}
+  - component: {fileID: 664374332}
+  m_Layer: 0
+  m_Name: SudokuManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &664374332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 664374331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e61ace1acef273d48946c0ffd8fc0b2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SudokuManager
+  sudokuGrid: {fileID: 1060286735}
+  sudokuCellPrefab: {fileID: 1324430655314030748}
+--- !u!4 &664374333
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 664374331}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.19508, y: 3.65439, z: 18.89684}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &667154169 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3597695214687293363, guid: 16f85e35943b5ea499e0203f749896d0, type: 3}
@@ -23176,10 +23222,10 @@ RectTransform:
   - {fileID: 96587151}
   m_Father: {fileID: 2031270141}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -30}
+  m_SizeDelta: {x: 720, y: 720}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1060286736
 MonoBehaviour:
@@ -23198,11 +23244,11 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 60, y: 60}
-  m_Spacing: {x: 0, y: 0}
+  m_CellSize: {x: 85, y: 85}
+  m_Spacing: {x: 3, y: 3}
   m_Constraint: 1
   m_ConstraintCount: 9
 --- !u!114 &1060286737
@@ -39650,9 +39696,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2031270141}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -375}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1804089725
@@ -45144,7 +45190,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 900, y: 700}
+  m_SizeDelta: {x: 820, y: 850}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2031270142
 MonoBehaviour:
@@ -47942,15 +47988,68 @@ PrefabInstance:
       propertyPath: m_Name
       value: SudokuCell
       objectReference: {fileID: 0}
-    - target: {fileID: 4301348794264333431, guid: 60ab6e672b066494da61e33d69c6e9e9, type: 3}
+    - target: {fileID: 2569746527803483087, guid: 60ab6e672b066494da61e33d69c6e9e9, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 85
+      objectReference: {fileID: 0}
+    - target: {fileID: 2569746527803483087, guid: 60ab6e672b066494da61e33d69c6e9e9, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 85
+      objectReference: {fileID: 0}
+    - target: {fileID: 2923717214654152078, guid: 60ab6e672b066494da61e33d69c6e9e9, type: 3}
       propertyPath: m_text
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 4301348794264333431, guid: 60ab6e672b066494da61e33d69c6e9e9, type: 3}
+      propertyPath: m_text
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5795348112581564626, guid: 60ab6e672b066494da61e33d69c6e9e9, type: 3}
+      propertyPath: m_fontSize
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 5795348112581564626, guid: 60ab6e672b066494da61e33d69c6e9e9, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 5795348112581564626, guid: 60ab6e672b066494da61e33d69c6e9e9, type: 3}
+      propertyPath: m_VerticalAlignment
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 5795348112581564626, guid: 60ab6e672b066494da61e33d69c6e9e9, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7079444389664982434, guid: 60ab6e672b066494da61e33d69c6e9e9, type: 3}
+      propertyPath: inputField
+      value: 
+      objectReference: {fileID: 1324430655314030747}
+    - target: {fileID: 7303320277083809164, guid: 60ab6e672b066494da61e33d69c6e9e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8471506167144177193, guid: 60ab6e672b066494da61e33d69c6e9e9, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 60ab6e672b066494da61e33d69c6e9e9, type: 3}
+--- !u!114 &1324430655314030747 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1755799602913072790, guid: 60ab6e672b066494da61e33d69c6e9e9, type: 3}
+  m_PrefabInstance: {fileID: 1324430655314030746}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TMP_InputField
+--- !u!1 &1324430655314030748 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2349956176316648412, guid: 60ab6e672b066494da61e33d69c6e9e9, type: 3}
+  m_PrefabInstance: {fileID: 1324430655314030746}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -47990,3 +48089,4 @@ SceneRoots:
   - {fileID: 607017195}
   - {fileID: 249161883}
   - {fileID: 69313328}
+  - {fileID: 664374333}
