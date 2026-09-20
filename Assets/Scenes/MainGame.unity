@@ -119,6 +119,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &9388874 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5010925442796397295, guid: 2f3fe288da751a2428fc82d8e5ed9f7e, type: 3}
+  m_PrefabInstance: {fileID: 791169977}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &12747539
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -249,6 +254,7 @@ MonoBehaviour:
   challengeUI: {fileID: 547689329}
   gameTimer: {fileID: 622049299}
   voiceOver: {fileID: 1142479022}
+  room1Interaction: {fileID: 2043440667}
 --- !u!65 &24972055
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2130,7 +2136,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5010925442796397295, guid: 2f3fe288da751a2428fc82d8e5ed9f7e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 894320830}
   m_SourcePrefab: {fileID: 100100000, guid: 2f3fe288da751a2428fc82d8e5ed9f7e, type: 3}
 --- !u!1 &145434323
 GameObject:
@@ -2690,6 +2699,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 172995528}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &174829652 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1419340744493873780, guid: ec78088b7a0003d48ac6ee3afada669e, type: 3}
+  m_PrefabInstance: {fileID: 205075270}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &177963093
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2849,6 +2863,11 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 3895470427108771425, guid: 040ae70d5c7969a43a7de392c6a9b956, type: 3}
   m_PrefabInstance: {fileID: 1258105748}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &190455263 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5010925442796397295, guid: 2f3fe288da751a2428fc82d8e5ed9f7e, type: 3}
+  m_PrefabInstance: {fileID: 1681069994}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &190619997
 GameObject:
@@ -3518,7 +3537,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1419340744493873780, guid: ec78088b7a0003d48ac6ee3afada669e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1896653372}
   m_SourcePrefab: {fileID: 100100000, guid: ec78088b7a0003d48ac6ee3afada669e, type: 3}
 --- !u!1 &213281770
 GameObject:
@@ -3916,6 +3938,145 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5675013305860159573, guid: 2f3fe288da751a2428fc82d8e5ed9f7e, type: 3}
   m_PrefabInstance: {fileID: 142106688}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &242545022
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 242545023}
+  - component: {fileID: 242545025}
+  - component: {fileID: 242545024}
+  m_Layer: 5
+  m_Name: GameOverMessage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &242545023
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242545022}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 668809790}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -30}
+  m_SizeDelta: {x: 600, y: 80}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &242545024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242545022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 'You failed to complete the challenge
+
+    before the timer reached zero'
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4292006610
+  m_fontColor: {r: 0.8235294, g: 0.8235294, b: 0.8235294, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 25
+  m_fontSizeBase: 25
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 1
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &242545025
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242545022}
+  m_CullTransparentMesh: 1
 --- !u!1001 &245585668
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4139,7 +4300,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &249161881
 GameObject:
   m_ObjectHideFlags: 0
@@ -4601,6 +4763,11 @@ MonoBehaviour:
 Transform:
   m_CorrespondingSourceObject: {fileID: 4315302312925223385, guid: a15c4b10370dd354a8d5d0fb6d99e482, type: 3}
   m_PrefabInstance: {fileID: 530143276}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &270287987 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3980846027687536446, guid: 424622fb2f5ecf54b87e7c616e7ec1dd, type: 3}
+  m_PrefabInstance: {fileID: 349275315}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &270312783 stripped
 Transform:
@@ -5206,6 +5373,7 @@ GameObject:
   - component: {fileID: 285575600}
   - component: {fileID: 285575599}
   - component: {fileID: 285575598}
+  - component: {fileID: 285575601}
   m_Layer: 5
   m_Name: RestartButton
   m_TagString: Untagged
@@ -5230,8 +5398,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -27}
-  m_SizeDelta: {x: 300, y: 70}
+  m_AnchoredPosition: {x: 0, y: -130}
+  m_SizeDelta: {x: 360, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &285575598
 MonoBehaviour:
@@ -5254,13 +5422,13 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0.8490566, g: 0.8490566, b: 0.8490566, a: 1}
-    m_HighlightedColor: {r: 0.8980392, g: 0.8980392, b: 0.8980392, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_NormalColor: {r: 0.05882353, g: 0.019607844, b: 0.02745098, a: 1}
+    m_HighlightedColor: {r: 0.39215687, g: 0.039215688, b: 0.039215688, a: 1}
+    m_PressedColor: {r: 0.7058824, g: 0.078431375, b: 0.078431375, a: 1}
+    m_SelectedColor: {r: 0.23529412, g: 0.019607844, b: 0.019607844, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
+    m_FadeDuration: 0.15
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
@@ -5302,7 +5470,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.05882353, g: 0.019607844, b: 0.02745098, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5327,6 +5495,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 285575596}
   m_CullTransparentMesh: 1
+--- !u!114 &285575601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 285575596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
+  m_EffectColor: {r: 1, g: 0.11764706, b: 0.11764706, a: 1}
+  m_EffectDistance: {x: 3, y: 3}
+  m_UseGraphicAlpha: 1
 --- !u!1001 &285737071
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6748,7 +6931,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3980846027687536446, guid: 424622fb2f5ecf54b87e7c616e7ec1dd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2140679923}
   m_SourcePrefab: {fileID: 100100000, guid: 424622fb2f5ecf54b87e7c616e7ec1dd, type: 3}
 --- !u!1001 &349555059
 PrefabInstance:
@@ -8320,6 +8506,7 @@ Transform:
   - {fileID: 115386170}
   - {fileID: 213281772}
   - {fileID: 24972053}
+  - {fileID: 2043440666}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &425202856
@@ -11530,7 +11717,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &540429314
 GameObject:
   m_ObjectHideFlags: 0
@@ -11623,7 +11811,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &547689330
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12737,7 +12925,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1001 &587991134
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13174,7 +13363,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &613658280 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4268246049419562484, guid: f78cb5e3a28483a41b34edc8c1b57ca1, type: 3}
@@ -13933,7 +14123,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5999845506303850339, guid: 3f036e691e664f447a90fa723afffeb0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1857788022}
   m_SourcePrefab: {fileID: 100100000, guid: 3f036e691e664f447a90fa723afffeb0, type: 3}
 --- !u!4 &635676707 stripped
 Transform:
@@ -14423,7 +14616,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1001 &662230710
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14584,7 +14778,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1001 &664060117
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14715,6 +14910,7 @@ GameObject:
   - component: {fileID: 668809790}
   - component: {fileID: 668809792}
   - component: {fileID: 668809791}
+  - component: {fileID: 668809793}
   m_Layer: 5
   m_Name: GameOverPanel
   m_TagString: Untagged
@@ -14734,14 +14930,18 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1132686582}
   - {fileID: 703488183}
+  - {fileID: 1878955777}
+  - {fileID: 242545023}
   - {fileID: 285575597}
+  - {fileID: 1534904932}
   m_Father: {fileID: 674569812}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -1, y: 2}
+  m_SizeDelta: {x: 1224.2441, y: 681.0726}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &668809791
 MonoBehaviour:
@@ -14756,7 +14956,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 0.03137255, g: 0.03137255, b: 0.047058824, a: 0.92156863}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -14781,6 +14981,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 668809789}
   m_CullTransparentMesh: 1
+--- !u!114 &668809793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 668809789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
+  m_EffectColor: {r: 1, g: 0.11764706, b: 0.11764706, a: 1}
+  m_EffectDistance: {x: 4, y: 4}
+  m_UseGraphicAlpha: 1
 --- !u!1 &674387769
 GameObject:
   m_ObjectHideFlags: 0
@@ -16020,8 +16235,9 @@ GameObject:
   - component: {fileID: 703488183}
   - component: {fileID: 703488185}
   - component: {fileID: 703488184}
+  - component: {fileID: 703488186}
   m_Layer: 5
-  m_Name: GameOverText
+  m_Name: GameOverTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16043,8 +16259,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 56}
-  m_SizeDelta: {x: 364.2738, y: 78.0074}
+  m_AnchoredPosition: {x: 0, y: 100}
+  m_SizeDelta: {x: 600, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &703488184
 MonoBehaviour:
@@ -16075,8 +16291,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190205
-  m_fontColor: {r: 0.49056602, g: 0, b: 0, a: 1}
+    rgba: 4282137855
+  m_fontColor: {r: 1, g: 0.23529412, b: 0.23529412, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -16093,15 +16309,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 60
-  m_fontSizeBase: 60
+  m_fontSize: 64
+  m_fontSizeBase: 64
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_fontStyle: 1
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -16132,7 +16348,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -7.4578705, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -16146,6 +16362,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 703488182}
   m_CullTransparentMesh: 1
+--- !u!114 &703488186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 703488182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
+  m_EffectColor: {r: 1, g: 0, b: 0, a: 0.7058824}
+  m_EffectDistance: {x: 2, y: 2}
+  m_UseGraphicAlpha: 1
 --- !u!1 &704004983 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4400545033943908415, guid: 80cbb9df11318004a95e198e69e78a10, type: 3}
@@ -16857,7 +17088,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &747683323
 GameObject:
   m_ObjectHideFlags: 0
@@ -17406,7 +17638,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &771861082 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4067003197141939374, guid: 2407d844bd13a73418ffb791ab57246c, type: 3}
@@ -18120,7 +18353,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5010925442796397295, guid: 2f3fe288da751a2428fc82d8e5ed9f7e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1199980362}
   m_SourcePrefab: {fileID: 100100000, guid: 2f3fe288da751a2428fc82d8e5ed9f7e, type: 3}
 --- !u!1 &792623852
 GameObject:
@@ -18256,7 +18492,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &809234707 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5026206534487593101, guid: 850e6db3abefeae479a23d65547bb744, type: 3}
@@ -18274,7 +18511,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &809894790
 GameObject:
   m_ObjectHideFlags: 0
@@ -19605,7 +19843,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &882067525
 GameObject:
   m_ObjectHideFlags: 0
@@ -19885,7 +20124,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &890550618 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5517800430992854469, guid: 931f05bc13f27dc4db77f7c17cf3824d, type: 3}
@@ -19903,12 +20143,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &892024185 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1419340744493873780, guid: ec78088b7a0003d48ac6ee3afada669e, type: 3}
   m_PrefabInstance: {fileID: 757647659}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &894320826 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5010925442796397295, guid: 2f3fe288da751a2428fc82d8e5ed9f7e, type: 3}
+  m_PrefabInstance: {fileID: 142106688}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &894320830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 894320826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NotClickable
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &901242601
 GameObject:
   m_ObjectHideFlags: 0
@@ -20038,7 +20298,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &911695773 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4226140136301090057, guid: 16f85e35943b5ea499e0203f749896d0, type: 3}
@@ -20077,7 +20338,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &914630467
 GameObject:
   m_ObjectHideFlags: 0
@@ -20126,7 +20388,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1001 &918013719
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20755,7 +21018,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!4 &938334013 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4356422241217904004, guid: 424622fb2f5ecf54b87e7c616e7ec1dd, type: 3}
@@ -21808,7 +22072,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &987666145
 GameObject:
   m_ObjectHideFlags: 0
@@ -22286,7 +22551,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6723027986625014322, guid: 0e16475e464050141a1bf64d51b46d48, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1849719198}
   m_SourcePrefab: {fileID: 100100000, guid: 0e16475e464050141a1bf64d51b46d48, type: 3}
 --- !u!1 &1014371874 stripped
 GameObject:
@@ -22305,7 +22573,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1015758185
 GameObject:
   m_ObjectHideFlags: 0
@@ -22640,7 +22909,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1040354969
 GameObject:
   m_ObjectHideFlags: 0
@@ -22904,6 +23174,11 @@ Transform:
   - {fileID: 1274130922}
   m_Father: {fileID: 422298754}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1047095310 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5906738997392846620, guid: 74706bb29dd2f754f8d23c7af6e47e82, type: 3}
+  m_PrefabInstance: {fileID: 1368977436}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1048971738
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23169,7 +23444,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &1055672728 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5040540905546997027, guid: a8d819c88b06d5d479cad532c162c475, type: 3}
@@ -23187,7 +23463,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1060286734
 GameObject:
   m_ObjectHideFlags: 0
@@ -23374,7 +23651,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &1071807425
 GameObject:
   m_ObjectHideFlags: 0
@@ -23838,8 +24116,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -23856,13 +24134,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
-  m_fontSizeBase: 40
+  m_fontSize: 35
+  m_fontSizeBase: 35
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -24107,7 +24385,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1095347127
 GameObject:
   m_ObjectHideFlags: 0
@@ -24242,7 +24521,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1001 &1100026726
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24518,7 +24798,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1110114669 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5944032116072608350, guid: 74be82cbd3349a44d90866b7cbaed00c, type: 3}
@@ -25238,7 +25519,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1001 &1126137812
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25602,6 +25884,81 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2874803351628251934, guid: f5831f1b1619d5e46bb216da6a0372f0, type: 3}
   m_PrefabInstance: {fileID: 1434222777}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1132686581
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1132686582}
+  - component: {fileID: 1132686584}
+  - component: {fileID: 1132686583}
+  m_Layer: 5
+  m_Name: RedGlow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1132686582
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1132686581}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 668809790}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 760, y: 420}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1132686583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1132686581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.047058824, g: 0, b: 0, a: 0.09803922}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1132686584
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1132686581}
+  m_CullTransparentMesh: 1
 --- !u!1001 &1137572509
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26533,7 +26890,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1159960243
 GameObject:
   m_ObjectHideFlags: 0
@@ -26811,6 +27169,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1173236195}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1177652557 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5999845506303850339, guid: 3f036e691e664f447a90fa723afffeb0, type: 3}
+  m_PrefabInstance: {fileID: 633847722}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1180431534
 GameObject:
   m_ObjectHideFlags: 0
@@ -27175,6 +27538,20 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5675013305860159573, guid: 2f3fe288da751a2428fc82d8e5ed9f7e, type: 3}
   m_PrefabInstance: {fileID: 791169977}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1199980362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9388874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NotClickable
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1001 &1214098551
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27275,7 +27652,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1224279365 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4400545033943908415, guid: 80cbb9df11318004a95e198e69e78a10, type: 3}
@@ -27293,7 +27671,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!4 &1225745252 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6c55f5e06134a6f4e93d2d1cd29935ce, type: 3}
@@ -27369,7 +27748,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2478961553079219844, guid: b4f729d9618a65543baedfac3b0a7311, type: 3}
   m_PrefabInstance: {fileID: 1774433813}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1232914319
+--- !u!114 &1232914322
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -27380,8 +27759,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  m_EditorClassIdentifier: Assembly-CSharp::NotClickable
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1001 &1236540238
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27583,7 +27963,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1251842933
 GameObject:
   m_ObjectHideFlags: 0
@@ -27968,7 +28349,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1001 &1265536055
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28176,7 +28558,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1291133605
 GameObject:
   m_ObjectHideFlags: 0
@@ -28749,7 +29132,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &1319816129 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5517800430992854469, guid: 931f05bc13f27dc4db77f7c17cf3824d, type: 3}
@@ -28788,7 +29172,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1001 &1322767920
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28992,7 +29377,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1001 &1330426694
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29448,6 +29834,25 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 935762852}
   m_SourcePrefab: {fileID: 100100000, guid: 7699f5af06713974ba61777a8a830f6e, type: 3}
+--- !u!1 &1367666723 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4268246049419562484, guid: f78cb5e3a28483a41b34edc8c1b57ca1, type: 3}
+  m_PrefabInstance: {fileID: 2115379385}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1367666727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367666723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NotClickable
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &1368049167
 GameObject:
   m_ObjectHideFlags: 0
@@ -29623,13 +30028,30 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5906738997392846620, guid: 74706bb29dd2f754f8d23c7af6e47e82, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1368977441}
   m_SourcePrefab: {fileID: 100100000, guid: 74706bb29dd2f754f8d23c7af6e47e82, type: 3}
 --- !u!4 &1368977437 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6535606509160396198, guid: 74706bb29dd2f754f8d23c7af6e47e82, type: 3}
   m_PrefabInstance: {fileID: 1368977436}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1368977441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047095310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NotClickable
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &1374671831
 GameObject:
   m_ObjectHideFlags: 0
@@ -30696,7 +31118,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1401738437
 GameObject:
   m_ObjectHideFlags: 0
@@ -31695,7 +32118,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1434668265
 GameObject:
   m_ObjectHideFlags: 0
@@ -32168,7 +32592,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1450025609
 GameObject:
   m_ObjectHideFlags: 0
@@ -32493,7 +32918,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!4 &1455747406 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3646950960811949498, guid: 845ec86c78d2a2c448e66e3b0e30e890, type: 3}
@@ -32704,6 +33130,20 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5675013305860159573, guid: 2f3fe288da751a2428fc82d8e5ed9f7e, type: 3}
   m_PrefabInstance: {fileID: 1681069994}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1462568693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 190455263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NotClickable
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1001 &1463264557
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33151,7 +33591,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1488405448
 GameObject:
   m_ObjectHideFlags: 0
@@ -33307,7 +33748,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!4 &1503887612 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6198975063232573576, guid: 0e16475e464050141a1bf64d51b46d48, type: 3}
@@ -33854,6 +34296,81 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4365344250252800, guid: 68b6eead0fbdcb44999d84e3209ff603, type: 3}
   m_PrefabInstance: {fileID: 1531236958}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1534904931
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1534904932}
+  - component: {fileID: 1534904934}
+  - component: {fileID: 1534904933}
+  m_Layer: 5
+  m_Name: RedDivider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1534904932
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534904931}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 668809790}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 65.6}
+  m_SizeDelta: {x: 300, y: 2}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1534904933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534904931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 0.13725491, b: 0.13725491, a: 0.8627451}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1534904934
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534904931}
+  m_CullTransparentMesh: 1
 --- !u!4 &1536174540 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6535606509160396198, guid: 74706bb29dd2f754f8d23c7af6e47e82, type: 3}
@@ -34481,7 +34998,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!4 &1571335316 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5211543161590813815, guid: d5f927682928f9f4c89f2b971e51f3d8, type: 3}
@@ -35447,7 +35965,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1596723979
 GameObject:
   m_ObjectHideFlags: 0
@@ -37104,7 +37623,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5010925442796397295, guid: 2f3fe288da751a2428fc82d8e5ed9f7e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1462568693}
   m_SourcePrefab: {fileID: 100100000, guid: 2f3fe288da751a2428fc82d8e5ed9f7e, type: 3}
 --- !u!1001 &1684581285
 PrefabInstance:
@@ -37545,7 +38067,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &1697874701 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5040540905546997027, guid: a8d819c88b06d5d479cad532c162c475, type: 3}
@@ -37568,7 +38091,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!4 &1700808922 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 403928, guid: 947e113398f058643a47464fff50cae1, type: 3}
@@ -38054,7 +38578,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1731505210
 GameObject:
   m_ObjectHideFlags: 0
@@ -38184,7 +38709,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1001 &1734284368
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38274,7 +38800,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!4 &1739090982 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8890510753198132191, guid: 747b2662eba846d43953b3eef63a53c6, type: 3}
@@ -38292,7 +38819,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1001 &1739779638
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38388,7 +38916,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1751139276 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1532551155450971798, guid: 78812a0a8603a5a4fbd5cb535a9178cd, type: 3}
@@ -38406,7 +38935,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1001 &1757189610
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38498,7 +39028,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1001 &1760004055
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38631,7 +39162,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!4 &1762204338 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6428502659324782820, guid: 74be82cbd3349a44d90866b7cbaed00c, type: 3}
@@ -38649,7 +39181,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &1767450855 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3506290060219908963, guid: a15c4b10370dd354a8d5d0fb6d99e482, type: 3}
@@ -38667,7 +39200,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1001 &1768602961
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38945,7 +39479,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2966986813057756222, guid: b4f729d9618a65543baedfac3b0a7311, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1232914319}
+      addedObject: {fileID: 1232914322}
   m_SourcePrefab: {fileID: 100100000, guid: b4f729d9618a65543baedfac3b0a7311, type: 3}
 --- !u!1 &1775436413
 GameObject:
@@ -39076,7 +39610,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1777176665
 GameObject:
   m_ObjectHideFlags: 0
@@ -39645,7 +40180,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!4 &1800812891 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1799560027522719950, guid: ec78088b7a0003d48ac6ee3afada669e, type: 3}
@@ -39663,7 +40199,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &1804089723
 GameObject:
   m_ObjectHideFlags: 0
@@ -40341,7 +40878,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1822031204
 GameObject:
   m_ObjectHideFlags: 0
@@ -40863,7 +41401,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1001 &1845272672
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -40949,7 +41488,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
+--- !u!1 &1849719194 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6723027986625014322, guid: 0e16475e464050141a1bf64d51b46d48, type: 3}
+  m_PrefabInstance: {fileID: 1005625150}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1849719198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1849719194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NotClickable
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &1853747174
 GameObject:
   m_ObjectHideFlags: 0
@@ -41215,6 +41774,20 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6343437858535550425, guid: 3f036e691e664f447a90fa723afffeb0, type: 3}
   m_PrefabInstance: {fileID: 633847722}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1857788022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1177652557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NotClickable
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &1859170309
 GameObject:
   m_ObjectHideFlags: 0
@@ -41369,7 +41942,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &1861862513
 GameObject:
   m_ObjectHideFlags: 0
@@ -41574,7 +42148,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1001 &1868639977
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -41649,6 +42224,143 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4365344250252800, guid: 68b6eead0fbdcb44999d84e3209ff603, type: 3}
   m_PrefabInstance: {fileID: 1868639977}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1878955776
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1878955777}
+  - component: {fileID: 1878955779}
+  - component: {fileID: 1878955778}
+  m_Layer: 5
+  m_Name: GameOverSubtitle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1878955777
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1878955776}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 668809790}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 40}
+  m_SizeDelta: {x: 500, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1878955778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1878955776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: ' TIME HAS RUN OUT '
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4284111615
+  m_fontColor: {r: 1, g: 0.3529412, b: 0.3529412, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 28
+  m_fontSizeBase: 28
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 1
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1878955779
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1878955776}
+  m_CullTransparentMesh: 1
 --- !u!1 &1881203137
 GameObject:
   m_ObjectHideFlags: 0
@@ -42279,6 +42991,20 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1799560027522719950, guid: ec78088b7a0003d48ac6ee3afada669e, type: 3}
   m_PrefabInstance: {fileID: 205075270}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1896653372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 174829652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NotClickable
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &1897192639 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4414843863964572891, guid: 040ae70d5c7969a43a7de392c6a9b956, type: 3}
@@ -42296,7 +43022,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1001 &1898028871
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -42724,7 +43451,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!4 &1915349621 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3262773810817596328, guid: 5ea36f3d277aec04e91627000369e5b4, type: 3}
@@ -43379,7 +44107,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1001 &1949294984
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -43729,7 +44458,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1966774210 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4226140136301090057, guid: 16f85e35943b5ea499e0203f749896d0, type: 3}
@@ -43747,7 +44477,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &1968656172 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5246333942632668552, guid: d47fd7930d5dde64290ec3be8e22428e, type: 3}
@@ -44273,7 +45004,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &1996655353
 GameObject:
   m_ObjectHideFlags: 0
@@ -44703,7 +45435,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &2018243315
 GameObject:
   m_ObjectHideFlags: 0
@@ -44971,7 +45704,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &2027201157
 GameObject:
   m_ObjectHideFlags: 0
@@ -45397,6 +46131,83 @@ Transform:
   m_Children: []
   m_Father: {fileID: 89312950}
   m_LocalEulerAnglesHint: {x: 177.422, y: -390.738, z: -90.45801}
+--- !u!1 &2043440665
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2043440666}
+  - component: {fileID: 2043440667}
+  m_Layer: 0
+  m_Name: Room1InteractionController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2043440666
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2043440665}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 8.97687, y: -3.74806, z: -0.9308796}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 422298754}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2043440667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2043440665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87b52cadb2302be43977b167397540b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Room1InteractionController
+  room1Objects:
+  - {fileID: 1860881777}
+  - {fileID: 872748879}
+  - {fileID: 1762204342}
+  - {fileID: 1800812895}
+  - {fileID: 1751139280}
+  - {fileID: 2014787969}
+  - {fileID: 1232914322}
+  - {fileID: 911691042}
+  - {fileID: 1914824478}
+  - {fileID: 613220831}
+  - {fileID: 1052083258}
+  - {fileID: 1489552409}
+  - {fileID: 914786678}
+  - {fileID: 2098707838}
+  - {fileID: 1400594291}
+  - {fileID: 1315799019}
+  - {fileID: 1452690974}
+  - {fileID: 1844014381}
+  - {fileID: 1688563027}
+  - {fileID: 1990448029}
+  - {fileID: 1758812925}
+  - {fileID: 2140679923}
+  - {fileID: 1367666727}
+  - {fileID: 1896653372}
+  - {fileID: 1849719198}
+  - {fileID: 1368977441}
+  - {fileID: 1462568693}
+  - {fileID: 1199980362}
+  - {fileID: 894320830}
+  - {fileID: 1857788022}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &2045633261
 GameObject:
   m_ObjectHideFlags: 0
@@ -46344,7 +47155,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &2082682639 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4054064865731555067, guid: 756f878363fcf1a4f89e45fa167dd3ed, type: 3}
@@ -46555,7 +47367,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &2090699919 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6723027986625014322, guid: 0e16475e464050141a1bf64d51b46d48, type: 3}
@@ -46594,7 +47407,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &2094462032
 GameObject:
   m_ObjectHideFlags: 0
@@ -46937,7 +47751,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1001 &2097093700
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -47097,7 +47912,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &2113868711 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 203720986700967546, guid: 94b03d6e8f0a7a3469424b7f0ad68357, type: 3}
@@ -47115,7 +47931,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1001 &2115379385
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -47179,7 +47996,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4268246049419562484, guid: f78cb5e3a28483a41b34edc8c1b57ca1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1367666727}
   m_SourcePrefab: {fileID: 100100000, guid: f78cb5e3a28483a41b34edc8c1b57ca1, type: 3}
 --- !u!1 &2115896920 stripped
 GameObject:
@@ -47224,7 +48044,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1 &2122770962
 GameObject:
   m_ObjectHideFlags: 0
@@ -47383,7 +48204,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotCollectible
-  messageManager: {fileID: 934362054}
+  interactionMessage: {fileID: 0}
+  isRoom1Object: 1
 --- !u!1001 &2126296423
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -47731,6 +48553,20 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4356422241217904004, guid: 424622fb2f5ecf54b87e7c616e7ec1dd, type: 3}
   m_PrefabInstance: {fileID: 349275315}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2140679923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 270287987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24ab45b1320013348883f4c76e489963, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NotClickable
+  interactionMessage: {fileID: 934362054}
+  isRoom1Object: 1
 --- !u!1 &2140828766 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6393484124639422824, guid: 835fc35b1beed9140a43e923578603cc, type: 3}
