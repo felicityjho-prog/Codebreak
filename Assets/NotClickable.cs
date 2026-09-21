@@ -1,11 +1,41 @@
 using UnityEngine;
 
-public class NotCollectible : MonoBehaviour
+public class NotClickable : MonoBehaviour
 {
-    public InteractionMessage messageManager;
+    public InteractionMessage interactionMessage;
 
-    void OnMouseDown()
+    [Header("Room Settings")]
+    public bool isRoom1Object = true;
+
+    private bool interactionEnabled = false;
+
+    public void EnableInteraction()
     {
-        messageManager.ShowMessage();
+        if (isRoom1Object)
+        {
+            interactionEnabled = true;
+        }
+    }
+
+    public void DisableInteraction()
+    {
+        interactionEnabled = false;
+    }
+
+    private void OnMouseDown()
+    {
+        if (!interactionEnabled)
+            return;
+
+        if (!isRoom1Object)
+            return;
+
+        if (GetComponent<ClickableObject>() != null)
+            return;
+
+        if (interactionMessage != null)
+        {
+            interactionMessage.ShowMessage();
+        }
     }
 }

@@ -70,7 +70,8 @@ public class GameTimer : MonoBehaviour
 
             UpdateTimerDisplay(timeRemaining);
 
-            StopTimer();
+            // TIME UP
+            TimeUp();
         }
     }
 
@@ -99,7 +100,7 @@ public class GameTimer : MonoBehaviour
             tickSound.Play();
         }
 
-        // Display 05:00 immediately
+        // Display timer immediately
         UpdateTimerDisplay(timeRemaining);
     }
 
@@ -119,6 +120,38 @@ public class GameTimer : MonoBehaviour
     }
 
     // ==========================================
+    // TIME UP / GAME OVER
+    // ==========================================
+
+    private void TimeUp()
+    {
+        // Stop timer and ticking sound
+        StopTimer();
+
+        // Show Game Over Panel
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(true);
+        }
+
+        // Stop player movement
+        if (playerMove != null)
+        {
+            playerMove.enabled = false;
+        }
+
+        // Stop player camera look
+        if (playerLook != null)
+        {
+            playerLook.enabled = false;
+        }
+
+        // Unlock cursor so player can click the panel
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    // ==========================================
     // TIMER DISPLAY
     // ==========================================
 
@@ -126,8 +159,6 @@ public class GameTimer : MonoBehaviour
     {
         if (timerText == null)
             return;
-
-        timeToDisplay += 1;
 
         int minutes = Mathf.FloorToInt(timeToDisplay / 60);
         int seconds = Mathf.FloorToInt(timeToDisplay % 60);

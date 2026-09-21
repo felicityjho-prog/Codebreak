@@ -10,16 +10,22 @@ public class ClickableObject : MonoBehaviour
 
     void OnMouseDown()
     {
-        // play collect sound
-        AudioSource.PlayClipAtPoint(
-            collectSound,
-            transform.position
-        );
+        // Play collect sound
+        if (collectSound != null)
+        {
+            AudioSource.PlayClipAtPoint(
+                collectSound,
+                transform.position
+            );
+        }
 
-        // collect item
-        checklistManager.CollectItem(itemName);
+        // Collect item
+        if (checklistManager != null)
+        {
+            checklistManager.CollectItem(itemName);
+        }
 
-        // mawala object
+        // Hide object
         gameObject.SetActive(false);
     }
 }

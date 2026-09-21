@@ -15,17 +15,20 @@ public class RoomEntryTrigger : MonoBehaviour
     [Header("Voice Over")]
     public AudioSource voiceOver;
 
+    [Header("Room 1 Interaction")]
+    public Room1InteractionController room1Interaction;
+
     private bool triggered = false;
 
     private void Start()
     {
-        // Show Challenge 1 instruction
+        // Show hallway instruction
         if (hallwayInstruction != null)
         {
             hallwayInstruction.SetActive(true);
         }
 
-        // Hide Room 1 checklist at the start
+        // Hide Room 1 challenge UI
         if (challengeUI != null)
         {
             challengeUI.SetActive(false);
@@ -35,21 +38,17 @@ public class RoomEntryTrigger : MonoBehaviour
         if (voiceOver != null && voiceOver.clip != null)
         {
             voiceOver.Play();
-
-            // Wait until voice-over actually finishes
             StartCoroutine(WaitForVoiceToFinish());
         }
     }
 
     private IEnumerator WaitForVoiceToFinish()
     {
-        // Wait while the voice is playing
         while (voiceOver != null && voiceOver.isPlaying)
         {
             yield return null;
         }
 
-        // Voice-over finished → now hide instruction
         if (hallwayInstruction != null)
         {
             hallwayInstruction.SetActive(false);
@@ -61,24 +60,35 @@ public class RoomEntryTrigger : MonoBehaviour
         if (triggered)
             return;
 
-        if (other.CompareTag("Player"))
+        if (!other.CompareTag("Player"))
+            return;
+
+        triggered = true;
+
+        Debug.Log("PLAYER ENTERED ROOM 1!");
+
+        // Hide hallway instruction
+        if (hallwayInstruction != null)
         {
-            triggered = true;
+            hallwayInstruction.SetActive(false);
+        }
 
-            // DO NOT hide hallway instruction here.
-            // Voice-over controls when it disappears.
+        // Show Room 1 challenge UI
+        if (challengeUI != null)
+        {
+            challengeUI.SetActive(true);
+        }
 
-            // Show Room 1 checklist
-            if (challengeUI != null)
-            {
-                challengeUI.SetActive(true);
-            }
+        // Start timer
+        if (gameTimer != null)
+        {
+            gameTimer.StartTimer();
+        }
 
-            // Start timer
-            if (gameTimer != null)
-            {
-                gameTimer.StartTimer();
-            }
+        // Enable Room 1 non-clickable interactions
+        if (room1Interaction != null)
+        {
+            room1Interaction.EnableRoom1Interactions();
         }
     }
 }
