@@ -1,49 +1,118 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class SudokuCell : MonoBehaviour
 {
+    [Header("UI")]
     public TMP_InputField inputField;
+    public Image cellBackground;
+
+    [Header("Checker")]
+    public TMP_Text checkerText;
 
     private int correctAnswer;
     private bool editable;
+
+    private Color normalColor;
 
     public void Setup(int givenNumber, int answer, bool canEdit)
     {
         correctAnswer = answer;
         editable = canEdit;
 
-        if (inputField == null)
+        // Save original cell color
+        if (cellBackground != null)
         {
-            inputField = GetComponentInChildren<TMP_InputField>();
+            normalColor = cellBackground.color;
         }
 
         if (editable)
         {
-            // EMPTY CELL
+            // Empty cell - player can type
             inputField.text = "";
             inputField.interactable = true;
+
+            // Listen for Enter / Submit
+            inputField.onEndEdit.RemoveAllListeners();
+            inputField.onEndEdit.AddListener(CheckAnswer);
+
+            if (checkerText != null)
+            {
+                checkerText.text = "";
+            }
         }
         else
         {
-            // GIVEN NUMBER
+            // Given number
             inputField.text = givenNumber.ToString();
             inputField.interactable = false;
+
+            if (checkerText != null)
+            {
+                checkerText.text = "";
+            }
         }
     }
 
-    public bool IsCorrect()
+    private void CheckAnswer(string playerInput)
     {
+        // Ignore given cells
         if (!editable)
+            return;
+
+        // Empty input
+        if (string.IsNullOrWhiteSpace(playerInput))
+            return;
+
+        int playerAnswer;
+
+        // Check if input is a number
+        if (!int.TryParse(playerInput, out playerAnswer))
         {
-            return true;
+            WrongAnswer();
+            return;
         }
 
-        if (int.TryParse(inputField.text, out int playerAnswer))
+        if (playerAnswer == correctAnswer)
         {
-            return playerAnswer == correctAnswer;
+            CorrectAnswer();
+        }
+        else
+        {
+            WrongAnswer();
+        }
+    }
+
+    private void CorrectAnswer()
+    {
+        // Green checker
+        if (checkerText != null)
+        {
+            checkerText.text = "✓";
+            checkerText.color = Color.green;
         }
 
-        return false;
+        // Normal cell color
+        if (cellBackground != null)
+        {
+            cellBackground.color = normalColor;
+        }
+    }
+
+    private void WrongAnswer()
+    {
+        // Red cell
+        if (cellBackground != null)
+        {
+            cellBackground.color = new Color(1f, 0.3f, 0.3f);
+        }
+
+        // Red X checker
+        if (checkerText != null)
+        {
+            checkerText.text = "✗";
+            checkerText.color = Color.red;
+        }
     }
 }
