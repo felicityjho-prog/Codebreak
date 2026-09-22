@@ -6,13 +6,20 @@ public class SudokuManager : MonoBehaviour
     public Transform sudokuGrid;
     public GameObject sudokuCellPrefab;
 
+    [Header("Sudoku Panel")]
+    public GameObject sudokuPanel;
+
+    [Header("Completion")]
+    public GameObject completionBanner;
+
     // =========================================================
-    // 6 x 6 SUDOKU
-    // 0 = EMPTY / PLAYER INPUT
+    // 6 x 6 SUDOKU PUZZLE
+    // 0 = EMPTY CELL
+    // Number = GIVEN NUMBER
     // =========================================================
 
     private int[,] puzzle =
-     {
+    {
         { 5, 0, 2, 0, 6, 0 },
         { 0, 7, 0, 3, 0, 4 },
         { 1, 0, 6, 0, 9, 0 },
@@ -23,7 +30,7 @@ public class SudokuManager : MonoBehaviour
     };
 
     // =========================================================
-    // COMPLETE ANSWER
+    // COMPLETE SOLUTION
     // =========================================================
 
     private int[,] solution =
@@ -37,10 +44,26 @@ public class SudokuManager : MonoBehaviour
         { 6, 2, 1, 7, 4, 3 }
     };
 
+    private bool puzzleCompleted = false;
+
+    // =========================================================
+    // START
+    // =========================================================
+
     void Start()
     {
+        // Hide completion banner at the beginning
+        if (completionBanner != null)
+        {
+            completionBanner.SetActive(false);
+        }
+
         GenerateBoard();
     }
+
+    // =========================================================
+    // GENERATE 6 x 6 BOARD
+    // =========================================================
 
     void GenerateBoard()
     {
@@ -72,7 +95,8 @@ public class SudokuManager : MonoBehaviour
                     cell.Setup(
                         puzzle[row, col],
                         solution[row, col],
-                        editable
+                        editable,
+                        this
                     );
                 }
                 else
@@ -83,5 +107,70 @@ public class SudokuManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    // =========================================================
+    // CHECK IF WHOLE SUDOKU IS COMPLETE
+    // =========================================================
+
+    public void CheckSudokuComplete()
+    {
+        // Prevent this from running again
+        if (puzzleCompleted)
+            return;
+
+        SudokuCell[] cells =
+            sudokuGrid.GetComponentsInChildren<SudokuCell>();
+
+        // Check every cell
+        foreach (SudokuCell cell in cells)
+        {
+            if (!cell.IsCorrect())
+            {
+                return;
+            }
+        }
+
+        // =====================================================
+        // EVERYTHING IS CORRECT
+        // =====================================================
+
+        puzzleCompleted = true;
+
+        ShowCompletion();
+    }
+
+    // =========================================================
+    // SUDOKU COMPLETED
+    // =========================================================
+
+    private void ShowCompletion()
+    {
+        Debug.Log("TABLE 1 CHALLENGE COMPLETED!");
+
+        // -----------------------------------------------------
+        // CLOSE SUDOKU PANEL
+        // -----------------------------------------------------
+
+        if (sudokuPanel != null)
+        {
+            sudokuPanel.SetActive(false);
+        }
+
+        // -----------------------------------------------------
+        // SHOW COMPLETION BANNER
+        // -----------------------------------------------------
+
+        if (completionBanner != null)
+        {
+            completionBanner.SetActive(true);
+        }
+
+        // -----------------------------------------------------
+        // UNLOCK CURSOR
+        // -----------------------------------------------------
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }
