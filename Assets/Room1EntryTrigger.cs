@@ -49,7 +49,9 @@ public class RoomEntryTrigger : MonoBehaviour
             yield return null;
         }
 
-        if (hallwayInstruction != null)
+        // Only hide the hallway instruction if the player
+        // has NOT entered Room 1 yet.
+        if (!triggered && hallwayInstruction != null)
         {
             hallwayInstruction.SetActive(false);
         }
@@ -67,25 +69,41 @@ public class RoomEntryTrigger : MonoBehaviour
 
         Debug.Log("PLAYER ENTERED ROOM 1!");
 
-        // Hide hallway instruction
+        // =========================================
+        // HIDE HALLWAY INSTRUCTION IMMEDIATELY
+        // =========================================
         if (hallwayInstruction != null)
         {
             hallwayInstruction.SetActive(false);
         }
 
-        // Show Room 1 challenge UI
+        // =========================================
+        // STOP VOICE OVER IMMEDIATELY
+        // =========================================
+        if (voiceOver != null && voiceOver.isPlaying)
+        {
+            voiceOver.Stop();
+        }
+
+        // =========================================
+        // SHOW ROOM 1 CHALLENGE UI
+        // =========================================
         if (challengeUI != null)
         {
             challengeUI.SetActive(true);
         }
 
-        // Start timer
+        // =========================================
+        // START TIMER
+        // =========================================
         if (gameTimer != null)
         {
             gameTimer.StartTimer();
         }
 
-        // Enable Room 1 non-clickable interactions
+        // =========================================
+        // ENABLE ROOM 1 INTERACTIONS
+        // =========================================
         if (room1Interaction != null)
         {
             room1Interaction.EnableRoom1Interactions();
