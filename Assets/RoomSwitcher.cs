@@ -13,6 +13,9 @@ public class RoomSwitcher : MonoBehaviour
     [Header("UI")]
     public GameObject taskPanel;
 
+    [Header("Room 2 Instruction")]
+    public GameObject room2InstructionPanel;
+
     [Header("Checklists")]
     public GameObject currentChecklist;
     public GameObject nextChecklist;
@@ -41,9 +44,20 @@ public class RoomSwitcher : MonoBehaviour
 
         Debug.Log("E Pressed");
 
-        // ==============================
+        // ==========================================
+        // ROOM 2 INSTRUCTION
+        // ==========================================
+
+        if (room2InstructionPanel != null &&
+            room2InstructionPanel.activeSelf)
+        {
+            Debug.Log("Room 2 Instruction is still open.");
+            return;
+        }
+
+        // ==========================================
         // ROOM 2 - SUDOKU INTERACTION
-        // ==============================
+        // ==========================================
 
         if (currentRoom != null &&
             currentRoom.name == "room2" &&
@@ -57,22 +71,20 @@ public class RoomSwitcher : MonoBehaviour
 
             Debug.Log("Distance from Sudoku Table: " + distance);
 
-            // If player is near Table 1
             if (distance <= sudokuInteractionDistance)
             {
                 sudokuPanel.SetActive(true);
 
                 Debug.Log("Sudoku Panel Opened!");
 
-                // IMPORTANT:
                 // Stop here so E does NOT switch to Room 3
                 return;
             }
         }
 
-        // ==============================
+        // ==========================================
         // NORMAL ROOM SWITCHING
-        // ==============================
+        // ==========================================
 
         if (canProceed && !switched)
         {
@@ -93,33 +105,48 @@ public class RoomSwitcher : MonoBehaviour
 
         switched = true;
 
+        // ==========================================
         // Disable current room
+        // ==========================================
+
         if (currentRoom != null)
         {
             currentRoom.SetActive(false);
         }
 
+        // ==========================================
         // Enable next room
+        // ==========================================
+
         if (nextRoom != null)
         {
             nextRoom.SetActive(true);
         }
 
+        // ==========================================
         // Disable current Game Manager
+        // ==========================================
+
         if (currentGameManager != null)
         {
             currentGameManager.SetActive(false);
         }
 
+        // ==========================================
         // Enable next Game Manager
+        // ==========================================
+
         if (nextGameManager != null)
         {
             nextGameManager.SetActive(true);
         }
 
-        // Teleport player
+        // ==========================================
+        // TELEPORT PLAYER
+        // ==========================================
+
         CharacterController cc =
-            player.GetComponent<CharacterController>();
+    player.GetComponent<CharacterController>();
 
         if (cc != null)
         {
@@ -129,6 +156,7 @@ public class RoomSwitcher : MonoBehaviour
         if (spawnPoint != null)
         {
             player.transform.position = spawnPoint.position;
+            player.transform.rotation = spawnPoint.rotation;
         }
 
         if (cc != null)
@@ -136,25 +164,50 @@ public class RoomSwitcher : MonoBehaviour
             cc.enabled = true;
         }
 
+        // ==========================================
         // Hide task panel
+        // ==========================================
+
         if (taskPanel != null)
         {
             taskPanel.SetActive(false);
         }
 
+        // ==========================================
         // Hide current checklist
+        // ==========================================
+
         if (currentChecklist != null)
         {
             currentChecklist.SetActive(false);
         }
 
+        // ==========================================
         // Show next checklist
+        // ==========================================
+
         if (nextChecklist != null)
         {
             nextChecklist.SetActive(true);
         }
 
+        // ==========================================
+        // ROOM 2 INSTRUCTION
+        // ==========================================
+
+        if (room2InstructionPanel != null &&
+            nextRoom != null &&
+            nextRoom.name == "room2")
+        {
+            room2InstructionPanel.SetActive(true);
+
+            Debug.Log("Room 2 Instruction Panel Shown!");
+        }
+
+        // ==========================================
         // Enable next Room Manager
+        // ==========================================
+
         if (nextRoomManager != null)
         {
             nextRoomManager.SetActive(true);
