@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class SudokuManager : MonoBehaviour
@@ -11,6 +12,9 @@ public class SudokuManager : MonoBehaviour
 
     [Header("Completion")]
     public GameObject completionBanner;
+
+    [Header("Completion Audio")]
+    public AudioSource completionAudio;
 
     // =========================================================
     // 6 x 6 SUDOKU PUZZLE
@@ -167,10 +171,39 @@ public class SudokuManager : MonoBehaviour
         }
 
         // -----------------------------------------------------
+        // PLAY COMPLETION SOUND
+        // -----------------------------------------------------
+
+        if (completionAudio != null)
+        {
+            completionAudio.Play();
+        }
+
+        // -----------------------------------------------------
         // UNLOCK CURSOR
         // -----------------------------------------------------
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        // -----------------------------------------------------
+        // HIDE BANNER AFTER 2 SECONDS
+        // -----------------------------------------------------
+
+        StartCoroutine(HideCompletionBanner());
+    }
+
+    // =========================================================
+    // HIDE COMPLETION BANNER
+    // =========================================================
+
+    private IEnumerator HideCompletionBanner()
+    {
+        yield return new WaitForSeconds(2f);
+
+        if (completionBanner != null)
+        {
+            completionBanner.SetActive(false);
+        }
     }
 }

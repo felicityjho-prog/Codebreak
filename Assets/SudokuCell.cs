@@ -18,10 +18,19 @@ public class SudokuCell : MonoBehaviour
 
     private void Awake()
     {
+        FindInputField();
+        PrepareInputField();
+    }
+
+    // =========================================================
+    // FIND INPUT FIELD
+    // =========================================================
+
+    private void FindInputField()
+    {
         if (inputField == null)
         {
-            inputField =
-                GetComponentInChildren<TMP_InputField>();
+            inputField = GetComponentInChildren<TMP_InputField>(true);
         }
 
         if (inputField == null)
@@ -29,13 +38,38 @@ public class SudokuCell : MonoBehaviour
             Debug.LogError(
                 "TMP_InputField NOT FOUND on SudokuCell!"
             );
-            return;
         }
+    }
+
+    // =========================================================
+    // PREPARE INPUT FIELD
+    // =========================================================
+
+    private void PrepareInputField()
+    {
+        if (inputField == null)
+            return;
 
         inputField.contentType =
             TMP_InputField.ContentType.IntegerNumber;
 
         inputField.characterLimit = 1;
+
+        // Make sure Text component is active
+        if (inputField.textComponent != null)
+        {
+            inputField.textComponent.gameObject.SetActive(true);
+
+            inputField.textComponent.color = Color.black;
+
+            inputField.textComponent.fontSize = 36;
+
+            inputField.textComponent.alignment =
+                TextAlignmentOptions.Center;
+
+            inputField.textComponent.fontStyle =
+                FontStyles.Bold;
+        }
     }
 
     // =========================================================
@@ -54,11 +88,7 @@ public class SudokuCell : MonoBehaviour
         editable = canEdit;
         sudokuManager = manager;
 
-        if (inputField == null)
-        {
-            inputField =
-                GetComponentInChildren<TMP_InputField>();
-        }
+        FindInputField();
 
         if (inputField == null)
         {
@@ -68,20 +98,53 @@ public class SudokuCell : MonoBehaviour
             return;
         }
 
+        PrepareInputField();
+
         // =====================================================
         // GIVEN NUMBER
         // =====================================================
 
         if (!editable)
         {
+            // Set the given number
             inputField.text =
                 givenNumber.ToString();
 
+            // Make sure it is visible
             inputField.interactable = false;
             inputField.readOnly = true;
 
-            // Normal color for given numbers
-            inputField.image.color = Color.white;
+            // Make background visible
+            if (inputField.image != null)
+            {
+                inputField.image.color = Color.white;
+            }
+
+            // FORCE TEXT VISIBLE
+            if (inputField.textComponent != null)
+            {
+                inputField.textComponent.gameObject.SetActive(true);
+
+                inputField.textComponent.color =
+                    Color.black;
+
+                inputField.textComponent.fontSize =
+                    36;
+
+                inputField.textComponent.alignment =
+                    TextAlignmentOptions.Center;
+
+                inputField.textComponent.fontStyle =
+                    FontStyles.Bold;
+
+                inputField.textComponent.text =
+                    givenNumber.ToString();
+            }
+
+            Debug.Log(
+                "Given Sudoku number displayed: " +
+                givenNumber
+            );
         }
 
         // =====================================================
@@ -100,13 +163,35 @@ public class SudokuCell : MonoBehaviour
 
             inputField.characterLimit = 1;
 
-            // Reset color
-            inputField.image.color = Color.white;
+            // White background
+            if (inputField.image != null)
+            {
+                inputField.image.color =
+                    Color.white;
+            }
 
-            // Remove previous listener
+            // Player text settings
+            if (inputField.textComponent != null)
+            {
+                inputField.textComponent.gameObject.SetActive(true);
+
+                inputField.textComponent.color =
+                    Color.black;
+
+                inputField.textComponent.fontSize =
+                    36;
+
+                inputField.textComponent.alignment =
+                    TextAlignmentOptions.Center;
+
+                inputField.textComponent.fontStyle =
+                    FontStyles.Normal;
+            }
+
+            // Remove old listeners
             inputField.onEndEdit.RemoveAllListeners();
 
-            // Add checker
+            // Add answer checker
             inputField.onEndEdit.AddListener(
                 CheckAnswer
             );
@@ -142,10 +227,19 @@ public class SudokuCell : MonoBehaviour
                     playerNumber
                 );
 
-                inputField.image.color =
-                    Color.green;
+                if (inputField.image != null)
+                {
+                    inputField.image.color =
+                        Color.green;
+                }
 
-                // Check if ALL cells are now correct
+                if (inputField.textComponent != null)
+                {
+                    inputField.textComponent.color =
+                        Color.black;
+                }
+
+                // Check whole Sudoku
                 if (sudokuManager != null)
                 {
                     sudokuManager.CheckSudokuComplete();
@@ -163,8 +257,17 @@ public class SudokuCell : MonoBehaviour
                     correctAnswer
                 );
 
-                inputField.image.color =
-                    Color.red;
+                if (inputField.image != null)
+                {
+                    inputField.image.color =
+                        Color.red;
+                }
+
+                if (inputField.textComponent != null)
+                {
+                    inputField.textComponent.color =
+                        Color.black;
+                }
             }
         }
     }
