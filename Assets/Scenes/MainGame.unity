@@ -456,7 +456,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3505299522626744229, guid: 7d72879ba54738d42887f83754ca3b26, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -17.86
+      value: -17.33
       objectReference: {fileID: 0}
     - target: {fileID: 3505299522626744229, guid: 7d72879ba54738d42887f83754ca3b26, type: 3}
       propertyPath: m_LocalRotation.w
@@ -493,7 +493,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3505299522626843525, guid: 7d72879ba54738d42887f83754ca3b26, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1788762708}
   m_SourcePrefab: {fileID: 100100000, guid: 7d72879ba54738d42887f83754ca3b26, type: 3}
 --- !u!4 &25015593 stripped
 Transform:
@@ -7735,7 +7738,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 08d5439121a07f544bdaaa816bb04c47, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.259
+      value: 8.417
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 08d5439121a07f544bdaaa816bb04c47, type: 3}
       propertyPath: m_LocalPosition.y
@@ -7743,7 +7746,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 08d5439121a07f544bdaaa816bb04c47, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -14.6640005
+      value: -13.594
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 08d5439121a07f544bdaaa816bb04c47, type: 3}
       propertyPath: m_LocalRotation.w
@@ -7780,7 +7783,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: 08d5439121a07f544bdaaa816bb04c47, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 926912594}
   m_SourcePrefab: {fileID: 100100000, guid: 08d5439121a07f544bdaaa816bb04c47, type: 3}
 --- !u!4 &360629625 stripped
 Transform:
@@ -16532,7 +16538,7 @@ MonoBehaviour:
   sudokuPanel: {fileID: 0}
   sudokuInteractionDistance: 3
   canProceed: 0
-  testRoom2: 0
+  testRoom2: 1
 --- !u!4 &677955355
 Transform:
   m_ObjectHideFlags: 0
@@ -22323,6 +22329,28 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: f6e5d7320d627e5419f41588b7aff9e0, type: 3}
   m_PrefabInstance: {fileID: 2076293456}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &926912591 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100000, guid: 08d5439121a07f544bdaaa816bb04c47, type: 3}
+  m_PrefabInstance: {fileID: 360629624}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &926912594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 926912591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4e2f2346a308824c82b136de7149ca9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TableInteraction
+  interactionDistance: 3
+  interactPrompt: {fileID: 1696763115}
+  promptCanvasGroup: {fileID: 1696763121}
+  fadeDuration: 0.25
+  puzzlePanel: {fileID: 0}
 --- !u!1001 &927057039
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24608,7 +24636,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 08d5439121a07f544bdaaa816bb04c47, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.052
+      value: -0.015
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 08d5439121a07f544bdaaa816bb04c47, type: 3}
       propertyPath: m_LocalPosition.y
@@ -24616,7 +24644,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 08d5439121a07f544bdaaa816bb04c47, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -14.64
+      value: -13.559
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 08d5439121a07f544bdaaa816bb04c47, type: 3}
       propertyPath: m_LocalRotation.w
@@ -43485,6 +43513,28 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4457234178445902, guid: f7c4d057f1187c64bad50c0d179a5f39, type: 3}
   m_PrefabInstance: {fileID: 172764359}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1788762705 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3505299522626843525, guid: 7d72879ba54738d42887f83754ca3b26, type: 3}
+  m_PrefabInstance: {fileID: 25015592}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1788762708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1788762705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4e2f2346a308824c82b136de7149ca9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TableInteraction
+  interactionDistance: 3
+  interactPrompt: {fileID: 1696763115}
+  promptCanvasGroup: {fileID: 1696763121}
+  fadeDuration: 0.25
+  puzzlePanel: {fileID: 0}
 --- !u!1 &1789237631
 GameObject:
   m_ObjectHideFlags: 0
