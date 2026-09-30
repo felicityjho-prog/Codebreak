@@ -2,34 +2,176 @@ using UnityEngine;
 
 public class SudokuPanelController : MonoBehaviour
 {
-    [Header("Player Controls")]
-    public MonoBehaviour playerMovement;
-    public MonoBehaviour playerLook;
+    [Header("Sudoku Panel")]
+    public GameObject sudokuPanel;
 
-    private void OnEnable()
+    [Header("Player Control")]
+    public PlayerMovement playerMovement;
+    public PlayerController playerLook;
+
+    [Header("Camera")]
+    public Transform playerCamera;
+
+    [Header("Interaction Prompt")]
+    public GameObject interactPrompt;
+
+    // ==========================================
+    // SUDOKU STATE
+    // ==========================================
+
+    private bool sudokuOpen = false;
+
+    // IMPORTANT:
+    // TableInteraction can check this
+    public bool IsSudokuOpen
     {
-        // Freeze player movement and camera
+        get { return sudokuOpen; }
+    }
+
+    // ==========================================
+    // SAVED CAMERA ROTATION
+    // ==========================================
+
+    private Quaternion savedCameraRotation;
+
+    // ==========================================
+    // UPDATE
+    // ==========================================
+
+    private void Update()
+    {
+        // While Sudoku is open:
+        // FORCE CAMERA TO STAY STILL
+        if (sudokuOpen)
+        {
+            // Keep cursor available
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
+            // Prevent camera rotation
+            if (playerCamera != null)
+            {
+                playerCamera.localRotation =
+                    savedCameraRotation;
+            }
+        }
+    }
+
+    // ==========================================
+    // OPEN SUDOKU
+    // ==========================================
+
+    public void OpenSudoku()
+    {
+        Debug.Log("SUDOKU OPENED - PLAYER FROZEN");
+
+        sudokuOpen = true;
+
+        // --------------------------------------
+        // SAVE CAMERA ROTATION
+        // --------------------------------------
+
+        if (playerCamera != null)
+        {
+            savedCameraRotation =
+                playerCamera.localRotation;
+        }
+
+        // --------------------------------------
+        // SHOW SUDOKU PANEL
+        // --------------------------------------
+
+        if (sudokuPanel != null)
+        {
+            sudokuPanel.SetActive(true);
+        }
+
+        // --------------------------------------
+        // HIDE INTERACTION PROMPT
+        // --------------------------------------
+
+        if (interactPrompt != null)
+        {
+            interactPrompt.SetActive(false);
+        }
+
+        // --------------------------------------
+        // DISABLE WASD MOVEMENT
+        // --------------------------------------
+
         if (playerMovement != null)
+        {
             playerMovement.enabled = false;
+        }
+
+        // --------------------------------------
+        // DISABLE CAMERA LOOK
+        // --------------------------------------
 
         if (playerLook != null)
-            playerLook.enabled = false;
+        {
+            playerLook.DisableLook();
+        }
 
-        // Allow mouse to interact with Sudoku
+        // --------------------------------------
+        // UNLOCK CURSOR
+        // --------------------------------------
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
 
-    private void OnDisable()
+    // ==========================================
+    // CLOSE SUDOKU
+    // ==========================================
+
+    public void CloseSudoku()
     {
-        // Enable player controls again
+        Debug.Log("SUDOKU CLOSED - PLAYER CONTROL RESTORED");
+
+        sudokuOpen = false;
+
+        // --------------------------------------
+        // HIDE SUDOKU PANEL
+        // --------------------------------------
+
+        if (sudokuPanel != null)
+        {
+            sudokuPanel.SetActive(false);
+        }
+
+        // --------------------------------------
+        // RESTORE CAMERA
+        // --------------------------------------
+
+        if (playerCamera != null)
+        {
+            playerCamera.localRotation =
+                savedCameraRotation;
+        }
+
+        // --------------------------------------
+        // ENABLE WASD MOVEMENT
+        // --------------------------------------
+
         if (playerMovement != null)
+        {
             playerMovement.enabled = true;
+        }
+
+        // --------------------------------------
+        // ENABLE CAMERA LOOK
+        // --------------------------------------
 
         if (playerLook != null)
-            playerLook.enabled = true;
+        {
+            playerLook.EnableLook();
+        }
 
-        // Lock mouse back to the game
+        // --------------------------------------
+        // LOCK CURSOR
+        // --------------------------------------
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }

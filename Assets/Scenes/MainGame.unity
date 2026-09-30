@@ -15989,6 +15989,7 @@ MonoBehaviour:
   sudokuPanel: {fileID: 2031270140}
   completionBanner: {fileID: 1038604513}
   completionAudio: {fileID: 664374334}
+  sudokuPanelController: {fileID: 2031270146}
 --- !u!4 &664374333
 Transform:
   m_ObjectHideFlags: 0
@@ -22429,6 +22430,7 @@ MonoBehaviour:
   promptCanvasGroup: {fileID: 1696763121}
   fadeDuration: 0.25
   puzzlePanel: {fileID: 0}
+  sudokuPanelController: {fileID: 0}
 --- !u!1001 &927057039
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24813,6 +24815,7 @@ MonoBehaviour:
   promptCanvasGroup: {fileID: 1696763121}
   fadeDuration: 0.25
   puzzlePanel: {fileID: 2031270140}
+  sudokuPanelController: {fileID: 2031270146}
 --- !u!1 &1022877400
 GameObject:
   m_ObjectHideFlags: 0
@@ -43613,6 +43616,7 @@ MonoBehaviour:
   promptCanvasGroup: {fileID: 1696763121}
   fadeDuration: 0.25
   puzzlePanel: {fileID: 2008009145}
+  sudokuPanelController: {fileID: 0}
 --- !u!1 &1789237631
 GameObject:
   m_ObjectHideFlags: 0
@@ -50526,6 +50530,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SudokuUIController
   sudokuPanel: {fileID: 2031270140}
   completionBanner: {fileID: 1038604513}
+  sudokuPanelController: {fileID: 2031270146}
 --- !u!114 &2031270146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50538,8 +50543,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c770acf21dd4fb848aef545a023738ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SudokuPanelController
-  playerMovement: {fileID: 1620056347}
-  playerLook: {fileID: 330585547}
+  sudokuPanel: {fileID: 2031270140}
+  playerMovement: {fileID: 1620056349}
+  playerLook: {fileID: 1620056347}
+  playerCamera: {fileID: 330585546}
+  interactPrompt: {fileID: 1696763115}
 --- !u!1 &2031702782
 GameObject:
   m_ObjectHideFlags: 0

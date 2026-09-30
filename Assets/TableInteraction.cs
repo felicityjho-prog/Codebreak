@@ -11,10 +11,13 @@ public class TableInteraction : MonoBehaviour
     public CanvasGroup promptCanvasGroup;
 
     [Header("Fade Settings")]
-    public float fadeDuration = 0.5f;
+    public float fadeDuration = 0.25f;
 
     [Header("Puzzle")]
     public GameObject puzzlePanel;
+
+    [Header("Sudoku Controller")]
+    public SudokuPanelController sudokuPanelController;
 
     private Transform player;
     private bool isNear = false;
@@ -22,28 +25,37 @@ public class TableInteraction : MonoBehaviour
 
     void Start()
     {
-        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+        GameObject playerObject =
+            GameObject.FindGameObjectWithTag("Player");
 
         if (playerObject != null)
         {
             player = playerObject.transform;
         }
 
-        if (interactPrompt != null)
-        {
-            interactPrompt.SetActive(true);
-        }
-
-        if (promptCanvasGroup != null)
-        {
-            promptCanvasGroup.alpha = 0f;
-            promptCanvasGroup.interactable = false;
-            promptCanvasGroup.blocksRaycasts = false;
-        }
+        HidePrompt();
     }
 
     void Update()
     {
+        // ==========================================
+        // SUDOKU IS OPEN
+        // ==========================================
+
+        if (IsSudokuOpen())
+        {
+            // Completely hide E prompt
+            HidePrompt();
+
+            isNear = false;
+
+            return;
+        }
+
+        // ==========================================
+        // NO PLAYER
+        // ==========================================
+
         if (player == null)
             return;
 
@@ -52,7 +64,10 @@ public class TableInteraction : MonoBehaviour
             player.position
         );
 
-        // PLAYER IS NEAR
+        // ==========================================
+        // PLAYER NEAR TABLE
+        // ==========================================
+
         if (distance <= interactionDistance)
         {
             if (!isNear)
@@ -61,12 +76,17 @@ public class TableInteraction : MonoBehaviour
                 FadeIn();
             }
 
+            // Press E
             if (Input.GetKeyDown(KeyCode.E))
             {
                 OpenPuzzle();
             }
         }
-        // PLAYER IS FAR
+
+        // ==========================================
+        // PLAYER FAR FROM TABLE
+        // ==========================================
+
         else
         {
             if (isNear)
@@ -77,69 +97,166 @@ public class TableInteraction : MonoBehaviour
         }
     }
 
+    // ==========================================
+    // CHECK IF SUDOKU IS OPEN
+    // ==========================================
+
+    bool IsSudokuOpen()
+    {
+        if (sudokuPanelController != null)
+        {
+            return sudokuPanelController.IsSudokuOpen;
+        }
+
+        return false;
+    }
+
+    // ==========================================
+    // FADE IN
+    // ==========================================
+
     void FadeIn()
     {
-        if (fadeCoroutine != null)
-            StopCoroutine(fadeCoroutine);
+        // Don't show while Sudoku is open
+        if (IsSudokuOpen())
+            return;
 
-        fadeCoroutine = StartCoroutine(FadePrompt(1f));
+        if (fadeCoroutine != null)
+        {
+            StopCoroutine(fadeCoroutine);
+        }
+
+        if (interactPrompt != null)
+        {
+            interactPrompt.SetActive(true);
+        }
+
+        fadeCoroutine = StartCoroutine(
+            FadePrompt(1f)
+        );
     }
+
+    // ==========================================
+    // FADE OUT
+    // ==========================================
 
     void FadeOut()
     {
         if (fadeCoroutine != null)
+        {
             StopCoroutine(fadeCoroutine);
+        }
 
-        fadeCoroutine = StartCoroutine(FadePrompt(0f));
+        fadeCoroutine = StartCoroutine(
+            FadePrompt(0f)
+        );
     }
+
+    // ==========================================
+    // FADE PROMPT
+    // ==========================================
 
     IEnumerator FadePrompt(float targetAlpha)
     {
         if (promptCanvasGroup == null)
             yield break;
 
-        float startAlpha = promptCanvasGroup.alpha;
+        float startAlpha =
+            promptCanvasGroup.alpha;
+
         float elapsed = 0f;
 
         while (elapsed < fadeDuration)
         {
             elapsed += Time.deltaTime;
 
-            float t = elapsed / fadeDuration;
+            float t =
+                elapsed / fadeDuration;
 
-            promptCanvasGroup.alpha = Mathf.Lerp(
-                startAlpha,
-                targetAlpha,
-                t
-            );
+            promptCanvasGroup.alpha =
+                Mathf.Lerp(
+                    startAlpha,
+                    targetAlpha,
+                    t
+                );
 
             yield return null;
         }
 
-        promptCanvasGroup.alpha = targetAlpha;
+        promptCanvasGroup.alpha =
+            targetAlpha;
 
-        if (targetAlpha > 0f)
+        // Show prompt only if Sudoku is NOT open
+        if (targetAlpha > 0f && !IsSudokuOpen())
         {
             promptCanvasGroup.interactable = true;
             promptCanvasGroup.blocksRaycasts = true;
+
+            if (interactPrompt != null)
+            {
+                interactPrompt.SetActive(true);
+            }
         }
         else
         {
             promptCanvasGroup.interactable = false;
             promptCanvasGroup.blocksRaycasts = false;
+
+            if (interactPrompt != null)
+            {
+                interactPrompt.SetActive(false);
+            }
         }
     }
 
-    void OpenPuzzle()
+    // ==========================================
+    // HIDE PROMPT
+    // ==========================================
+
+    void HidePrompt()
     {
-        if (puzzlePanel != null)
+        if (fadeCoroutine != null)
         {
-            puzzlePanel.SetActive(true);
+            StopCoroutine(fadeCoroutine);
+            fadeCoroutine = null;
         }
 
-        FadeOut();
+        if (promptCanvasGroup != null)
+        {
+            promptCanvasGroup.alpha = 0f;
+            promptCanvasGroup.interactable = false;
+            promptCanvasGroup.blocksRaycasts = false;
+        }
 
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        if (interactPrompt != null)
+        {
+            interactPrompt.SetActive(false);
+        }
+    }
+
+    // ==========================================
+    // OPEN PUZZLE
+    // ==========================================
+
+    void OpenPuzzle()
+    {
+        // Immediately hide E prompt
+        HidePrompt();
+
+        isNear = false;
+
+        if (sudokuPanelController != null)
+        {
+            sudokuPanelController.OpenSudoku();
+        }
+        else if (puzzlePanel != null)
+        {
+            puzzlePanel.SetActive(true);
+
+            Cursor.lockState =
+                CursorLockMode.None;
+
+            Cursor.visible = true;
+        }
     }
 }

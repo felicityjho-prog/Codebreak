@@ -8,20 +8,45 @@ public class SudokuUIController : MonoBehaviour
     [Header("Completion UI")]
     public GameObject completionBanner;
 
+    [Header("Sudoku Controller")]
+    public SudokuPanelController sudokuPanelController;
+
     private void Start()
     {
         if (completionBanner != null)
+        {
             completionBanner.SetActive(false);
+        }
     }
 
     public void ShowCompletion()
     {
-        // Close Sudoku
-        if (sudokuPanel != null)
-            sudokuPanel.SetActive(false);
+        // ==============================
+        // CLOSE SUDOKU AND RESTORE PLAYER
+        // ==============================
 
-        // Show completion message
+        if (sudokuPanelController != null)
+        {
+            sudokuPanelController.CloseSudoku();
+        }
+        else
+        {
+            if (sudokuPanel != null)
+            {
+                sudokuPanel.SetActive(false);
+            }
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+        // ==============================
+        // SHOW COMPLETION BANNER
+        // ==============================
+
         if (completionBanner != null)
+        {
             completionBanner.SetActive(true);
+        }
     }
 }

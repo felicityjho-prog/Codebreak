@@ -14,6 +14,12 @@ public class CrosswordCell : MonoBehaviour
     {
         if (letterInput != null)
         {
+            // Only allow letters A-Z
+            letterInput.characterValidation =
+                TMP_InputField.CharacterValidation.Alphanumeric;
+
+            letterInput.characterLimit = 1;
+
             letterInput.onValueChanged.AddListener(OnLetterChanged);
         }
     }
@@ -26,12 +32,27 @@ public class CrosswordCell : MonoBehaviour
         if (string.IsNullOrEmpty(value))
             return;
 
-        string upperLetter = value.ToUpper();
+        // Remove anything that is NOT a letter
+        string filtered = "";
 
-        if (value != upperLetter)
+        foreach (char c in value)
         {
-            letterInput.SetTextWithoutNotify(upperLetter);
+            if (char.IsLetter(c))
+            {
+                filtered += c;
+            }
         }
+
+        // Keep only the first letter
+        if (filtered.Length > 1)
+        {
+            filtered = filtered.Substring(0, 1);
+        }
+
+        // Convert to uppercase
+        filtered = filtered.ToUpper();
+
+        letterInput.SetTextWithoutNotify(filtered);
     }
 
     public void SetCorrectLetter(string letter)

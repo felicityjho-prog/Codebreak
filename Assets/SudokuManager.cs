@@ -16,11 +16,8 @@ public class SudokuManager : MonoBehaviour
     [Header("Completion Audio")]
     public AudioSource completionAudio;
 
-    // =========================================================
-    // 6 x 6 SUDOKU PUZZLE
-    // 0 = EMPTY CELL
-    // Number = GIVEN NUMBER
-    // =========================================================
+    [Header("Sudoku Controller")]
+    public SudokuPanelController sudokuPanelController;
 
     private int[,] puzzle =
     {
@@ -32,10 +29,6 @@ public class SudokuManager : MonoBehaviour
         { 4, 0, 7, 0, 8, 0 },
         { 0, 2, 0, 7, 0, 3 }
     };
-
-    // =========================================================
-    // COMPLETE SOLUTION
-    // =========================================================
 
     private int[,] solution =
     {
@@ -50,13 +43,8 @@ public class SudokuManager : MonoBehaviour
 
     private bool puzzleCompleted = false;
 
-    // =========================================================
-    // START
-    // =========================================================
-
     void Start()
     {
-        // Hide completion banner at the beginning
         if (completionBanner != null)
         {
             completionBanner.SetActive(false);
@@ -65,19 +53,13 @@ public class SudokuManager : MonoBehaviour
         GenerateBoard();
     }
 
-    // =========================================================
-    // GENERATE 6 x 6 BOARD
-    // =========================================================
-
     void GenerateBoard()
     {
-        // Remove old cells
         foreach (Transform child in sudokuGrid)
         {
             Destroy(child.gameObject);
         }
 
-        // Create 36 cells
         for (int row = 0; row < 6; row++)
         {
             for (int col = 0; col < 6; col++)
@@ -87,14 +69,16 @@ public class SudokuManager : MonoBehaviour
                     sudokuGrid
                 );
 
-                cellObject.name = "Cell_" + (row * 6 + col);
+                cellObject.name =
+                    "Cell_" + (row * 6 + col);
 
                 SudokuCell cell =
                     cellObject.GetComponent<SudokuCell>();
 
                 if (cell != null)
                 {
-                    bool editable = puzzle[row, col] == 0;
+                    bool editable =
+                        puzzle[row, col] == 0;
 
                     cell.Setup(
                         puzzle[row, col],
@@ -103,30 +87,18 @@ public class SudokuManager : MonoBehaviour
                         this
                     );
                 }
-                else
-                {
-                    Debug.LogError(
-                        "SudokuCell script is missing on SudokuCell prefab!"
-                    );
-                }
             }
         }
     }
 
-    // =========================================================
-    // CHECK IF WHOLE SUDOKU IS COMPLETE
-    // =========================================================
-
     public void CheckSudokuComplete()
     {
-        // Prevent this from running again
         if (puzzleCompleted)
             return;
 
         SudokuCell[] cells =
             sudokuGrid.GetComponentsInChildren<SudokuCell>();
 
-        // Check every cell
         foreach (SudokuCell cell in cells)
         {
             if (!cell.IsCorrect())
@@ -135,67 +107,42 @@ public class SudokuManager : MonoBehaviour
             }
         }
 
-        // =====================================================
-        // EVERYTHING IS CORRECT
-        // =====================================================
-
         puzzleCompleted = true;
 
         ShowCompletion();
     }
 
-    // =========================================================
-    // SUDOKU COMPLETED
-    // =========================================================
-
     private void ShowCompletion()
     {
         Debug.Log("TABLE 1 CHALLENGE COMPLETED!");
 
-        // -----------------------------------------------------
-        // CLOSE SUDOKU PANEL
-        // -----------------------------------------------------
-
-        if (sudokuPanel != null)
+        // CLOSE SUDOKU PROPERLY
+        if (sudokuPanelController != null)
         {
-            sudokuPanel.SetActive(false);
+            sudokuPanelController.CloseSudoku();
+        }
+        else
+        {
+            if (sudokuPanel != null)
+            {
+                sudokuPanel.SetActive(false);
+            }
         }
 
-        // -----------------------------------------------------
         // SHOW COMPLETION BANNER
-        // -----------------------------------------------------
-
         if (completionBanner != null)
         {
             completionBanner.SetActive(true);
         }
 
-        // -----------------------------------------------------
-        // PLAY COMPLETION SOUND
-        // -----------------------------------------------------
-
+        // PLAY SOUND
         if (completionAudio != null)
         {
             completionAudio.Play();
         }
 
-        // -----------------------------------------------------
-        // UNLOCK CURSOR
-        // -----------------------------------------------------
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-
-        // -----------------------------------------------------
-        // HIDE BANNER AFTER 2 SECONDS
-        // -----------------------------------------------------
-
         StartCoroutine(HideCompletionBanner());
     }
-
-    // =========================================================
-    // HIDE COMPLETION BANNER
-    // =========================================================
 
     private IEnumerator HideCompletionBanner()
     {

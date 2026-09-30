@@ -12,6 +12,15 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         LockCursor();
+
+        // Get current camera rotation
+        if (cameraTransform != null)
+        {
+            xRotation = cameraTransform.localEulerAngles.x;
+
+            if (xRotation > 180f)
+                xRotation -= 360f;
+        }
     }
 
     void Update()
@@ -22,24 +31,45 @@ public class PlayerController : MonoBehaviour
             UnlockCursor();
         }
 
-        if (Input.GetMouseButtonDown(0) && cursorLocked == false && lookEnabled)
+        // Click to lock cursor again
+        if (Input.GetMouseButtonDown(0) &&
+            cursorLocked == false &&
+            lookEnabled)
         {
             LockCursor();
         }
 
-        // Camera movement
+        // CAMERA MOVEMENT
         if (cursorLocked && lookEnabled)
         {
-            float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-            float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+            float mouseX =
+                Input.GetAxis("Mouse X") *
+                mouseSensitivity *
+                Time.deltaTime;
+
+            float mouseY =
+                Input.GetAxis("Mouse Y") *
+                mouseSensitivity *
+                Time.deltaTime;
 
             xRotation -= mouseY;
-            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+
+            xRotation = Mathf.Clamp(
+                xRotation,
+                -90f,
+                90f
+            );
 
             cameraTransform.localRotation =
-                Quaternion.Euler(xRotation, 0f, 0f);
+                Quaternion.Euler(
+                    xRotation,
+                    0f,
+                    0f
+                );
 
-            transform.Rotate(Vector3.up * mouseX);
+            transform.Rotate(
+                Vector3.up * mouseX
+            );
         }
     }
 
@@ -63,7 +93,24 @@ public class PlayerController : MonoBehaviour
     }
 
     // ==============================
-    // CURSOR
+    // SET CAMERA ROTATION
+    // ==============================
+
+    public void SetCameraRotation(Quaternion rotation)
+    {
+        if (cameraTransform == null)
+            return;
+
+        cameraTransform.localRotation = rotation;
+
+        xRotation = rotation.eulerAngles.x;
+
+        if (xRotation > 180f)
+            xRotation -= 360f;
+    }
+
+    // ==============================
+    // LOCK CURSOR
     // ==============================
 
     void LockCursor()
@@ -72,6 +119,10 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = false;
         cursorLocked = true;
     }
+
+    // ==============================
+    // UNLOCK CURSOR
+    // ==============================
 
     void UnlockCursor()
     {
