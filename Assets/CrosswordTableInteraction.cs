@@ -1,10 +1,14 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class CrosswordTableInteraction : MonoBehaviour
 {
     [Header("Interaction")]
     public float interactionDistance = 3f;
+
+    [Header("Table Progress")]
+    public int tableNumber = 2;
 
     [Header("UI")]
     public GameObject interactPrompt;
@@ -20,13 +24,14 @@ public class CrosswordTableInteraction : MonoBehaviour
     private bool isNear = false;
     private Coroutine fadeCoroutine;
 
+    private TMP_Text promptText;
+
     // ==========================================
     // START
     // ==========================================
 
     void Start()
     {
-        // Find Player
         GameObject playerObject =
             GameObject.FindGameObjectWithTag("Player");
 
@@ -35,7 +40,12 @@ public class CrosswordTableInteraction : MonoBehaviour
             player = playerObject.transform;
         }
 
-        // Hide prompt at start
+        if (interactPrompt != null)
+        {
+            promptText =
+                interactPrompt.GetComponentInChildren<TMP_Text>(true);
+        }
+
         HidePrompt();
     }
 
@@ -45,9 +55,19 @@ public class CrosswordTableInteraction : MonoBehaviour
 
     void Update()
     {
-        // No player
         if (player == null)
             return;
+
+        // ==========================================
+        // TABLE ALREADY COMPLETED
+        // ==========================================
+
+        if (IsTableCompleted())
+        {
+            isNear = false;
+            HidePrompt();
+            return;
+        }
 
         // ==========================================
         // CROSSWORD IS OPEN
@@ -61,17 +81,14 @@ public class CrosswordTableInteraction : MonoBehaviour
             return;
         }
 
-        // ==========================================
-        // CHECK DISTANCE
-        // ==========================================
-
-        float distance = Vector3.Distance(
-            player.position,
-            transform.position
-        );
+        float distance =
+            Vector3.Distance(
+                player.position,
+                transform.position
+            );
 
         // ==========================================
-        // PLAYER NEAR CROSSWORD TABLE
+        // PLAYER NEAR TABLE
         // ==========================================
 
         if (distance <= interactionDistance)
@@ -79,18 +96,45 @@ public class CrosswordTableInteraction : MonoBehaviour
             if (!isNear)
             {
                 isNear = true;
+
+                if (IsTableUnlocked())
+                {
+                    SetPromptText(
+                        "[E] TO INTERACT"
+                    );
+                }
+                else
+                {
+                    SetPromptText(
+                        "PREVIOUS CHALLENGE REQUIRED — COMPLETE TABLE 1 FIRST."
+                    );
+                }
+
                 ShowPrompt();
             }
 
-            // Press E
+            // ==========================================
+            // PRESS E
+            // ==========================================
+
             if (Input.GetKeyDown(KeyCode.E))
             {
-                OpenCrossword();
+                if (IsTableUnlocked())
+                {
+                    OpenCrossword();
+                }
+                else
+                {
+                    Debug.Log(
+                        "Table " + tableNumber +
+                        " is locked. Complete the previous challenge first."
+                    );
+                }
             }
         }
 
         // ==========================================
-        // PLAYER FAR FROM CROSSWORD TABLE
+        // PLAYER FAR
         // ==========================================
 
         else
@@ -104,16 +148,51 @@ public class CrosswordTableInteraction : MonoBehaviour
     }
 
     // ==========================================
+    // CHECK IF TABLE IS UNLOCKED
+    // ==========================================
+
+    bool IsTableUnlocked()
+    {
+        if (ChallengeProgressManager.Instance == null)
+        {
+            Debug.LogWarning(
+                "ChallengeProgressManager is missing!"
+            );
+
+            return false;
+        }
+
+        return ChallengeProgressManager.Instance
+            .IsTableUnlocked(tableNumber);
+    }
+
+    // ==========================================
+    // CHECK IF TABLE IS COMPLETED
+    // ==========================================
+
+    bool IsTableCompleted()
+    {
+        if (ChallengeProgressManager.Instance == null)
+            return false;
+
+        return ChallengeProgressManager.Instance
+            .IsTableCompleted(tableNumber);
+    }
+
+    // ==========================================
     // OPEN CROSSWORD
     // ==========================================
 
     void OpenCrossword()
     {
-        // Check controller
+        if (IsTableCompleted())
+            return;
+
         if (crosswordController == null)
         {
             Debug.LogError(
-                "CrosswordTableInteraction: CrosswordPanelController is NOT assigned!"
+                "CrosswordTableInteraction: " +
+                "CrosswordPanelController is NOT assigned!"
             );
 
             return;
@@ -121,13 +200,40 @@ public class CrosswordTableInteraction : MonoBehaviour
 
         Debug.Log("OPENING CROSSWORD...");
 
-        // Hide interaction prompt
+        // Hide E prompt
         HidePrompt();
 
         isNear = false;
 
-        // Open crossword through controller
+        // ==========================================
+        // HIDE ROOM INSTRUCTION
+        // ==========================================
+
+        Room2InstructionManager instructionManager =
+            FindFirstObjectByType<Room2InstructionManager>();
+
+        if (instructionManager != null)
+        {
+            instructionManager.HideInstruction();
+        }
+
+        // ==========================================
+        // OPEN CROSSWORD
+        // ==========================================
+
         crosswordController.OpenCrossword();
+    }
+
+    // ==========================================
+    // SET PROMPT TEXT
+    // ==========================================
+
+    void SetPromptText(string message)
+    {
+        if (promptText != null)
+        {
+            promptText.text = message;
+        }
     }
 
     // ==========================================
@@ -136,6 +242,9 @@ public class CrosswordTableInteraction : MonoBehaviour
 
     void ShowPrompt()
     {
+        if (IsTableCompleted())
+            return;
+
         if (interactPrompt == null)
             return;
 
@@ -145,7 +254,6 @@ public class CrosswordTableInteraction : MonoBehaviour
             return;
         }
 
-        // Make object active first
         interactPrompt.SetActive(true);
 
         StartFade(1f);
@@ -230,11 +338,8 @@ public class CrosswordTableInteraction : MonoBehaviour
         promptCanvasGroup.alpha =
             targetAlpha;
 
-        // ==========================================
-        // ENABLE / DISABLE INTERACTION
-        // ==========================================
-
-        if (targetAlpha > 0f)
+        if (targetAlpha > 0f &&
+            !IsTableCompleted())
         {
             promptCanvasGroup.interactable = true;
             promptCanvasGroup.blocksRaycasts = true;

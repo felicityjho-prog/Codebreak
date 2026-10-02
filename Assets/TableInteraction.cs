@@ -6,6 +6,9 @@ public class TableInteraction : MonoBehaviour
     [Header("Interaction")]
     public float interactionDistance = 3f;
 
+    [Header("Table Progress")]
+    public int tableNumber = 1;
+
     [Header("UI")]
     public GameObject interactPrompt;
     public CanvasGroup promptCanvasGroup;
@@ -23,6 +26,10 @@ public class TableInteraction : MonoBehaviour
     private bool isNear = false;
     private Coroutine fadeCoroutine;
 
+    // ==========================================
+    // START
+    // ==========================================
+
     void Start()
     {
         GameObject playerObject =
@@ -36,19 +43,31 @@ public class TableInteraction : MonoBehaviour
         HidePrompt();
     }
 
+    // ==========================================
+    // UPDATE
+    // ==========================================
+
     void Update()
     {
+        // ==========================================
+        // TABLE ALREADY COMPLETED
+        // ==========================================
+
+        if (IsTableCompleted())
+        {
+            isNear = false;
+            HidePrompt();
+            return;
+        }
+
         // ==========================================
         // SUDOKU IS OPEN
         // ==========================================
 
         if (IsSudokuOpen())
         {
-            // Completely hide E prompt
             HidePrompt();
-
             isNear = false;
-
             return;
         }
 
@@ -98,6 +117,19 @@ public class TableInteraction : MonoBehaviour
     }
 
     // ==========================================
+    // CHECK IF TABLE IS COMPLETED
+    // ==========================================
+
+    bool IsTableCompleted()
+    {
+        if (ChallengeProgressManager.Instance == null)
+            return false;
+
+        return ChallengeProgressManager.Instance
+            .IsTableCompleted(tableNumber);
+    }
+
+    // ==========================================
     // CHECK IF SUDOKU IS OPEN
     // ==========================================
 
@@ -117,7 +149,9 @@ public class TableInteraction : MonoBehaviour
 
     void FadeIn()
     {
-        // Don't show while Sudoku is open
+        if (IsTableCompleted())
+            return;
+
         if (IsSudokuOpen())
             return;
 
@@ -186,8 +220,9 @@ public class TableInteraction : MonoBehaviour
         promptCanvasGroup.alpha =
             targetAlpha;
 
-        // Show prompt only if Sudoku is NOT open
-        if (targetAlpha > 0f && !IsSudokuOpen())
+        if (targetAlpha > 0f &&
+            !IsSudokuOpen() &&
+            !IsTableCompleted())
         {
             promptCanvasGroup.interactable = true;
             promptCanvasGroup.blocksRaycasts = true;
@@ -240,10 +275,29 @@ public class TableInteraction : MonoBehaviour
 
     void OpenPuzzle()
     {
-        // Immediately hide E prompt
+        if (IsTableCompleted())
+            return;
+
+        // Hide E prompt
         HidePrompt();
 
         isNear = false;
+
+        // ==========================================
+        // HIDE ROOM INSTRUCTION
+        // ==========================================
+
+        Room2InstructionManager instructionManager =
+            FindFirstObjectByType<Room2InstructionManager>();
+
+        if (instructionManager != null)
+        {
+            instructionManager.HideInstruction();
+        }
+
+        // ==========================================
+        // OPEN SUDOKU
+        // ==========================================
 
         if (sudokuPanelController != null)
         {

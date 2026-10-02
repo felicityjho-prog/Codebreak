@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class SudokuManager : MonoBehaviour
@@ -18,6 +18,9 @@ public class SudokuManager : MonoBehaviour
 
     [Header("Sudoku Controller")]
     public SudokuPanelController sudokuPanelController;
+
+    [Header("Room 2 Instruction")]
+    public Room2InstructionManager instructionManager;
 
     private int[,] puzzle =
     {
@@ -112,11 +115,15 @@ public class SudokuManager : MonoBehaviour
         ShowCompletion();
     }
 
+    // ==========================================
+    // SHOW COMPLETION
+    // ==========================================
+
     private void ShowCompletion()
     {
         Debug.Log("TABLE 1 CHALLENGE COMPLETED!");
 
-        // CLOSE SUDOKU PROPERLY
+        // CLOSE SUDOKU
         if (sudokuPanelController != null)
         {
             sudokuPanelController.CloseSudoku();
@@ -135,22 +142,44 @@ public class SudokuManager : MonoBehaviour
             completionBanner.SetActive(true);
         }
 
-        // PLAY SOUND
+        // PLAY COMPLETION SOUND
         if (completionAudio != null)
         {
             completionAudio.Play();
         }
 
+        // ==========================================
+        // UNLOCK TABLE 2
+        // ==========================================
+
+        if (ChallengeProgressManager.Instance != null)
+        {
+            ChallengeProgressManager.Instance.CompleteTable(1);
+        }
+
+        // WAIT BEFORE SHOWING NEXT INSTRUCTION
         StartCoroutine(HideCompletionBanner());
     }
 
+    // ==========================================
+    // HIDE BANNER → SHOW INSTRUCTION
+    // ==========================================
+
     private IEnumerator HideCompletionBanner()
     {
+        // Completion banner stays for 2 seconds
         yield return new WaitForSeconds(2f);
 
+        // Hide completion banner FIRST
         if (completionBanner != null)
         {
             completionBanner.SetActive(false);
+        }
+
+        // THEN show instruction
+        if (instructionManager != null)
+        {
+            instructionManager.ShowChallengeCleared();
         }
     }
 }

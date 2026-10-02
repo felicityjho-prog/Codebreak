@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class CrosswordPanelController : MonoBehaviour
@@ -25,6 +25,9 @@ public class CrosswordPanelController : MonoBehaviour
     [Header("Interaction Prompt")]
     public GameObject interactPrompt;
 
+    [Header("Room 2 Instruction")]
+    public Room2InstructionManager instructionManager;
+
     // ==========================================
     // CROSSWORD STATE
     // ==========================================
@@ -48,7 +51,6 @@ public class CrosswordPanelController : MonoBehaviour
 
     private void Start()
     {
-        // Make sure banner is hidden when game starts
         if (completionBanner != null)
         {
             completionBanner.SetActive(false);
@@ -63,11 +65,9 @@ public class CrosswordPanelController : MonoBehaviour
     {
         if (crosswordOpen)
         {
-            // Keep cursor available
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
-            // Keep camera completely still
             if (playerCamera != null)
             {
                 playerCamera.localRotation =
@@ -86,56 +86,38 @@ public class CrosswordPanelController : MonoBehaviour
 
         crosswordOpen = true;
 
-        // --------------------------------------
         // SAVE CAMERA ROTATION
-        // --------------------------------------
-
         if (playerCamera != null)
         {
             savedCameraRotation =
                 playerCamera.localRotation;
         }
 
-        // --------------------------------------
         // SHOW CROSSWORD PANEL
-        // --------------------------------------
-
         if (crosswordPanel != null)
         {
             crosswordPanel.SetActive(true);
         }
 
-        // --------------------------------------
         // HIDE INTERACTION PROMPT
-        // --------------------------------------
-
         if (interactPrompt != null)
         {
             interactPrompt.SetActive(false);
         }
 
-        // --------------------------------------
         // DISABLE WASD
-        // --------------------------------------
-
         if (playerMovement != null)
         {
             playerMovement.enabled = false;
         }
 
-        // --------------------------------------
         // DISABLE CAMERA LOOK
-        // --------------------------------------
-
         if (playerLook != null)
         {
             playerLook.DisableLook();
         }
 
-        // --------------------------------------
         // UNLOCK CURSOR
-        // --------------------------------------
-
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
@@ -150,47 +132,32 @@ public class CrosswordPanelController : MonoBehaviour
 
         crosswordOpen = false;
 
-        // --------------------------------------
         // HIDE CROSSWORD PANEL
-        // --------------------------------------
-
         if (crosswordPanel != null)
         {
             crosswordPanel.SetActive(false);
         }
 
-        // --------------------------------------
         // RESTORE CAMERA
-        // --------------------------------------
-
         if (playerCamera != null)
         {
             playerCamera.localRotation =
                 savedCameraRotation;
         }
 
-        // --------------------------------------
         // ENABLE WASD
-        // --------------------------------------
-
         if (playerMovement != null)
         {
             playerMovement.enabled = true;
         }
 
-        // --------------------------------------
         // ENABLE CAMERA LOOK
-        // --------------------------------------
-
         if (playerLook != null)
         {
             playerLook.EnableLook();
         }
 
-        // --------------------------------------
         // LOCK CURSOR
-        // --------------------------------------
-
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -203,25 +170,25 @@ public class CrosswordPanelController : MonoBehaviour
     {
         Debug.Log("CROSSWORD COMPLETED!");
 
-        // --------------------------------------
         // CLOSE CROSSWORD
-        // --------------------------------------
-
         CloseCrossword();
 
-        // --------------------------------------
         // PLAY SUCCESS AUDIO
-        // --------------------------------------
-
         if (successAudio != null)
         {
             successAudio.Play();
         }
 
-        // --------------------------------------
-        // SHOW COMPLETION BANNER
-        // --------------------------------------
+        // ==========================================
+        // UNLOCK TABLE 3
+        // ==========================================
 
+        if (ChallengeProgressManager.Instance != null)
+        {
+            ChallengeProgressManager.Instance.CompleteTable(2);
+        }
+
+        // SHOW COMPLETION BANNER
         ShowCompletionBanner();
     }
 
@@ -240,7 +207,6 @@ public class CrosswordPanelController : MonoBehaviour
             return;
         }
 
-        // Show banner
         completionBanner.SetActive(true);
 
         Debug.Log(
@@ -249,23 +215,33 @@ public class CrosswordPanelController : MonoBehaviour
             + " SECONDS"
         );
 
-        // Start timer from THIS active controller
         StartCoroutine(HideCompletionBanner());
     }
 
     // ==========================================
-    // HIDE COMPLETION BANNER
+    // HIDE BANNER → SHOW TABLE 3 INSTRUCTION
     // ==========================================
 
     private IEnumerator HideCompletionBanner()
     {
+        // Keep completion banner visible
         yield return new WaitForSeconds(bannerDuration);
 
+        // Hide completion banner FIRST
         if (completionBanner != null)
         {
             completionBanner.SetActive(false);
         }
 
         Debug.Log("COMPLETION BANNER HIDDEN");
+
+        // ==========================================
+        // SHOW TABLE 3 INSTRUCTION
+        // ==========================================
+
+        if (instructionManager != null)
+        {
+            instructionManager.ShowFinalChallengeInstruction();
+        }
     }
 }
