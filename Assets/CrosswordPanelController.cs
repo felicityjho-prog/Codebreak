@@ -51,6 +51,8 @@ public class CrosswordPanelController : MonoBehaviour
 
     private void Start()
     {
+        crosswordOpen = false;
+
         if (completionBanner != null)
         {
             completionBanner.SetActive(false);
@@ -65,7 +67,9 @@ public class CrosswordPanelController : MonoBehaviour
     {
         if (crosswordOpen)
         {
-            Cursor.lockState = CursorLockMode.None;
+            Cursor.lockState =
+                CursorLockMode.None;
+
             Cursor.visible = true;
 
             if (playerCamera != null)
@@ -82,7 +86,9 @@ public class CrosswordPanelController : MonoBehaviour
 
     public void OpenCrossword()
     {
-        Debug.Log("CROSSWORD OPENED - PLAYER FROZEN");
+        Debug.Log(
+            "CROSSWORD OPENED - PLAYER FROZEN"
+        );
 
         crosswordOpen = true;
 
@@ -93,32 +99,34 @@ public class CrosswordPanelController : MonoBehaviour
                 playerCamera.localRotation;
         }
 
-        // SHOW CROSSWORD PANEL
+        // SHOW PANEL
         if (crosswordPanel != null)
         {
             crosswordPanel.SetActive(true);
         }
 
-        // HIDE INTERACTION PROMPT
+        // HIDE PROMPT
         if (interactPrompt != null)
         {
             interactPrompt.SetActive(false);
         }
 
-        // DISABLE WASD
+        // FREEZE WASD
         if (playerMovement != null)
         {
             playerMovement.enabled = false;
         }
 
-        // DISABLE CAMERA LOOK
+        // FREEZE CAMERA
         if (playerLook != null)
         {
             playerLook.DisableLook();
         }
 
         // UNLOCK CURSOR
-        Cursor.lockState = CursorLockMode.None;
+        Cursor.lockState =
+            CursorLockMode.None;
+
         Cursor.visible = true;
     }
 
@@ -128,38 +136,87 @@ public class CrosswordPanelController : MonoBehaviour
 
     public void CloseCrossword()
     {
-        Debug.Log("CROSSWORD CLOSED - PLAYER CONTROL RESTORED");
+        Debug.Log(
+            "CROSSWORD CLOSED - PLAYER CONTROL RESTORED"
+        );
 
         crosswordOpen = false;
 
-        // HIDE CROSSWORD PANEL
         if (crosswordPanel != null)
         {
             crosswordPanel.SetActive(false);
         }
 
-        // RESTORE CAMERA
         if (playerCamera != null)
         {
             playerCamera.localRotation =
                 savedCameraRotation;
         }
 
-        // ENABLE WASD
         if (playerMovement != null)
         {
             playerMovement.enabled = true;
         }
 
-        // ENABLE CAMERA LOOK
+        if (playerLook != null)
+        {
+            playerLook.EnableLook();
+        }
+
+        Cursor.lockState =
+            CursorLockMode.Locked;
+
+        Cursor.visible = false;
+    }
+
+    // ==========================================
+    // FORCE CLOSE CROSSWORD
+    // IMPORTANT FOR GAME OVER / TRY AGAIN
+    // ==========================================
+
+    public void ForceCloseCrossword()
+    {
+        Debug.Log(
+            "FORCE CLOSING CROSSWORD"
+        );
+
+        // IMPORTANT:
+        // This resets the internal state.
+        crosswordOpen = false;
+
+        // CLOSE PANEL
+        if (crosswordPanel != null)
+        {
+            crosswordPanel.SetActive(false);
+        }
+
+        // HIDE PROMPT
+        if (interactPrompt != null)
+        {
+            interactPrompt.SetActive(false);
+        }
+
+        // RESTORE WASD
+        if (playerMovement != null)
+        {
+            playerMovement.enabled = true;
+        }
+
+        // RESTORE CAMERA
         if (playerLook != null)
         {
             playerLook.EnableLook();
         }
 
         // LOCK CURSOR
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState =
+            CursorLockMode.Locked;
+
         Cursor.visible = false;
+
+        Debug.Log(
+            "CROSSWORD FORCE CLOSE COMPLETE"
+        );
     }
 
     // ==========================================
@@ -168,27 +225,23 @@ public class CrosswordPanelController : MonoBehaviour
 
     public void CompleteCrossword()
     {
-        Debug.Log("CROSSWORD COMPLETED!");
+        Debug.Log(
+            "CROSSWORD COMPLETED!"
+        );
 
-        // CLOSE CROSSWORD
         CloseCrossword();
 
-        // PLAY SUCCESS AUDIO
         if (successAudio != null)
         {
             successAudio.Play();
         }
 
-        // ==========================================
-        // UNLOCK TABLE 3
-        // ==========================================
-
         if (ChallengeProgressManager.Instance != null)
         {
-            ChallengeProgressManager.Instance.CompleteTable(2);
+            ChallengeProgressManager.Instance
+                .CompleteTable(2);
         }
 
-        // SHOW COMPLETION BANNER
         ShowCompletionBanner();
     }
 
@@ -215,33 +268,34 @@ public class CrosswordPanelController : MonoBehaviour
             + " SECONDS"
         );
 
-        StartCoroutine(HideCompletionBanner());
+        StartCoroutine(
+            HideCompletionBanner()
+        );
     }
 
     // ==========================================
-    // HIDE BANNER → SHOW TABLE 3 INSTRUCTION
+    // HIDE BANNER
     // ==========================================
 
     private IEnumerator HideCompletionBanner()
     {
-        // Keep completion banner visible
-        yield return new WaitForSeconds(bannerDuration);
+        yield return new WaitForSeconds(
+            bannerDuration
+        );
 
-        // Hide completion banner FIRST
         if (completionBanner != null)
         {
             completionBanner.SetActive(false);
         }
 
-        Debug.Log("COMPLETION BANNER HIDDEN");
-
-        // ==========================================
-        // SHOW TABLE 3 INSTRUCTION
-        // ==========================================
+        Debug.Log(
+            "COMPLETION BANNER HIDDEN"
+        );
 
         if (instructionManager != null)
         {
-            instructionManager.ShowFinalChallengeInstruction();
+            instructionManager
+                .ShowFinalChallengeInstruction();
         }
     }
 }

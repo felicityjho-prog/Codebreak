@@ -21,8 +21,6 @@ public class SudokuPanelController : MonoBehaviour
 
     private bool sudokuOpen = false;
 
-    // IMPORTANT:
-    // TableInteraction can check this
     public bool IsSudokuOpen
     {
         get { return sudokuOpen; }
@@ -40,20 +38,18 @@ public class SudokuPanelController : MonoBehaviour
 
     private void Update()
     {
-        // While Sudoku is open:
-        // FORCE CAMERA TO STAY STILL
-        if (sudokuOpen)
-        {
-            // Keep cursor available
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+        if (!sudokuOpen)
+            return;
 
-            // Prevent camera rotation
-            if (playerCamera != null)
-            {
-                playerCamera.localRotation =
-                    savedCameraRotation;
-            }
+        Cursor.lockState =
+            CursorLockMode.None;
+
+        Cursor.visible = true;
+
+        if (playerCamera != null)
+        {
+            playerCamera.localRotation =
+                savedCameraRotation;
         }
     }
 
@@ -63,13 +59,11 @@ public class SudokuPanelController : MonoBehaviour
 
     public void OpenSudoku()
     {
-        Debug.Log("SUDOKU OPENED - PLAYER FROZEN");
+        Debug.Log(
+            "SUDOKU OPENED - PLAYER FROZEN"
+        );
 
         sudokuOpen = true;
-
-        // --------------------------------------
-        // SAVE CAMERA ROTATION
-        // --------------------------------------
 
         if (playerCamera != null)
         {
@@ -77,47 +71,29 @@ public class SudokuPanelController : MonoBehaviour
                 playerCamera.localRotation;
         }
 
-        // --------------------------------------
-        // SHOW SUDOKU PANEL
-        // --------------------------------------
-
         if (sudokuPanel != null)
         {
             sudokuPanel.SetActive(true);
         }
-
-        // --------------------------------------
-        // HIDE INTERACTION PROMPT
-        // --------------------------------------
 
         if (interactPrompt != null)
         {
             interactPrompt.SetActive(false);
         }
 
-        // --------------------------------------
-        // DISABLE WASD MOVEMENT
-        // --------------------------------------
-
         if (playerMovement != null)
         {
             playerMovement.enabled = false;
         }
-
-        // --------------------------------------
-        // DISABLE CAMERA LOOK
-        // --------------------------------------
 
         if (playerLook != null)
         {
             playerLook.DisableLook();
         }
 
-        // --------------------------------------
-        // UNLOCK CURSOR
-        // --------------------------------------
+        Cursor.lockState =
+            CursorLockMode.None;
 
-        Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
 
@@ -127,22 +103,16 @@ public class SudokuPanelController : MonoBehaviour
 
     public void CloseSudoku()
     {
-        Debug.Log("SUDOKU CLOSED - PLAYER CONTROL RESTORED");
+        Debug.Log(
+            "SUDOKU CLOSED - PLAYER CONTROL RESTORED"
+        );
 
         sudokuOpen = false;
-
-        // --------------------------------------
-        // HIDE SUDOKU PANEL
-        // --------------------------------------
 
         if (sudokuPanel != null)
         {
             sudokuPanel.SetActive(false);
         }
-
-        // --------------------------------------
-        // RESTORE CAMERA
-        // --------------------------------------
 
         if (playerCamera != null)
         {
@@ -150,29 +120,62 @@ public class SudokuPanelController : MonoBehaviour
                 savedCameraRotation;
         }
 
-        // --------------------------------------
-        // ENABLE WASD MOVEMENT
-        // --------------------------------------
-
         if (playerMovement != null)
         {
             playerMovement.enabled = true;
         }
-
-        // --------------------------------------
-        // ENABLE CAMERA LOOK
-        // --------------------------------------
 
         if (playerLook != null)
         {
             playerLook.EnableLook();
         }
 
-        // --------------------------------------
-        // LOCK CURSOR
-        // --------------------------------------
+        Cursor.lockState =
+            CursorLockMode.Locked;
 
-        Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    // ==========================================
+    // FORCE CLOSE
+    // GAME OVER / TRY AGAIN
+    // ==========================================
+
+    public void ForceCloseSudoku()
+    {
+        Debug.Log(
+            "FORCE CLOSING SUDOKU"
+        );
+
+        sudokuOpen = false;
+
+        if (sudokuPanel != null)
+        {
+            sudokuPanel.SetActive(false);
+        }
+
+        if (interactPrompt != null)
+        {
+            interactPrompt.SetActive(false);
+        }
+
+        if (playerMovement != null)
+        {
+            playerMovement.enabled = true;
+        }
+
+        if (playerLook != null)
+        {
+            playerLook.EnableLook();
+        }
+
+        Cursor.lockState =
+            CursorLockMode.Locked;
+
+        Cursor.visible = false;
+
+        Debug.Log(
+            "SUDOKU FORCE CLOSE COMPLETE"
+        );
     }
 }

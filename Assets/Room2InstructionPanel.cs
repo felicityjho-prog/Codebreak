@@ -9,13 +9,27 @@ public class Room2InstructionPanel : MonoBehaviour
     public MonoBehaviour playerMovement;
     public PlayerController playerController;
 
+    private bool instructionClosed = false;
+
+    // =========================================================
+    // ON ENABLE
+    // =========================================================
+
     private void OnEnable()
     {
+        instructionClosed = false;
         ShowInstruction();
     }
 
+    // =========================================================
+    // SHOW INSTRUCTION
+    // =========================================================
+
     public void ShowInstruction()
     {
+        instructionClosed = false;
+
+        // Show instruction panel
         if (instructionPanel != null)
         {
             instructionPanel.SetActive(true);
@@ -27,19 +41,30 @@ public class Room2InstructionPanel : MonoBehaviour
             playerMovement.enabled = false;
         }
 
-        // Stop mouse/camera movement
+        // Stop camera / mouse look
         if (playerController != null)
         {
             playerController.DisableLook();
         }
 
-        // Make cursor available for clicking
+        // Unlock cursor so player can click GOT IT
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        Debug.Log("ROOM 2 INSTRUCTION OPENED.");
     }
+
+    // =========================================================
+    // CLOSE INSTRUCTION / GOT IT
+    // =========================================================
 
     public void CloseInstruction()
     {
+        if (instructionClosed)
+            return;
+
+        instructionClosed = true;
+
         // Hide instruction panel
         if (instructionPanel != null)
         {
@@ -52,10 +77,17 @@ public class Room2InstructionPanel : MonoBehaviour
             playerMovement.enabled = true;
         }
 
-        // Enable camera/mouse movement
+        // Enable camera / mouse look
         if (playerController != null)
         {
             playerController.EnableLook();
         }
+
+        // IMPORTANT:
+        // Return cursor to normal FPS gameplay mode
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        Debug.Log("ROOM 2 INSTRUCTION CLOSED - PLAYER CONTROL RESTORED.");
     }
 }

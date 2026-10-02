@@ -50,9 +50,9 @@ public class CrosswordManager : MonoBehaviour
         { false, false, false, true,  false, false }
     };
 
-    // ==========================================
+    // =========================================================
     // START
-    // ==========================================
+    // =========================================================
 
     void Start()
     {
@@ -64,22 +64,30 @@ public class CrosswordManager : MonoBehaviour
         }
     }
 
-    // ==========================================
+    // =========================================================
     // GENERATE GRID
-    // ==========================================
+    // =========================================================
 
-    void GenerateGrid()
+    private void GenerateGrid()
     {
+        // Remove old crossword cells
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+
         for (int row = 0; row < gridSize; row++)
         {
             for (int col = 0; col < gridSize; col++)
             {
-                GameObject cell = Instantiate(
-                    crosswordCellPrefab,
-                    transform
-                );
+                GameObject cell =
+                    Instantiate(
+                        crosswordCellPrefab,
+                        transform
+                    );
 
-                Image cellImage = cell.GetComponent<Image>();
+                Image cellImage =
+                    cell.GetComponent<Image>();
 
                 if (cellImage == null)
                 {
@@ -96,15 +104,16 @@ public class CrosswordManager : MonoBehaviour
                 bool blocked =
                     crosswordPattern[row, col] == 1;
 
-                // ==================================
+                // =================================================
                 // BLOCKED CELL
-                // ==================================
+                // =================================================
 
                 if (blocked)
                 {
                     if (cellImage != null)
                     {
-                        cellImage.color = blockedCellColor;
+                        cellImage.color =
+                            blockedCellColor;
                     }
 
                     if (input != null)
@@ -118,15 +127,16 @@ public class CrosswordManager : MonoBehaviour
                     }
                 }
 
-                // ==================================
+                // =================================================
                 // PLAYABLE CELL
-                // ==================================
+                // =================================================
 
                 else
                 {
                     if (cellImage != null)
                     {
-                        cellImage.color = whiteCellColor;
+                        cellImage.color =
+                            whiteCellColor;
                     }
 
                     if (input != null)
@@ -145,7 +155,6 @@ public class CrosswordManager : MonoBehaviour
                             correctLetter
                         );
 
-                        // Given letters
                         if (givenLetters[row, col])
                         {
                             crosswordCell.SetGivenLetter(
@@ -158,9 +167,9 @@ public class CrosswordManager : MonoBehaviour
         }
     }
 
-    // ==========================================
+    // =========================================================
     // CHECK ANSWER
-    // ==========================================
+    // =========================================================
 
     public void CheckAnswer()
     {
@@ -176,11 +185,9 @@ public class CrosswordManager : MonoBehaviour
 
         foreach (CrosswordCell cell in cells)
         {
-            // Ignore blocked cells
             if (!cell.enabled)
                 continue;
 
-            // EMPTY CELL
             if (cell.IsEmpty())
             {
                 hasEmpty = true;
@@ -188,8 +195,6 @@ public class CrosswordManager : MonoBehaviour
 
                 cell.ResetColor();
             }
-
-            // WRONG LETTER
             else if (!cell.IsCorrect())
             {
                 hasWrong = true;
@@ -197,32 +202,35 @@ public class CrosswordManager : MonoBehaviour
 
                 cell.ShowWrong();
             }
-
-            // CORRECT LETTER
             else
             {
                 cell.ShowCorrect();
             }
         }
 
-        // ==========================================
+        // =====================================================
         // WRONG ANSWERS
-        // ==========================================
+        // =====================================================
 
         if (hasWrong)
         {
             if (resultText != null)
             {
                 resultText.text =
-                    "SOME ANSWERS ARE INCORRECT. TRY AGAIN.";
+                    "SOME ANSWERS ARE INCORRECT. -10 SECONDS";
+            }
+
+            if (Room2ChallengeTimer.Instance != null)
+            {
+                Room2ChallengeTimer.Instance.WrongAnswer();
             }
 
             return;
         }
 
-        // ==========================================
+        // =====================================================
         // EMPTY BOXES
-        // ==========================================
+        // =====================================================
 
         if (hasEmpty)
         {
@@ -235,35 +243,38 @@ public class CrosswordManager : MonoBehaviour
             return;
         }
 
-        // ==========================================
-        // EVERYTHING IS CORRECT
-        // ==========================================
+        // =====================================================
+        // EVERYTHING CORRECT
+        // =====================================================
 
         if (allCorrect)
         {
+            if (resultText != null)
+            {
+                resultText.text =
+                    "CORRECT!";
+            }
+
             CompleteChallenge();
         }
     }
 
-    // ==========================================
+    // =========================================================
     // COMPLETE CHALLENGE
-    // ==========================================
+    // =========================================================
 
     private void CompleteChallenge()
     {
         challengeCompleted = true;
 
-        Debug.Log("CROSSWORD CHALLENGE COMPLETED!");
+        Debug.Log(
+            "CROSSWORD CHALLENGE COMPLETED!"
+        );
 
-        // Clear result text
         if (resultText != null)
         {
             resultText.text = "";
         }
-
-        // ------------------------------------------
-        // SEND TO PANEL CONTROLLER
-        // ------------------------------------------
 
         if (crosswordPanelController != null)
         {
@@ -275,5 +286,45 @@ public class CrosswordManager : MonoBehaviour
                 "CrosswordPanelController is NOT assigned!"
             );
         }
+    }
+
+    // =========================================================
+    // RESET CROSSWORD
+    // =========================================================
+    // Given letters remain.
+    // Player-entered letters are removed.
+    // =========================================================
+
+    public void ResetCrossword()
+    {
+        Debug.Log("=================================");
+        Debug.Log("RESETTING CROSSWORD");
+        Debug.Log("=================================");
+
+        challengeCompleted = false;
+
+        if (resultText != null)
+        {
+            resultText.text = "";
+        }
+
+        CrosswordCell[] cells =
+            GetComponentsInChildren<CrosswordCell>();
+
+        foreach (CrosswordCell cell in cells)
+        {
+            if (cell == null)
+                continue;
+
+            if (!cell.enabled)
+                continue;
+
+            cell.ClearLetter();
+            cell.ResetColor();
+        }
+
+        Debug.Log(
+            "CROSSWORD RESET COMPLETE!"
+        );
     }
 }

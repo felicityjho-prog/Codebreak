@@ -10,7 +10,8 @@ public class ChallengeProgressManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
+        if (Instance != null &&
+            Instance != this)
         {
             Destroy(gameObject);
             return;
@@ -43,14 +44,20 @@ public class ChallengeProgressManager : MonoBehaviour
 
     public void CompleteTable(int tableNumber)
     {
-        Debug.Log("TABLE " + tableNumber + " COMPLETED!");
+        Debug.Log(
+            "TABLE " +
+            tableNumber +
+            " COMPLETED!"
+        );
 
         if (tableNumber == currentUnlockedTable)
         {
             currentUnlockedTable++;
 
             Debug.Log(
-                "TABLE " + currentUnlockedTable + " UNLOCKED!"
+                "TABLE " +
+                currentUnlockedTable +
+                " UNLOCKED!"
             );
         }
     }
@@ -62,5 +69,49 @@ public class ChallengeProgressManager : MonoBehaviour
     public int GetCurrentUnlockedTable()
     {
         return currentUnlockedTable;
+    }
+
+    // ==========================================
+    // RESET ROOM 2 PROGRESS
+    // ==========================================
+    //
+    // IMPORTANT:
+    // This does NOT reset Room 1.
+    //
+    // It only makes Room 2 start again
+    // from Table 1.
+    //
+    // Table 1 = unlocked
+    // Table 2 = locked
+    // Table 3 = locked
+    // ==========================================
+
+    public void ResetRoom2Progress()
+    {
+        currentUnlockedTable = 1;
+
+        Debug.Log(
+            "================================="
+        );
+
+        Debug.Log(
+            "ROOM 2 PROGRESS RESET"
+        );
+
+        Debug.Log(
+            "TABLE 1 UNLOCKED"
+        );
+
+        Debug.Log(
+            "TABLE 2 LOCKED"
+        );
+
+        Debug.Log(
+            "TABLE 3 LOCKED"
+        );
+
+        Debug.Log(
+            "================================="
+        );
     }
 }
