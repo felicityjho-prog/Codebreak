@@ -2,36 +2,89 @@ using UnityEngine;
 
 public class TaskManager : MonoBehaviour
 {
+    [Header("UI")]
     public GameObject taskCompletePanel;
-
     public GameObject checklistUI;
+    public GameObject instructionPanel;
 
+    [Header("Room")]
     public RoomSwitcher roomSwitcher;
 
+    [Header("Timer")]
     public GameTimer gameTimer;
+
+    [Header("Completion Audio")]
+    public AudioSource completionAudio;
+    public AudioClip completionSound;
 
     [SerializeField] private int totalObjects;
 
     private int collectedObjects = 0;
+    private bool challengeCompleted = false;
 
     public void CollectObject()
     {
+        // Prevent collecting again after challenge is completed
+        if (challengeCompleted)
+            return;
+
         collectedObjects++;
 
         if (collectedObjects >= totalObjects)
         {
-            // Stop timer and ticking sound
+            challengeCompleted = true;
+
+            // =========================================
+            // PLAY COMPLETION SOUND
+            // =========================================
+            if (completionAudio != null && completionSound != null)
+            {
+                completionAudio.PlayOneShot(completionSound);
+            }
+
+            // =========================================
+            // STOP AND HIDE TIMER
+            // =========================================
             if (gameTimer != null)
             {
                 gameTimer.StopTimer();
             }
 
-            checklistUI.SetActive(false);
+            // =========================================
+            // HIDE CHECKLIST
+            // =========================================
+            if (checklistUI != null)
+            {
+                checklistUI.SetActive(false);
+            }
 
-            taskCompletePanel.SetActive(true);
+            // =========================================
+            // HIDE ROOM 1 INSTRUCTION
+            // =========================================
+            if (instructionPanel != null)
+            {
+                instructionPanel.SetActive(false);
+            }
 
-            roomSwitcher.EnableProceed();
+            // =========================================
+            // SHOW TASK COMPLETE PANEL
+            // =========================================
+            if (taskCompletePanel != null)
+            {
+                taskCompletePanel.SetActive(true);
+            }
 
+            // =========================================
+            // ALLOW PLAYER TO PROCEED
+            // =========================================
+            if (roomSwitcher != null)
+            {
+                roomSwitcher.EnableProceed();
+            }
+
+            // =========================================
+            // UNLOCK CURSOR
+            // =========================================
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }

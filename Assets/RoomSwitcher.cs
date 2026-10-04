@@ -19,6 +19,9 @@ public class RoomSwitcher : MonoBehaviour
     [Header("Room 2 Instruction")]
     public GameObject room2InstructionPanel;
 
+    [Header("Room 2 Voice")]
+    public Room2VoiceSubtitleManager room2VoiceManager;
+
     [Header("Checklists")]
     public GameObject currentChecklist;
     public GameObject nextChecklist;
@@ -248,6 +251,12 @@ public class RoomSwitcher : MonoBehaviour
 
         currentRoom = nextRoom;
 
+        // ==========================================
+        // START ROOM 2 VOICE + SUBTITLE
+        // ==========================================
+
+        StartRoom2Voice();
+
         // Prevent normal Room 1 -> Room 2 switching
         canProceed = false;
         switched = true;
@@ -260,6 +269,30 @@ public class RoomSwitcher : MonoBehaviour
         canProceed = true;
 
         Debug.Log("Room transition unlocked!");
+    }
+
+    // ==========================================
+    // START ROOM 2 VOICE
+    // ==========================================
+
+    void StartRoom2Voice()
+    {
+        if (nextRoom != null &&
+            nextRoom.name == "room2")
+        {
+            if (room2VoiceManager != null)
+            {
+                room2VoiceManager.StartVoiceSequence();
+
+                Debug.Log("Room 2 Voice + Subtitle Started!");
+            }
+            else
+            {
+                Debug.LogWarning(
+                    "Room 2 Voice Manager is not assigned in RoomSwitcher."
+                );
+            }
+        }
     }
 
     void SwitchRoom()
@@ -375,6 +408,12 @@ public class RoomSwitcher : MonoBehaviour
         {
             nextRoomManager.SetActive(true);
         }
+
+        // ==========================================
+        // START ROOM 2 VOICE + SUBTITLE
+        // ==========================================
+
+        StartRoom2Voice();
 
         Debug.Log("Switched to next room!");
 

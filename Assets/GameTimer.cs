@@ -11,6 +11,7 @@ public class GameTimer : MonoBehaviour
     [Header("UI")]
     public TMP_Text timerText;
     public GameObject gameOverPanel;
+    public GameObject instructionPanel;
 
     [Header("Player")]
     public MonoBehaviour playerMove;
@@ -37,6 +38,12 @@ public class GameTimer : MonoBehaviour
         if (timerText != null)
         {
             timerText.gameObject.SetActive(false);
+        }
+
+        // Hide Room 1 instruction at the beginning
+        if (instructionPanel != null)
+        {
+            instructionPanel.SetActive(false);
         }
     }
 
@@ -117,6 +124,12 @@ public class GameTimer : MonoBehaviour
         {
             tickSound.Stop();
         }
+
+        // Hide timer
+        if (timerText != null)
+        {
+            timerText.gameObject.SetActive(false);
+        }
     }
 
     // ==========================================
@@ -127,6 +140,12 @@ public class GameTimer : MonoBehaviour
     {
         // Stop timer and ticking sound
         StopTimer();
+
+        // Hide Room 1 instruction
+        if (instructionPanel != null)
+        {
+            instructionPanel.SetActive(false);
+        }
 
         // Show Game Over Panel
         if (gameOverPanel != null)

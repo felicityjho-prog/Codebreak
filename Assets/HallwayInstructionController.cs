@@ -8,6 +8,9 @@ public class HallwayInstructionController : MonoBehaviour
     [Header("Voice Over")]
     public AudioSource voiceOver;
 
+    [Header("Test Mode")]
+    public RoomSwitcher roomSwitcher;
+
     [Header("Heartbeat Animation")]
     public float pulseSpeed = 2f;
     public float pulseAmount = 0.04f;
@@ -16,6 +19,27 @@ public class HallwayInstructionController : MonoBehaviour
 
     void Start()
     {
+        // =========================================
+        // TEST ROOM 2 CHECK
+        // =========================================
+        if (roomSwitcher != null && roomSwitcher.testRoom2)
+        {
+            if (voiceOver != null)
+            {
+                voiceOver.Stop();
+            }
+
+            if (instructionPanel != null)
+            {
+                instructionPanel.SetActive(false);
+            }
+
+            return;
+        }
+
+        // =========================================
+        // SHOW INSTRUCTION PANEL
+        // =========================================
         if (instructionPanel != null)
         {
             instructionPanel.SetActive(true);
@@ -25,6 +49,9 @@ public class HallwayInstructionController : MonoBehaviour
             StartCoroutine(HeartbeatAnimation());
         }
 
+        // =========================================
+        // PLAY VOICE OVER
+        // =========================================
         if (voiceOver != null && voiceOver.clip != null)
         {
             voiceOver.Play();
@@ -34,13 +61,11 @@ public class HallwayInstructionController : MonoBehaviour
 
     IEnumerator WaitForVoiceToFinish()
     {
-        // Wait until the voice-over completely finishes
         while (voiceOver != null && voiceOver.isPlaying)
         {
             yield return null;
         }
 
-        // Voice finished → hide the instruction
         HideInstruction();
     }
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class NotClickable : MonoBehaviour
 {
@@ -24,6 +25,13 @@ public class NotClickable : MonoBehaviour
 
     private void OnMouseDown()
     {
+        // Ignore clicks that are hitting UI
+        if (EventSystem.current != null &&
+            EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
         if (!interactionEnabled)
             return;
 
