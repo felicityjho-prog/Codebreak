@@ -16,6 +16,9 @@ public class Room2InstructionManager : MonoBehaviour
     [Header("Global Controls UI")]
     public GameObject controlsPanel;
 
+    [Header("Global Center Dot")]
+    public GameObject centerDot;
+
     [Header("Fade Settings")]
     public float fadeDuration = 0.3f;
 
@@ -78,13 +81,33 @@ public class Room2InstructionManager : MonoBehaviour
         // =========================================
         // SHOW CONTROLS AGAIN
         // =========================================
+
         if (controlsPanel != null)
         {
             controlsPanel.SetActive(true);
-            Debug.Log("CONTROLS PANEL SHOWN AGAIN IN ROOM 2.");
+
+            Debug.Log(
+                "CONTROLS PANEL SHOWN AGAIN IN ROOM 2."
+            );
         }
 
-        // Start Room 2 timer
+        // =========================================
+        // SHOW CENTER DOT AGAIN
+        // =========================================
+
+        if (centerDot != null)
+        {
+            centerDot.SetActive(true);
+
+            Debug.Log(
+                "CENTER DOT SHOWN AGAIN IN ROOM 2."
+            );
+        }
+
+        // =========================================
+        // START ROOM 2 TIMER
+        // =========================================
+
         if (Room2ChallengeTimer.Instance != null)
         {
             Room2ChallengeTimer.Instance.StartTimer();

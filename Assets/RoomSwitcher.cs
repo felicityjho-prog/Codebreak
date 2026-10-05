@@ -41,6 +41,7 @@ public class RoomSwitcher : MonoBehaviour
     public Transform sudokuTable;
     public GameObject sudokuPanel;
     public float sudokuInteractionDistance = 3f;
+    public SudokuManager sudokuManager;
 
     [Header("Settings")]
     public bool canProceed = false;
@@ -89,21 +90,39 @@ public class RoomSwitcher : MonoBehaviour
             sudokuTable != null &&
             sudokuPanel != null)
         {
-            float distance = Vector3.Distance(
-                player.transform.position,
-                sudokuTable.position
-            );
+            // ==========================================
+            // IMPORTANT:
+            // DO NOT OPEN SUDOKU AFTER IT IS COMPLETED
+            // ==========================================
 
-            Debug.Log("Distance from Sudoku Table: " + distance);
-
-            if (distance <= sudokuInteractionDistance)
+            if (sudokuManager != null &&
+                sudokuManager.IsPuzzleCompleted())
             {
-                sudokuPanel.SetActive(true);
+                Debug.Log(
+                    "Sudoku already completed. " +
+                    "E interaction is disabled."
+                );
+            }
+            else
+            {
+                float distance = Vector3.Distance(
+                    player.transform.position,
+                    sudokuTable.position
+                );
 
-                Debug.Log("Sudoku Panel Opened!");
+                Debug.Log(
+                    "Distance from Sudoku Table: " + distance
+                );
 
-                // Stop here so E does NOT switch to Room 3
-                return;
+                if (distance <= sudokuInteractionDistance)
+                {
+                    sudokuPanel.SetActive(true);
+
+                    Debug.Log("Sudoku Panel Opened!");
+
+                    // Stop here so E does NOT switch to Room 3
+                    return;
+                }
             }
         }
 
@@ -133,7 +152,9 @@ public class RoomSwitcher : MonoBehaviour
             playerController.enabled = true;
         }
 
-        Debug.Log("Player Movement + Camera Controls ENABLED.");
+        Debug.Log(
+            "Player Movement + Camera Controls ENABLED."
+        );
     }
 
     // ==========================================
@@ -197,15 +218,20 @@ public class RoomSwitcher : MonoBehaviour
                 cc.enabled = false;
             }
 
-            player.transform.position = spawnPoint.position;
-            player.transform.rotation = spawnPoint.rotation;
+            player.transform.position =
+                spawnPoint.position;
+
+            player.transform.rotation =
+                spawnPoint.rotation;
 
             if (cc != null)
             {
                 cc.enabled = true;
             }
 
-            Debug.Log("Player moved to SpawnPointRoom2.");
+            Debug.Log(
+                "Player moved to SpawnPointRoom2."
+            );
         }
 
         // ==========================================
@@ -231,7 +257,9 @@ public class RoomSwitcher : MonoBehaviour
         {
             hallwayInstruction.SetActive(false);
 
-            Debug.Log("Hallway Instruction Hidden - Room 2 Test Mode.");
+            Debug.Log(
+                "Hallway Instruction Hidden - Room 2 Test Mode."
+            );
         }
 
         // ==========================================
@@ -260,7 +288,9 @@ public class RoomSwitcher : MonoBehaviour
         {
             room2InstructionPanel.SetActive(true);
 
-            Debug.Log("Room 2 Instruction Panel Shown.");
+            Debug.Log(
+                "Room 2 Instruction Panel Shown."
+            );
         }
 
         // ==========================================
@@ -289,14 +319,18 @@ public class RoomSwitcher : MonoBehaviour
         canProceed = false;
         switched = true;
 
-        Debug.Log("Room 2 Test Mode Ready!");
+        Debug.Log(
+            "Room 2 Test Mode Ready!"
+        );
     }
 
     public void EnableProceed()
     {
         canProceed = true;
 
-        Debug.Log("Room transition unlocked!");
+        Debug.Log(
+            "Room transition unlocked!"
+        );
     }
 
     // ==========================================
@@ -312,7 +346,9 @@ public class RoomSwitcher : MonoBehaviour
             {
                 room2VoiceManager.StartVoiceSequence();
 
-                Debug.Log("Room 2 Voice + Subtitle Started!");
+                Debug.Log(
+                    "Room 2 Voice + Subtitle Started!"
+                );
             }
             else
             {
@@ -383,8 +419,11 @@ public class RoomSwitcher : MonoBehaviour
 
         if (spawnPoint != null)
         {
-            player.transform.position = spawnPoint.position;
-            player.transform.rotation = spawnPoint.rotation;
+            player.transform.position =
+                spawnPoint.position;
+
+            player.transform.rotation =
+                spawnPoint.rotation;
         }
 
         if (cc != null)
@@ -435,7 +474,9 @@ public class RoomSwitcher : MonoBehaviour
         {
             room2InstructionPanel.SetActive(true);
 
-            Debug.Log("Room 2 Instruction Panel Shown!");
+            Debug.Log(
+                "Room 2 Instruction Panel Shown!"
+            );
         }
 
         // ==========================================
@@ -453,7 +494,9 @@ public class RoomSwitcher : MonoBehaviour
 
         StartRoom2Voice();
 
-        Debug.Log("Switched to next room!");
+        Debug.Log(
+            "Switched to next room!"
+        );
 
         // Disable this RoomSwitcher
         gameObject.SetActive(false);

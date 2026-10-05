@@ -18,6 +18,10 @@ public class CrosswordManager : MonoBehaviour
     [Header("Answer Feedback")]
     public TMP_Text resultText;
 
+    [Header("Wrong Answer Audio")]
+    public AudioSource wrongAnswerAudio;
+    public AudioClip wrongAnswerSound;
+
     [Header("Completion Controller")]
     public CrosswordPanelController crosswordPanelController;
 
@@ -197,10 +201,6 @@ public class CrosswordManager : MonoBehaviour
 
         if (!cell.letterInput.interactable)
             return;
-
-        EventSystem.current.SetSelectedGameObject(
-            cell.letterInput.gameObject
-        );
 
         cell.letterInput.Select();
         cell.letterInput.ActivateInputField();
@@ -422,6 +422,22 @@ public class CrosswordManager : MonoBehaviour
                 resultText.text =
                     "SOME ANSWERS ARE INCORRECT. -10 SECONDS";
             }
+
+            // =========================================
+            // PLAY WRONG ANSWER SOUND
+            // =========================================
+
+            if (wrongAnswerAudio != null &&
+                wrongAnswerSound != null)
+            {
+                wrongAnswerAudio.PlayOneShot(
+                    wrongAnswerSound
+                );
+            }
+
+            // =========================================
+            // REMOVE 10 SECONDS
+            // =========================================
 
             if (Room2ChallengeTimer.Instance != null)
             {

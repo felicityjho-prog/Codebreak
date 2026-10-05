@@ -16,6 +16,10 @@ public class SudokuManager : MonoBehaviour
     [Header("Completion Audio")]
     public AudioSource completionAudio;
 
+    [Header("Wrong Answer Audio")]
+    public AudioSource wrongAnswerAudio;
+    public AudioClip wrongAnswerSound;
+
     [Header("Sudoku Controller")]
     public SudokuPanelController sudokuPanelController;
 
@@ -53,6 +57,11 @@ public class SudokuManager : MonoBehaviour
     // =========================================================
 
     private bool puzzleCompleted = false;
+
+    public bool IsPuzzleCompleted()
+    {
+        return puzzleCompleted;
+    }
 
     // =========================================================
     // START
@@ -180,6 +189,19 @@ public class SudokuManager : MonoBehaviour
     }
 
     // =========================================================
+    // WRONG ANSWER SOUND
+    // =========================================================
+
+    public void PlayWrongAnswerSound()
+    {
+        if (wrongAnswerAudio != null &&
+            wrongAnswerSound != null)
+        {
+            wrongAnswerAudio.PlayOneShot(wrongAnswerSound);
+        }
+    }
+
+    // =========================================================
     // SHOW COMPLETION
     // =========================================================
 
@@ -301,14 +323,6 @@ public class SudokuManager : MonoBehaviour
         // =====================================================
         // STOP OLD COROUTINES
         // =====================================================
-        //
-        // Important:
-        // If the Sudoku was completed before Game Over,
-        // HideCompletionBanner() could still be waiting.
-        //
-        // We don't want the old coroutine to execute after
-        // Try Again and show the completion instruction again.
-        // =====================================================
 
         StopAllCoroutines();
 
@@ -348,10 +362,6 @@ public class SudokuManager : MonoBehaviour
         // =====================================================
         // FORCE RESET PLAYER CONTROL
         // =====================================================
-        //
-        // This makes sure Sudoku cannot leave the player
-        // frozen after Try Again.
-        // =====================================================
 
         if (sudokuPanelController != null)
         {
@@ -360,13 +370,6 @@ public class SudokuManager : MonoBehaviour
 
         // =====================================================
         // REGENERATE ENTIRE BOARD
-        // =====================================================
-        //
-        // This destroys the old cells containing the player's
-        // previous answers and creates completely new cells.
-        //
-        // Given numbers come from "puzzle".
-        // Player answers start EMPTY.
         // =====================================================
 
         GenerateBoard();

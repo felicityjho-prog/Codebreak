@@ -266,6 +266,15 @@ public class SudokuCell : MonoBehaviour
             }
 
             // =================================================
+            // PLAY WRONG ANSWER SOUND
+            // =================================================
+
+            if (sudokuManager != null)
+            {
+                sudokuManager.PlayWrongAnswerSound();
+            }
+
+            // =================================================
             // REMOVE 10 SECONDS
             // =================================================
 

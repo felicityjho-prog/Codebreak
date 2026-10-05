@@ -7,6 +7,7 @@ public class TaskManager : MonoBehaviour
     public GameObject checklistUI;
     public GameObject instructionPanel;
     public GameObject controlsPanel;
+    public GameObject centerDot;
 
     [Header("Room")]
     public RoomSwitcher roomSwitcher;
@@ -77,6 +78,14 @@ public class TaskManager : MonoBehaviour
             if (controlsPanel != null)
             {
                 controlsPanel.SetActive(false);
+            }
+
+            // =========================================
+            // HIDE CENTER DOT
+            // =========================================
+            if (centerDot != null)
+            {
+                centerDot.SetActive(false);
             }
 
             // =========================================
