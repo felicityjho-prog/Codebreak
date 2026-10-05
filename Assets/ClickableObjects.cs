@@ -8,7 +8,14 @@ public class ClickableObject : MonoBehaviour
     [Header("Sound")]
     public AudioClip collectSound;
 
+    // Existing mouse click still works
     void OnMouseDown()
+    {
+        Interact();
+    }
+
+    // Can now be called by the Center Dot interaction system
+    public void Interact()
     {
         // Play collect sound
         if (collectSound != null)

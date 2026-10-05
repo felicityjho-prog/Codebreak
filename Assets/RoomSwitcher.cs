@@ -10,6 +10,10 @@ public class RoomSwitcher : MonoBehaviour
     public GameObject player;
     public Transform spawnPoint;
 
+    [Header("Player Controls")]
+    public PlayerMovement playerMovement;
+    public PlayerController playerController;
+
     [Header("UI")]
     public GameObject taskPanel;
 
@@ -114,6 +118,25 @@ public class RoomSwitcher : MonoBehaviour
     }
 
     // ==========================================
+    // ENABLE PLAYER CONTROLS
+    // ==========================================
+
+    void EnablePlayerControls()
+    {
+        if (playerMovement != null)
+        {
+            playerMovement.enabled = true;
+        }
+
+        if (playerController != null)
+        {
+            playerController.enabled = true;
+        }
+
+        Debug.Log("Player Movement + Camera Controls ENABLED.");
+    }
+
+    // ==========================================
     // ROOM 2 TEST MODE
     // ==========================================
 
@@ -186,6 +209,12 @@ public class RoomSwitcher : MonoBehaviour
         }
 
         // ==========================================
+        // ENABLE PLAYER CONTROLS
+        // ==========================================
+
+        EnablePlayerControls();
+
+        // ==========================================
         // Hide Room 1 UI
         // ==========================================
 
@@ -246,7 +275,6 @@ public class RoomSwitcher : MonoBehaviour
         // ==========================================
         // IMPORTANT:
         // Make Room 2 the CURRENT room
-        // so Sudoku interaction works.
         // ==========================================
 
         currentRoom = nextRoom;
@@ -294,6 +322,10 @@ public class RoomSwitcher : MonoBehaviour
             }
         }
     }
+
+    // ==========================================
+    // NORMAL ROOM SWITCHING
+    // ==========================================
 
     void SwitchRoom()
     {
@@ -359,6 +391,12 @@ public class RoomSwitcher : MonoBehaviour
         {
             cc.enabled = true;
         }
+
+        // ==========================================
+        // ENABLE PLAYER CONTROLS AGAIN
+        // ==========================================
+
+        EnablePlayerControls();
 
         // ==========================================
         // Hide task panel

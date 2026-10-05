@@ -13,6 +13,9 @@ public class Room2InstructionManager : MonoBehaviour
     [Header("Persistent Challenge Instruction")]
     public CanvasGroup persistentInstructionCanvasGroup;
 
+    [Header("Global Controls UI")]
+    public GameObject controlsPanel;
+
     [Header("Fade Settings")]
     public float fadeDuration = 0.3f;
 
@@ -29,6 +32,8 @@ public class Room2InstructionManager : MonoBehaviour
         if (instructionCanvasGroup != null)
         {
             instructionCanvasGroup.alpha = 0f;
+            instructionCanvasGroup.interactable = false;
+            instructionCanvasGroup.blocksRaycasts = false;
         }
 
         // Hide top instruction initially.
@@ -36,6 +41,8 @@ public class Room2InstructionManager : MonoBehaviour
         if (persistentInstructionCanvasGroup != null)
         {
             persistentInstructionCanvasGroup.alpha = 0f;
+            persistentInstructionCanvasGroup.interactable = false;
+            persistentInstructionCanvasGroup.blocksRaycasts = false;
         }
     }
 
@@ -67,6 +74,15 @@ public class Room2InstructionManager : MonoBehaviour
 
         // Show top persistent instruction
         ShowPersistentInstruction();
+
+        // =========================================
+        // SHOW CONTROLS AGAIN
+        // =========================================
+        if (controlsPanel != null)
+        {
+            controlsPanel.SetActive(true);
+            Debug.Log("CONTROLS PANEL SHOWN AGAIN IN ROOM 2.");
+        }
 
         // Start Room 2 timer
         if (Room2ChallengeTimer.Instance != null)
@@ -128,12 +144,6 @@ public class Room2InstructionManager : MonoBehaviour
     // =========================================================
     // RESET ROOM 2 INSTRUCTION
     // =========================================================
-    // Called when player clicks TRY AGAIN.
-    // Restores the top instruction:
-    //
-    // CHALLENGE 1 AWAITS — PROCEED TO TABLE 1
-    //
-    // This also hides the large instruction panel.
 
     public void ResetForTryAgain()
     {

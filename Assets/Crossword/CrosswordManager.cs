@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using TMPro;
+using System.Collections.Generic;
 
 public class CrosswordManager : MonoBehaviour
 {
@@ -17,6 +20,13 @@ public class CrosswordManager : MonoBehaviour
 
     [Header("Completion Controller")]
     public CrosswordPanelController crosswordPanelController;
+
+    // =========================================================
+    // TAB NAVIGATION
+    // =========================================================
+
+    private List<CrosswordCell> editableCells =
+        new List<CrosswordCell>();
 
     private bool challengeCompleted = false;
 
@@ -58,10 +68,145 @@ public class CrosswordManager : MonoBehaviour
     {
         GenerateGrid();
 
+        // Disable Unity automatic UI navigation.
+        // TAB will be handled here manually.
+        if (EventSystem.current != null)
+        {
+            EventSystem.current.sendNavigationEvents = false;
+        }
+
         if (resultText != null)
         {
             resultText.text = "";
         }
+    }
+
+    // =========================================================
+    // UPDATE - HANDLE TAB
+    // =========================================================
+
+    void Update()
+    {
+        if (Keyboard.current == null)
+            return;
+
+        if (!Keyboard.current.tabKey.wasPressedThisFrame)
+            return;
+
+        if (EventSystem.current == null)
+            return;
+
+        GameObject selectedObject =
+            EventSystem.current.currentSelectedGameObject;
+
+        if (selectedObject == null)
+            return;
+
+        CrosswordCell currentCell = null;
+
+        // Find which crossword cell is currently selected
+        foreach (CrosswordCell cell in editableCells)
+        {
+            if (cell != null &&
+                cell.letterInput != null &&
+                cell.letterInput.gameObject == selectedObject)
+            {
+                currentCell = cell;
+                break;
+            }
+        }
+
+        if (currentCell == null)
+            return;
+
+        bool shiftHeld =
+            Keyboard.current.leftShiftKey.isPressed ||
+            Keyboard.current.rightShiftKey.isPressed;
+
+        if (shiftHeld)
+        {
+            FocusPreviousCell(currentCell);
+        }
+        else
+        {
+            FocusNextCell(currentCell);
+        }
+    }
+
+    // =========================================================
+    // NEXT CELL
+    // =========================================================
+
+    private void FocusNextCell(CrosswordCell currentCell)
+    {
+        int currentIndex =
+            editableCells.IndexOf(currentCell);
+
+        if (currentIndex < 0)
+            return;
+
+        int nextIndex =
+            currentIndex + 1;
+
+        if (nextIndex >= editableCells.Count)
+        {
+            nextIndex = 0;
+        }
+
+        FocusCell(editableCells[nextIndex]);
+    }
+
+    // =========================================================
+    // PREVIOUS CELL
+    // =========================================================
+
+    private void FocusPreviousCell(CrosswordCell currentCell)
+    {
+        int currentIndex =
+            editableCells.IndexOf(currentCell);
+
+        if (currentIndex < 0)
+            return;
+
+        int previousIndex =
+            currentIndex - 1;
+
+        if (previousIndex < 0)
+        {
+            previousIndex =
+                editableCells.Count - 1;
+        }
+
+        FocusCell(editableCells[previousIndex]);
+    }
+
+    // =========================================================
+    // FOCUS CELL
+    // =========================================================
+
+    private void FocusCell(CrosswordCell cell)
+    {
+        if (cell == null)
+            return;
+
+        if (cell.letterInput == null)
+            return;
+
+        if (cell.IsGivenLetter())
+            return;
+
+        if (!cell.letterInput.interactable)
+            return;
+
+        EventSystem.current.SetSelectedGameObject(
+            cell.letterInput.gameObject
+        );
+
+        cell.letterInput.Select();
+        cell.letterInput.ActivateInputField();
+
+        cell.letterInput.caretPosition =
+            cell.letterInput.text.Length;
     }
 
     // =========================================================
@@ -70,7 +215,8 @@ public class CrosswordManager : MonoBehaviour
 
     private void GenerateGrid()
     {
-        // Remove old crossword cells
+        editableCells.Clear();
+
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
@@ -148,23 +294,80 @@ public class CrosswordManager : MonoBehaviour
                     {
                         crosswordCell.enabled = true;
 
-                        string correctLetter =
-                            answerGrid[row, col];
-
                         crosswordCell.SetCorrectLetter(
-                            correctLetter
+                            answerGrid[row, col]
                         );
 
                         if (givenLetters[row, col])
                         {
                             crosswordCell.SetGivenLetter(
-                                correctLetter
+                                answerGrid[row, col]
+                            );
+                        }
+                        else
+                        {
+                            editableCells.Add(
+                                crosswordCell
                             );
                         }
                     }
                 }
             }
         }
+
+        // =========================================================
+        // SET CELL NAVIGATION
+        // =========================================================
+
+        SetupTabNavigation();
+    }
+
+    // =========================================================
+    // SET TAB NAVIGATION
+    // =========================================================
+
+    private void SetupTabNavigation()
+    {
+        for (int i = 0; i < editableCells.Count; i++)
+        {
+            CrosswordCell previousCell = null;
+            CrosswordCell nextCell = null;
+
+            if (i > 0)
+            {
+                previousCell =
+                    editableCells[i - 1];
+            }
+            else if (editableCells.Count > 0)
+            {
+                previousCell =
+                    editableCells[
+                        editableCells.Count - 1
+                    ];
+            }
+
+            if (i < editableCells.Count - 1)
+            {
+                nextCell =
+                    editableCells[i + 1];
+            }
+            else if (editableCells.Count > 0)
+            {
+                nextCell =
+                    editableCells[0];
+            }
+
+            editableCells[i].SetNavigation(
+                previousCell,
+                nextCell
+            );
+        }
+
+        Debug.Log(
+            "Crossword TAB navigation setup complete. " +
+            "Editable cells: " +
+            editableCells.Count
+        );
     }
 
     // =========================================================
@@ -290,9 +493,6 @@ public class CrosswordManager : MonoBehaviour
 
     // =========================================================
     // RESET CROSSWORD
-    // =========================================================
-    // Given letters remain.
-    // Player-entered letters are removed.
     // =========================================================
 
     public void ResetCrossword()

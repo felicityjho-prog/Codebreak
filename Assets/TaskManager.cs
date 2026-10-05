@@ -6,9 +6,14 @@ public class TaskManager : MonoBehaviour
     public GameObject taskCompletePanel;
     public GameObject checklistUI;
     public GameObject instructionPanel;
+    public GameObject controlsPanel;
 
     [Header("Room")]
     public RoomSwitcher roomSwitcher;
+
+    [Header("Player Freeze")]
+    public PlayerMovement playerMovement;
+    public PlayerController playerController;
 
     [Header("Timer")]
     public GameTimer gameTimer;
@@ -64,6 +69,30 @@ public class TaskManager : MonoBehaviour
             if (instructionPanel != null)
             {
                 instructionPanel.SetActive(false);
+            }
+
+            // =========================================
+            // HIDE CONTROLS
+            // =========================================
+            if (controlsPanel != null)
+            {
+                controlsPanel.SetActive(false);
+            }
+
+            // =========================================
+            // FREEZE PLAYER MOVEMENT
+            // =========================================
+            if (playerMovement != null)
+            {
+                playerMovement.enabled = false;
+            }
+
+            // =========================================
+            // FREEZE CAMERA LOOK
+            // =========================================
+            if (playerController != null)
+            {
+                playerController.enabled = false;
             }
 
             // =========================================

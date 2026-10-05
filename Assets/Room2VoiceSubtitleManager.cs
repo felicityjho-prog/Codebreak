@@ -45,6 +45,8 @@ public class Room2VoiceSubtitleManager : MonoBehaviour
 
     public void StartVoiceSequence()
     {
+        Debug.Log("ROOM 2 VOICE STARTED!");
+
         if (sequenceStarted)
             return;
 
