@@ -106,7 +106,8 @@ public class GlobalCameraCollision : MonoBehaviour
                 !candidate.enabled ||
                 candidate.isTrigger ||
                 !IsInGameRoomHierarchy(candidate.transform) ||
-                !HasStructuralWallName(candidate.gameObject.name))
+                !(HasStructuralWallName(candidate.gameObject.name) ||
+                  IsLiveRoom1Door(candidate.transform)))
             {
                 continue;
             }
@@ -114,6 +115,21 @@ public class GlobalCameraCollision : MonoBehaviour
             structuralWalls.Add(candidate);
         }
     }
+
+    private static bool IsLiveRoom1Door(Transform candidate)
+    {
+        return candidate != null &&
+               candidate.gameObject.activeInHierarchy &&
+               candidate.name.Equals("Door", System.StringComparison.Ordinal) &&
+               candidate.parent != null &&
+               candidate.parent.name.Equals("Door_1", System.StringComparison.Ordinal) &&
+               candidate.parent.parent != null &&
+               candidate.parent.parent.name.Equals("DoorPivot", System.StringComparison.Ordinal) &&
+               candidate.parent.parent.parent != null &&
+               candidate.parent.parent.parent.name.Equals("room1", System.StringComparison.Ordinal) &&
+               candidate.parent.parent.parent.parent == null;
+    }
+
 
     private static bool IsInGameRoomHierarchy(Transform candidate)
     {
