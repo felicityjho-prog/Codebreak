@@ -23,6 +23,8 @@ public class TaskManager : MonoBehaviour
     public AudioSource completionAudio;
     public AudioClip completionSound;
 
+
+
     [SerializeField] private int totalObjects;
 
     private int collectedObjects = 0;

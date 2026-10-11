@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
@@ -7,6 +8,7 @@ public class GameTimer : MonoBehaviour
     [Header("Timer")]
     public float timeRemaining = 300f;
     private bool timerRunning = false;
+    private bool gameOverTriggered = false;
 
     [Header("UI")]
     public TMP_Text timerText;
@@ -17,8 +19,15 @@ public class GameTimer : MonoBehaviour
     public MonoBehaviour playerMove;
     public MonoBehaviour playerLook;
 
-    [Header("Sound")]
+    [Header("Timer Sound")]
     private AudioSource tickSound;
+
+    [Header("Game Over Audio")]
+    public AudioSource gameOverAudioSource;
+    public AudioClip gameOverSound;
+
+    [Range(0.5f, 1.5f)]
+    public float gameOverPitch = 1f;
 
     private void Start()
     {
@@ -28,8 +37,24 @@ public class GameTimer : MonoBehaviour
             gameOverPanel.SetActive(false);
         }
 
-        // Get Audio Source
+        // Get AudioSource used for ticking
         tickSound = GetComponent<AudioSource>();
+
+        if (tickSound != null)
+        {
+            tickSound.playOnAwake = false;
+            tickSound.loop = true;
+            tickSound.pitch = 1f;
+            tickSound.Stop();
+        }
+
+        // Prepare Game Over audio
+        if (gameOverAudioSource != null)
+        {
+            gameOverAudioSource.playOnAwake = false;
+            gameOverAudioSource.pitch = gameOverPitch;
+            gameOverAudioSource.Stop();
+        }
 
         // Timer is NOT running yet
         timerRunning = false;
@@ -49,36 +74,38 @@ public class GameTimer : MonoBehaviour
 
     private void Update()
     {
-        if (!timerRunning)
+        if (!timerRunning || gameOverTriggered)
             return;
 
-        if (timeRemaining > 0)
+        if (timeRemaining > 0f)
         {
             timeRemaining -= Time.deltaTime;
 
+            // Prevent negative timer values
+            if (timeRemaining < 0f)
+            {
+                timeRemaining = 0f;
+            }
+
             // Red when 30 seconds or less
-            if (timeRemaining <= 30 && timerText != null)
+            if (timeRemaining <= 30f && timerText != null)
             {
                 timerText.color = Color.red;
             }
 
-            // Fast ticking during last 10 seconds
-            if (timeRemaining <= 10 && tickSound != null)
+            // Fast ticking during the last 10 seconds
+            if (timeRemaining <= 10f && tickSound != null)
             {
                 tickSound.pitch = 1.5f;
             }
 
             UpdateTimerDisplay(timeRemaining);
-        }
-        else
-        {
-            timeRemaining = 0;
-            timerRunning = false;
 
-            UpdateTimerDisplay(timeRemaining);
-
-            // TIME UP
-            TimeUp();
+            // Trigger Game Over when time reaches zero
+            if (timeRemaining <= 0f)
+            {
+                TimeUp();
+            }
         }
     }
 
@@ -88,7 +115,7 @@ public class GameTimer : MonoBehaviour
 
     public void StartTimer()
     {
-        if (timerRunning)
+        if (timerRunning || gameOverTriggered)
             return;
 
         timerRunning = true;
@@ -119,10 +146,11 @@ public class GameTimer : MonoBehaviour
     {
         timerRunning = false;
 
-        // Stop ticking sound
+        // Stop ticking and reset its speed
         if (tickSound != null)
         {
             tickSound.Stop();
+            tickSound.pitch = 1f;
         }
 
         // Hide timer
@@ -138,13 +166,35 @@ public class GameTimer : MonoBehaviour
 
     private void TimeUp()
     {
-        // Stop timer and ticking sound
+        // Prevent Game Over from triggering more than once
+        if (gameOverTriggered)
+            return;
+
+        gameOverTriggered = true;
+
+        // Stop timer and reset ticking pitch
         StopTimer();
 
         // Hide Room 1 instruction
         if (instructionPanel != null)
         {
             instructionPanel.SetActive(false);
+        }
+
+        // Play Game Over sound at the configured pitch
+        if (gameOverAudioSource != null && gameOverSound != null)
+        {
+            gameOverAudioSource.Stop();
+            gameOverAudioSource.pitch = gameOverPitch;
+            gameOverAudioSource.PlayOneShot(gameOverSound);
+
+            Debug.Log("ROOM 1 GAME OVER SOUND PLAYED!");
+        }
+        else
+        {
+            Debug.LogWarning(
+                "Assign the Game Over AudioSource and AudioClip in the Inspector!"
+            );
         }
 
         // Show Game Over Panel
@@ -165,9 +215,11 @@ public class GameTimer : MonoBehaviour
             playerLook.enabled = false;
         }
 
-        // Unlock cursor so player can click the panel
+        // Unlock cursor
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        Debug.Log("ROOM 1 GAME OVER!");
     }
 
     // ==========================================
@@ -179,8 +231,8 @@ public class GameTimer : MonoBehaviour
         if (timerText == null)
             return;
 
-        int minutes = Mathf.FloorToInt(timeToDisplay / 60);
-        int seconds = Mathf.FloorToInt(timeToDisplay % 60);
+        int minutes = Mathf.FloorToInt(timeToDisplay / 60f);
+        int seconds = Mathf.FloorToInt(timeToDisplay % 60f);
 
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
