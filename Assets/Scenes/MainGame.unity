@@ -20066,7 +20066,7 @@ MonoBehaviour:
   sudokuInteractionDistance: 3
   sudokuManager: {fileID: 0}
   canProceed: 0
-  testRoom2: 1
+  testRoom2: 0
 --- !u!4 &677955355
 Transform:
   m_ObjectHideFlags: 0
@@ -31153,10 +31153,10 @@ Light:
   serializedVersion: 13
   m_Type: 0
   m_Color: {r: 0.12, g: 0.65, b: 0.8, a: 1}
-  m_Intensity: 15
+  m_Intensity: 6
   m_Range: 3
-  m_SpotAngle: 75
-  m_InnerSpotAngle: 21.80208
+  m_SpotAngle: 72.67532
+  m_InnerSpotAngle: 19.477406
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 0
