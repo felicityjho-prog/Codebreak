@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Ostryzhnyi/AdaptiveGrid/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: b9e52a34490057d49845a050783afd05
+  - enabled: 1
     path: Assets/Scenes/MainGame.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects: {}

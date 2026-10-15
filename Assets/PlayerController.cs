@@ -11,6 +11,11 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        float sensitivityMultiplier =
+    PlayerPrefs.GetFloat("MouseSensitivityMultiplier", 1f);
+
+        mouseSensitivity *= sensitivityMultiplier;
+
         LockCursor();
 
         // Get current camera rotation
