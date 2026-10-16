@@ -418,19 +418,9 @@ public class Room2GameOverController : MonoBehaviour
         Cursor.visible = true;
 
         // =====================================================
-        // OPEN WEB MAIN MENU
+        // RETURN TO MAIN MENU
         // =====================================================
 
-        Application.OpenURL(
-            "http://127.0.0.1:5500/index.html"
-        );
-
-        Debug.Log(
-            "MAIN MENU URL OPENED:"
-        );
-
-        Debug.Log(
-            "http://127.0.0.1:5500/index.html"
-        );
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
     }
 }

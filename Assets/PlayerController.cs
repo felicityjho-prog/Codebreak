@@ -1,51 +1,70 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
     public float mouseSensitivity = 100f;
     public Transform cameraTransform;
 
-    float xRotation = 0f;
-    bool cursorLocked = true;
-    bool lookEnabled = true;
+    private float xRotation = 0f;
+    private bool cursorLocked = true;
+    private bool lookEnabled = true;
+    public bool IsLookEnabled => lookEnabled;
 
     void Start()
     {
         float sensitivityMultiplier =
-    PlayerPrefs.GetFloat("MouseSensitivityMultiplier", 1f);
+            PlayerPrefs.GetFloat("MouseSensitivityMultiplier", 1f);
 
         mouseSensitivity *= sensitivityMultiplier;
 
         LockCursor();
 
-        // Get current camera rotation
+        // Get current camera rotation.
         if (cameraTransform != null)
         {
             xRotation = cameraTransform.localEulerAngles.x;
 
             if (xRotation > 180f)
+            {
                 xRotation -= 360f;
+            }
         }
     }
 
     void Update()
     {
-        // Toggle cursor with F
+        // Toggle cursor with F.
         if (Input.GetKeyDown(KeyCode.F))
         {
             UnlockCursor();
         }
 
-        // Click to lock cursor again
+        // Lock the cursor only when clicking outside the UI.
         if (Input.GetMouseButtonDown(0) &&
-            cursorLocked == false &&
+            !cursorLocked &&
             lookEnabled)
         {
-            LockCursor();
+            bool pointerOverUI = false;
+
+            if (EventSystem.current != null)
+            {
+                pointerOverUI =
+                    EventSystem.current.IsPointerOverGameObject();
+            }
+
+            // Do not lock the cursor when clicking a UI element.
+            if (!pointerOverUI)
+            {
+                LockCursor();
+            }
         }
 
-        // CAMERA MOVEMENT
-        if (cursorLocked && lookEnabled)
+        // Camera movement.
+        if (cursorLocked &&
+            lookEnabled &&
+            cameraTransform != null)
         {
             float mouseX =
                 Input.GetAxis("Mouse X") *
@@ -111,14 +130,16 @@ public class PlayerController : MonoBehaviour
         xRotation = rotation.eulerAngles.x;
 
         if (xRotation > 180f)
+        {
             xRotation -= 360f;
+        }
     }
 
     // ==============================
     // LOCK CURSOR
     // ==============================
 
-    void LockCursor()
+    private void LockCursor()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -129,7 +150,7 @@ public class PlayerController : MonoBehaviour
     // UNLOCK CURSOR
     // ==============================
 
-    void UnlockCursor()
+    private void UnlockCursor()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
