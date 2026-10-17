@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class TaskManager : MonoBehaviour
@@ -23,8 +24,6 @@ public class TaskManager : MonoBehaviour
     public AudioSource completionAudio;
     public AudioClip completionSound;
 
-
-
     [SerializeField] private int totalObjects;
 
     private int collectedObjects = 0;
@@ -32,7 +31,6 @@ public class TaskManager : MonoBehaviour
 
     public void CollectObject()
     {
-        // Prevent collecting again after challenge is completed
         if (challengeCompleted)
             return;
 
@@ -42,91 +40,115 @@ public class TaskManager : MonoBehaviour
         {
             challengeCompleted = true;
 
-            // =========================================
-            // PLAY COMPLETION SOUND
-            // =========================================
             if (completionAudio != null && completionSound != null)
             {
                 completionAudio.PlayOneShot(completionSound);
             }
 
-            // =========================================
-            // STOP AND HIDE TIMER
-            // =========================================
             if (gameTimer != null)
             {
                 gameTimer.StopTimer();
             }
 
-            // =========================================
-            // HIDE CHECKLIST
-            // =========================================
             if (checklistUI != null)
-            {
                 checklistUI.SetActive(false);
-            }
 
-            // =========================================
-            // HIDE ROOM 1 INSTRUCTION
-            // =========================================
             if (instructionPanel != null)
-            {
                 instructionPanel.SetActive(false);
-            }
 
-            // =========================================
-            // HIDE CONTROLS
-            // =========================================
             if (controlsPanel != null)
-            {
                 controlsPanel.SetActive(false);
-            }
 
-            // =========================================
-            // HIDE CENTER DOT
-            // =========================================
             if (centerDot != null)
-            {
                 centerDot.SetActive(false);
-            }
 
-            // =========================================
-            // FREEZE PLAYER MOVEMENT
-            // =========================================
             if (playerMovement != null)
-            {
                 playerMovement.enabled = false;
-            }
 
-            // =========================================
-            // FREEZE CAMERA LOOK
-            // =========================================
             if (playerController != null)
-            {
                 playerController.enabled = false;
-            }
 
-            // =========================================
-            // SHOW TASK COMPLETE PANEL
-            // =========================================
             if (taskCompletePanel != null)
-            {
                 taskCompletePanel.SetActive(true);
-            }
 
-            // =========================================
-            // ALLOW PLAYER TO PROCEED
-            // =========================================
             if (roomSwitcher != null)
-            {
                 roomSwitcher.EnableProceed();
-            }
 
-            // =========================================
-            // UNLOCK CURSOR
-            // =========================================
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
+    }
+
+    // ==========================================
+    // RESTART ROOM 1 CHALLENGE
+    // ==========================================
+
+    public void ResetChallenge()
+    {
+        Debug.Log("RESETTING ROOM 1 CHALLENGE...");
+
+        // Reset collection progress.
+        collectedObjects = 0;
+        challengeCompleted = false;
+
+        // Restore every Collectible object in the scene.
+        Collectible[] collectibles =
+            FindObjectsByType<Collectible>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None
+            );
+
+        foreach (Collectible collectible in collectibles)
+        {
+            if (collectible != null)
+                collectible.ResetCollectible();
+        }
+
+        // Hide the completion panel.
+        if (taskCompletePanel != null)
+            taskCompletePanel.SetActive(false);
+
+        // Restore the checklist and gameplay UI.
+        if (checklistUI != null)
+            checklistUI.SetActive(true);
+
+        if (instructionPanel != null)
+            instructionPanel.SetActive(false);
+
+        if (controlsPanel != null)
+            controlsPanel.SetActive(true);
+
+        if (centerDot != null)
+            centerDot.SetActive(true);
+
+        // Allow the player to complete the challenge again.
+        if (playerMovement != null)
+            playerMovement.enabled = true;
+
+        if (playerController != null)
+        {
+            playerController.enabled = true;
+            playerController.EnableLook();
+        }
+
+        // Prevent proceeding using the previous completion state.
+        if (roomSwitcher != null)
+            roomSwitcher.canProceed = false;
+
+        // Stop any previous completion audio.
+        if (completionAudio != null)
+            completionAudio.Stop();
+
+        // Reset and restart Room 1 timer.
+        if (gameTimer != null)
+        {
+            gameTimer.RestartTimerForChallenge();
+        }
+
+        // Restore normal gameplay cursor.
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        Debug.Log("ROOM 1 CHALLENGE RESET COMPLETE!");
     }
 }

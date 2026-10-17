@@ -9,11 +9,15 @@ public class GameTimer : MonoBehaviour
     public float timeRemaining = 300f;
     private bool timerRunning = false;
     private bool gameOverTriggered = false;
+    private float initialTimeRemaining;
 
     [Header("UI")]
     public TMP_Text timerText;
     public GameObject gameOverPanel;
     public GameObject instructionPanel;
+
+    [Header("Pause Menu")]
+    [SerializeField] private PauseMenuController pauseMenuController;
 
     [Header("Player")]
     public MonoBehaviour playerMove;
@@ -31,13 +35,15 @@ public class GameTimer : MonoBehaviour
 
     private void Start()
     {
-        // Hide Game Over at the beginning
+        initialTimeRemaining = timeRemaining;
+
+        // Hide Game Over at the beginning.
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(false);
         }
 
-        // Get AudioSource used for ticking
+        // Get AudioSource used for ticking.
         tickSound = GetComponent<AudioSource>();
 
         if (tickSound != null)
@@ -48,7 +54,7 @@ public class GameTimer : MonoBehaviour
             tickSound.Stop();
         }
 
-        // Prepare Game Over audio
+        // Prepare Game Over audio.
         if (gameOverAudioSource != null)
         {
             gameOverAudioSource.playOnAwake = false;
@@ -56,16 +62,16 @@ public class GameTimer : MonoBehaviour
             gameOverAudioSource.Stop();
         }
 
-        // Timer is NOT running yet
+        // Timer is NOT running yet.
         timerRunning = false;
 
-        // Hide timer at the beginning
+        // Hide timer at the beginning.
         if (timerText != null)
         {
             timerText.gameObject.SetActive(false);
         }
 
-        // Hide Room 1 instruction at the beginning
+        // Hide Room 1 instruction at the beginning.
         if (instructionPanel != null)
         {
             instructionPanel.SetActive(false);
@@ -81,19 +87,19 @@ public class GameTimer : MonoBehaviour
         {
             timeRemaining -= Time.deltaTime;
 
-            // Prevent negative timer values
+            // Prevent negative timer values.
             if (timeRemaining < 0f)
             {
                 timeRemaining = 0f;
             }
 
-            // Red when 30 seconds or less
+            // Red when 30 seconds or less.
             if (timeRemaining <= 30f && timerText != null)
             {
                 timerText.color = Color.red;
             }
 
-            // Fast ticking during the last 10 seconds
+            // Fast ticking during the last 10 seconds.
             if (timeRemaining <= 10f && tickSound != null)
             {
                 tickSound.pitch = 1.5f;
@@ -101,7 +107,7 @@ public class GameTimer : MonoBehaviour
 
             UpdateTimerDisplay(timeRemaining);
 
-            // Trigger Game Over when time reaches zero
+            // Trigger Game Over when time reaches zero.
             if (timeRemaining <= 0f)
             {
                 TimeUp();
@@ -120,21 +126,21 @@ public class GameTimer : MonoBehaviour
 
         timerRunning = true;
 
-        // Show timer
+        // Show timer.
         if (timerText != null)
         {
             timerText.gameObject.SetActive(true);
             timerText.color = Color.white;
         }
 
-        // Start ticking sound
+        // Start ticking sound.
         if (tickSound != null)
         {
             tickSound.pitch = 1f;
             tickSound.Play();
         }
 
-        // Display timer immediately
+        // Display timer immediately.
         UpdateTimerDisplay(timeRemaining);
     }
 
@@ -146,14 +152,14 @@ public class GameTimer : MonoBehaviour
     {
         timerRunning = false;
 
-        // Stop ticking and reset its speed
+        // Stop ticking and reset its speed.
         if (tickSound != null)
         {
             tickSound.Stop();
             tickSound.pitch = 1f;
         }
 
-        // Hide timer
+        // Hide timer.
         if (timerText != null)
         {
             timerText.gameObject.SetActive(false);
@@ -166,22 +172,34 @@ public class GameTimer : MonoBehaviour
 
     private void TimeUp()
     {
-        // Prevent Game Over from triggering more than once
+        // Prevent Game Over from triggering more than once.
         if (gameOverTriggered)
             return;
 
         gameOverTriggered = true;
 
-        // Stop timer and reset ticking pitch
+        // Stop timer and reset ticking pitch.
         StopTimer();
 
-        // Hide Room 1 instruction
+        // Hide Room 1 instruction.
         if (instructionPanel != null)
         {
             instructionPanel.SetActive(false);
         }
 
-        // Play Game Over sound at the configured pitch
+        // Hide Pause button and Pause Menu overlay.
+        if (pauseMenuController != null)
+        {
+            pauseMenuController.HidePauseMenuForGameOver();
+        }
+        else
+        {
+            Debug.LogWarning(
+                "PauseMenuController is not assigned in GameTimer Inspector!"
+            );
+        }
+
+        // Play Game Over sound at the configured pitch.
         if (gameOverAudioSource != null && gameOverSound != null)
         {
             gameOverAudioSource.Stop();
@@ -197,25 +215,25 @@ public class GameTimer : MonoBehaviour
             );
         }
 
-        // Show Game Over Panel
+        // Show Game Over Panel.
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
         }
 
-        // Stop player movement
+        // Stop player movement.
         if (playerMove != null)
         {
             playerMove.enabled = false;
         }
 
-        // Stop player camera look
+        // Stop player camera look.
         if (playerLook != null)
         {
             playerLook.enabled = false;
         }
 
-        // Unlock cursor
+        // Unlock cursor for Game Over buttons.
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
@@ -241,8 +259,31 @@ public class GameTimer : MonoBehaviour
     // RESTART
     // ==========================================
 
-    public void RestartGame()
+    public void RestartTimerForChallenge()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        timerRunning = false;
+        gameOverTriggered = false;
+        timeRemaining = initialTimeRemaining;
+
+        if (tickSound != null)
+        {
+            tickSound.Stop();
+            tickSound.pitch = 1f;
+        }
+
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(false);
+        }
+
+        if (timerText != null)
+        {
+            timerText.color = Color.white;
+            timerText.gameObject.SetActive(false);
+        }
+
+        StartTimer();
+
+        Debug.Log("ROOM 1 TIMER RESET AND RESTARTED!");
     }
 }

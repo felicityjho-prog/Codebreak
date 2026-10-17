@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using System.Collections;
 
@@ -24,9 +25,9 @@ public class Room2VoiceSubtitleManager : MonoBehaviour
     private bool sequenceStarted = false;
     private Coroutine sequenceCoroutine;
 
-    // =====================================================
+    // ==========================================
     // AWAKE
-    // =====================================================
+    // ==========================================
 
     private void Awake()
     {
@@ -35,59 +36,102 @@ public class Room2VoiceSubtitleManager : MonoBehaviour
             voiceAudio = GetComponent<AudioSource>();
         }
 
-        // Make sure the old subtitle UI is hidden.
         HideOldSubtitleUI();
     }
 
-    // =====================================================
-    // START VOICE
-    // =====================================================
+    // ==========================================
+    // START VOICE SEQUENCE
+    // ==========================================
 
     public void StartVoiceSequence()
     {
-        Debug.Log("ROOM 2 VOICE STARTED!");
-
         if (sequenceStarted)
-            return;
-
-        if (voiceAudio == null)
         {
-            Debug.LogWarning(
-                "Room 2 Voice: AudioSource is missing."
-            );
+            Debug.Log("Room 2 voice sequence is already running.");
             return;
         }
 
-        if (voiceLines == null ||
-            voiceLines.Length == 0)
+        if (voiceAudio == null)
         {
-            Debug.LogWarning(
-                "Room 2 Voice: No Voice Lines assigned."
-            );
+            Debug.LogWarning("Room 2 Voice: AudioSource is missing.");
+            return;
+        }
+
+        if (voiceLines == null || voiceLines.Length == 0)
+        {
+            Debug.LogWarning("Room 2 Voice: No Voice Lines assigned.");
             return;
         }
 
         sequenceStarted = true;
 
-        sequenceCoroutine =
-            StartCoroutine(
-                PlayVoiceSequence()
-            );
+        sequenceCoroutine = StartCoroutine(PlayVoiceSequence());
+
+        Debug.Log("ROOM 2 VOICE SEQUENCE STARTED!");
     }
 
-    // =====================================================
-    // PLAY 7 VOICE CLIPS
-    // =====================================================
+    // ==========================================
+    // RESTART VOICE SEQUENCE
+    // ==========================================
+
+    public void RestartVoiceSequence()
+    {
+        Debug.Log("RESTARTING ROOM 2 VOICE SEQUENCE...");
+
+        // Stop any previous sequence.
+        if (sequenceCoroutine != null)
+        {
+            StopCoroutine(sequenceCoroutine);
+            sequenceCoroutine = null;
+        }
+
+        if (voiceAudio != null)
+        {
+            voiceAudio.Stop();
+            voiceAudio.time = 0f;
+        }
+
+        // Reset the guard so the sequence can run again.
+        sequenceStarted = false;
+
+        // Start from the first voice line.
+        StartVoiceSequence();
+    }
+
+    // ==========================================
+    // STOP VOICE SEQUENCE
+    // ==========================================
+
+    public void StopVoiceSequence()
+    {
+        if (sequenceCoroutine != null)
+        {
+            StopCoroutine(sequenceCoroutine);
+            sequenceCoroutine = null;
+        }
+
+        if (voiceAudio != null)
+        {
+            voiceAudio.Stop();
+            voiceAudio.time = 0f;
+        }
+
+        sequenceStarted = false;
+
+        Debug.Log("ROOM 2 VOICE SEQUENCE STOPPED.");
+    }
+
+    // ==========================================
+    // PLAY VOICE LINES
+    // ==========================================
 
     private IEnumerator PlayVoiceSequence()
     {
         for (int i = 0; i < voiceLines.Length; i++)
         {
-            VoiceLine currentLine =
-                voiceLines[i];
+            VoiceLine currentLine = voiceLines[i];
 
-            if (currentLine == null ||
-                currentLine.voiceClip == null)
+            if (currentLine == null || currentLine.voiceClip == null)
             {
                 Debug.LogWarning(
                     "Room 2 Voice: Voice Line " +
@@ -98,18 +142,11 @@ public class Room2VoiceSubtitleManager : MonoBehaviour
                 continue;
             }
 
-            AudioClip clip =
-                currentLine.voiceClip;
+            AudioClip clip = currentLine.voiceClip;
 
-            // Stop previous clip
             voiceAudio.Stop();
-
-            // Assign current clip
             voiceAudio.clip = clip;
-
             voiceAudio.time = 0f;
-
-            // Play voice
             voiceAudio.Play();
 
             Debug.Log(
@@ -119,48 +156,35 @@ public class Room2VoiceSubtitleManager : MonoBehaviour
                 clip.name
             );
 
-            // Wait for the exact clip duration
-            yield return new WaitForSecondsRealtime(
-                clip.length
-            );
+            yield return new WaitForSecondsRealtime(clip.length);
 
-            // Stop current clip
             voiceAudio.Stop();
 
-            // Small gap before next line
             if (lineGap > 0f)
             {
-                yield return new WaitForSecondsRealtime(
-                    lineGap
-                );
+                yield return new WaitForSecondsRealtime(lineGap);
             }
         }
 
-        // =================================================
-        // COMPLETE
-        // =================================================
-
-        voiceAudio.Stop();
+        if (voiceAudio != null)
+        {
+            voiceAudio.Stop();
+        }
 
         sequenceStarted = false;
         sequenceCoroutine = null;
 
-        Debug.Log(
-            "Room 2 Voice sequence completed."
-        );
+        Debug.Log("Room 2 Voice sequence completed.");
     }
 
-    // =====================================================
+    // ==========================================
     // HIDE OLD SUBTITLE UI
-    // =====================================================
+    // ==========================================
 
     private void HideOldSubtitleUI()
     {
-        // Find SubtitleText anywhere under this object
         TMPro.TMP_Text oldSubtitle =
-            GetComponentInChildren<TMPro.TMP_Text>(
-                true
-            );
+            GetComponentInChildren<TMPro.TMP_Text>(true);
 
         if (oldSubtitle != null)
         {
@@ -168,9 +192,6 @@ public class Room2VoiceSubtitleManager : MonoBehaviour
             oldSubtitle.gameObject.SetActive(false);
         }
 
-        // Hide the background image without
-        // disabling this GameObject, because
-        // this GameObject contains the AudioSource.
         UnityEngine.UI.Image panelImage =
             GetComponent<UnityEngine.UI.Image>();
 
@@ -180,9 +201,9 @@ public class Room2VoiceSubtitleManager : MonoBehaviour
         }
     }
 
-    // =====================================================
+    // ==========================================
     // CLEANUP
-    // =====================================================
+    // ==========================================
 
     private void OnDisable()
     {

@@ -6,10 +6,19 @@ public class PauseMenuController : MonoBehaviour
 {
     [Header("Pause Menu UI")]
     [SerializeField] private GameObject pauseOverlay;
+    [SerializeField] private GameObject pauseButton;
 
     [Header("Player Controls")]
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private PlayerController playerController;
+
+    [Header("Room 1 Restart")]
+    [SerializeField] private GameObject room1Root;
+    [SerializeField] private Room1GameOverController room1GameOverController;
+
+    [Header("Room 2 Restart")]
+    [SerializeField] private GameObject room2Root;
+    [SerializeField] private Room2GameOverController room2GameOverController;
 
     private bool isPaused;
 
@@ -25,7 +34,6 @@ public class PauseMenuController : MonoBehaviour
 
     private void Awake()
     {
-        // Restore normal game time when MainGame loads.
         Time.timeScale = 1f;
         AudioListener.pause = false;
     }
@@ -33,16 +41,9 @@ public class PauseMenuController : MonoBehaviour
     private void Start()
     {
         if (pauseOverlay != null)
-        {
             pauseOverlay.SetActive(false);
-        }
         else
-        {
-            Debug.LogError(
-                "PauseOverlay is not assigned!",
-                this
-            );
-        }
+            Debug.LogError("PauseOverlay is not assigned!", this);
 
         isPaused = false;
     }
@@ -53,68 +54,40 @@ public class PauseMenuController : MonoBehaviour
 
     public void PauseGame()
     {
-        if (isPaused)
+        if (isPaused || pauseOverlay == null)
             return;
 
-        if (pauseOverlay == null)
-        {
-            Debug.LogError(
-                "Cannot pause: PauseOverlay is not assigned!",
-                this
-            );
-            return;
-        }
-
-        // Remember current global states.
         previousTimeScale =
             Time.timeScale > 0f ? Time.timeScale : 1f;
 
         audioWasPaused = AudioListener.pause;
-
         previousCursorLockState = Cursor.lockState;
         previousCursorVisible = Cursor.visible;
 
-        // Remember movement component state.
         movementWasEnabled =
-            playerMovement != null &&
-            playerMovement.enabled;
+            playerMovement != null && playerMovement.enabled;
 
-        // Remember camera component AND camera-look states.
         controllerWasEnabled =
-            playerController != null &&
-            playerController.enabled;
+            playerController != null && playerController.enabled;
 
         lookWasEnabled =
-            playerController != null &&
-            playerController.IsLookEnabled;
+            playerController != null && playerController.IsLookEnabled;
 
-        // Stop player movement.
         if (playerMovement != null)
-        {
             playerMovement.enabled = false;
-        }
 
-        // Stop camera input while the pause menu is open.
         if (playerController != null)
-        {
             playerController.enabled = false;
-        }
 
-        // Deselect active Sudoku/Crossword input.
         if (EventSystem.current != null)
-        {
             EventSystem.current.SetSelectedGameObject(null);
-        }
 
-        // Show the pause menu.
         isPaused = true;
         pauseOverlay.SetActive(true);
 
-        // Freeze gameplay, timers and audio.
         Time.timeScale = 0f;
         AudioListener.pause = true;
 
-        // Allow clicking the pause menu.
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
@@ -130,23 +103,15 @@ public class PauseMenuController : MonoBehaviour
         if (!isPaused)
             return;
 
-        // Hide the pause menu.
         if (pauseOverlay != null)
-        {
             pauseOverlay.SetActive(false);
-        }
 
-        // Restore global states.
         Time.timeScale = previousTimeScale;
         AudioListener.pause = audioWasPaused;
 
-        // Restore movement to its previous state.
         if (playerMovement != null)
-        {
             playerMovement.enabled = movementWasEnabled;
-        }
 
-        // Restore both camera component and look state.
         if (playerController != null)
         {
             playerController.enabled = controllerWasEnabled;
@@ -154,29 +119,19 @@ public class PauseMenuController : MonoBehaviour
             if (controllerWasEnabled)
             {
                 if (lookWasEnabled)
-                {
-                    // Normal gameplay: immediately restore camera look.
                     playerController.EnableLook();
-                }
                 else
-                {
-                    // Puzzle was open: keep camera look disabled.
                     playerController.DisableLook();
-                }
             }
         }
 
-        // Restore cursor appropriately.
         if (controllerWasEnabled && lookWasEnabled)
         {
-            // Normal gameplay: hide cursor and lock it.
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
         else
         {
-            // Puzzle UI or previously disabled controls:
-            // preserve the cursor state from before pausing.
             Cursor.lockState = previousCursorLockState;
             Cursor.visible = previousCursorVisible;
         }
@@ -184,6 +139,97 @@ public class PauseMenuController : MonoBehaviour
         isPaused = false;
 
         Debug.Log("GAME RESUMED");
+    }
+
+    // ==========================================
+    // RESTART CURRENT CHALLENGE
+    // ==========================================
+
+    public void RestartChallenge()
+    {
+        Debug.Log("RESTARTING CURRENT CHALLENGE...");
+
+        if (pauseOverlay != null)
+            pauseOverlay.SetActive(false);
+
+        isPaused = false;
+
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+
+        // ROOM 2: reuse its existing TryAgain logic.
+        if (room2Root != null && room2Root.activeInHierarchy)
+        {
+            if (room2GameOverController == null)
+            {
+                Debug.LogError(
+                    "Room2GameOverController is not assigned!"
+                );
+                return;
+            }
+
+            room2GameOverController.TryAgain();
+
+            Debug.Log("ROOM 2 RESTART COMPLETE!");
+            return;
+        }
+
+        // ROOM 1: return to the hallway and reset the challenge.
+        if (room1Root != null && room1Root.activeInHierarchy)
+        {
+            if (room1GameOverController == null)
+            {
+                Debug.LogError(
+                    "Room1GameOverController is not assigned!"
+                );
+                return;
+            }
+
+            room1GameOverController.RestartFromHallway();
+
+            Debug.Log("ROOM 1 RESTART COMPLETE!");
+            return;
+        }
+
+        Debug.LogError(
+            "Cannot determine the current room. " +
+            "Check the Room 1 Root and Room 2 Root assignments."
+        );
+    }
+
+    // ==========================================
+    // HIDE PAUSE UI WHEN GAME OVER
+    // ==========================================
+
+    public void HidePauseMenuForGameOver()
+    {
+        if (pauseButton != null)
+            pauseButton.SetActive(false);
+
+        if (pauseOverlay != null)
+            pauseOverlay.SetActive(false);
+
+        if (isPaused)
+        {
+            Time.timeScale = 1f;
+            AudioListener.pause = false;
+            isPaused = false;
+        }
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        Debug.Log("Pause UI hidden for Game Over");
+    }
+
+    // ==========================================
+    // RESTORE PAUSE BUTTON
+    // ==========================================
+
+    public void ShowPauseButton()
+    {
+        if (pauseButton != null)
+            pauseButton.SetActive(true);
     }
 
     // ==========================================

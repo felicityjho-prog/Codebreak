@@ -4,13 +4,19 @@ using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Camera Settings")]
     public float mouseSensitivity = 100f;
     public Transform cameraTransform;
 
     private float xRotation = 0f;
     private bool cursorLocked = true;
     private bool lookEnabled = true;
+
     public bool IsLookEnabled => lookEnabled;
+
+    // =====================================================
+    // START
+    // =====================================================
 
     void Start()
     {
@@ -31,7 +37,23 @@ public class PlayerController : MonoBehaviour
                 xRotation -= 360f;
             }
         }
+        else
+        {
+            Debug.LogWarning(
+                "PlayerController: Camera Transform is NOT assigned!"
+            );
+        }
+
+        Debug.Log(
+            "PlayerController started. " +
+            "Look Enabled: " + lookEnabled +
+            " | Camera Assigned: " + (cameraTransform != null)
+        );
     }
+
+    // =====================================================
+    // UPDATE
+    // =====================================================
 
     void Update()
     {
@@ -97,33 +119,53 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // ==============================
+    // =====================================================
     // DISABLE CAMERA LOOK
-    // ==============================
+    // =====================================================
 
     public void DisableLook()
     {
         lookEnabled = false;
+
+        Debug.Log(
+            "CAMERA LOOK DISABLED. " +
+            "Called on: " + gameObject.name
+        );
     }
 
-    // ==============================
+    // =====================================================
     // ENABLE CAMERA LOOK
-    // ==============================
+    // =====================================================
 
     public void EnableLook()
     {
         lookEnabled = true;
+
         LockCursor();
+
+        Debug.Log(
+            "CAMERA LOOK ENABLED. " +
+            "LookEnabled: " + lookEnabled +
+            " | Camera Assigned: " + (cameraTransform != null) +
+            " | Cursor Locked: " + cursorLocked +
+            " | Cursor State: " + Cursor.lockState
+        );
     }
 
-    // ==============================
+    // =====================================================
     // SET CAMERA ROTATION
-    // ==============================
+    // =====================================================
 
     public void SetCameraRotation(Quaternion rotation)
     {
         if (cameraTransform == null)
+        {
+            Debug.LogWarning(
+                "SetCameraRotation failed: Camera Transform is missing."
+            );
+
             return;
+        }
 
         cameraTransform.localRotation = rotation;
 
@@ -135,9 +177,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // ==============================
+    // =====================================================
     // LOCK CURSOR
-    // ==============================
+    // =====================================================
 
     private void LockCursor()
     {
@@ -146,9 +188,9 @@ public class PlayerController : MonoBehaviour
         cursorLocked = true;
     }
 
-    // ==============================
+    // =====================================================
     // UNLOCK CURSOR
-    // ==============================
+    // =====================================================
 
     private void UnlockCursor()
     {

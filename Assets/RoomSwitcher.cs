@@ -43,6 +43,9 @@ public class RoomSwitcher : MonoBehaviour
     public float sudokuInteractionDistance = 3f;
     public SudokuManager sudokuManager;
 
+    [Header("Teleport Transition")]
+    public TeleportTransitionManager teleportTransitionManager;
+
     [Header("Settings")]
     public bool canProceed = false;
 
@@ -363,111 +366,101 @@ public class RoomSwitcher : MonoBehaviour
     // NORMAL ROOM SWITCHING
     // ==========================================
 
+
     void SwitchRoom()
     {
+        if (switched)
+            return;
+
         Debug.Log("Switching Room...");
 
+        // Prevent duplicate room-switch requests.
         switched = true;
 
-        // ==========================================
-        // Disable current room
-        // ==========================================
+        if (teleportTransitionManager != null)
+        {
+            teleportTransitionManager.RunTransition(
+                () => PerformRoomSwitch(false),
+                StartRoom2Voice
+            );
+        }
+        else
+        {
+            Debug.LogWarning(
+                "Teleport Transition Manager is not assigned. " +
+                "Switching rooms without a fade."
+            );
 
+            PerformRoomSwitch(true);
+            StartRoom2Voice();
+        }
+    }
+
+    private void PerformRoomSwitch(
+        bool enableControlsImmediately)
+    {
+        // Disable the current room.
         if (currentRoom != null)
-        {
             currentRoom.SetActive(false);
-        }
 
-        // ==========================================
-        // Enable next room
-        // ==========================================
-
+        // Enable the destination room.
         if (nextRoom != null)
-        {
             nextRoom.SetActive(true);
-        }
 
-        // ==========================================
-        // Disable current Game Manager
-        // ==========================================
-
+        // Switch game managers.
         if (currentGameManager != null)
-        {
             currentGameManager.SetActive(false);
-        }
-
-        // ==========================================
-        // Enable next Game Manager
-        // ==========================================
 
         if (nextGameManager != null)
-        {
             nextGameManager.SetActive(true);
-        }
 
-        // ==========================================
-        // TELEPORT PLAYER
-        // ==========================================
-
-        CharacterController cc =
-            player.GetComponent<CharacterController>();
-
-        if (cc != null)
+        // Teleport the player while the screen is black.
+        if (player != null)
         {
-            cc.enabled = false;
-        }
+            CharacterController cc =
+                player.GetComponent<CharacterController>();
 
-        if (spawnPoint != null)
+            if (cc != null)
+                cc.enabled = false;
+
+            if (spawnPoint != null)
+            {
+                player.transform.position = spawnPoint.position;
+                player.transform.rotation = spawnPoint.rotation;
+            }
+            else
+            {
+                Debug.LogWarning(
+                    "RoomSwitcher: Spawn Point is not assigned."
+                );
+            }
+
+            if (cc != null)
+                cc.enabled = true;
+        }
+        else
         {
-            player.transform.position =
-                spawnPoint.position;
-
-            player.transform.rotation =
-                spawnPoint.rotation;
+            Debug.LogError(
+                "RoomSwitcher: Player reference is missing."
+            );
         }
 
-        if (cc != null)
-        {
-            cc.enabled = true;
-        }
+        // The transition manager restores controls after fade-in.
+        if (enableControlsImmediately)
+            EnablePlayerControls();
 
-        // ==========================================
-        // ENABLE PLAYER CONTROLS AGAIN
-        // ==========================================
-
-        EnablePlayerControls();
-
-        // ==========================================
-        // Hide task panel
-        // ==========================================
-
+        // Hide the current task panel.
         if (taskPanel != null)
-        {
             taskPanel.SetActive(false);
-        }
 
-        // ==========================================
-        // Hide current checklist
-        // ==========================================
-
+        // Update checklists.
         if (currentChecklist != null)
-        {
             currentChecklist.SetActive(false);
-        }
-
-        // ==========================================
-        // Show next checklist
-        // ==========================================
 
         if (nextChecklist != null)
-        {
             nextChecklist.SetActive(true);
-        }
 
-        // ==========================================
-        // ROOM 2 INSTRUCTION
-        // ==========================================
-
+        // Prepare Room 2 instruction panel.
         if (room2InstructionPanel != null &&
             nextRoom != null &&
             nextRoom.name == "room2")
@@ -475,30 +468,19 @@ public class RoomSwitcher : MonoBehaviour
             room2InstructionPanel.SetActive(true);
 
             Debug.Log(
-                "Room 2 Instruction Panel Shown!"
+                "Room 2 Instruction Panel Prepared."
             );
         }
 
-        // ==========================================
-        // Enable next Room Manager
-        // ==========================================
-
+        // Activate the destination room manager.
         if (nextRoomManager != null)
-        {
             nextRoomManager.SetActive(true);
-        }
 
-        // ==========================================
-        // START ROOM 2 VOICE + SUBTITLE
-        // ==========================================
+        Debug.Log("Switched to next room!");
 
-        StartRoom2Voice();
-
-        Debug.Log(
-            "Switched to next room!"
-        );
-
-        // Disable this RoomSwitcher
+        // Disable this RoomSwitcher after the room switch.
+        // The transition manager lives on a separate GameObject.
         gameObject.SetActive(false);
     }
+
 }

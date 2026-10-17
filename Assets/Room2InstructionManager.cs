@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using System.Collections;
 using TMPro;
@@ -6,6 +7,9 @@ public class Room2InstructionManager : MonoBehaviour
 {
     [Header("Instruction Panel")]
     public CanvasGroup instructionCanvasGroup;
+
+    [Tooltip("Root GameObject of the large Room 2 challenge panel.")]
+    public GameObject instructionPanelRoot;
 
     [Header("Instruction Text")]
     public TMP_Text instructionText;
@@ -29,24 +33,10 @@ public class Room2InstructionManager : MonoBehaviour
     // START
     // =========================================================
 
-    void Start()
+    private void Start()
     {
-        // Hide the large instruction panel initially
-        if (instructionCanvasGroup != null)
-        {
-            instructionCanvasGroup.alpha = 0f;
-            instructionCanvasGroup.interactable = false;
-            instructionCanvasGroup.blocksRaycasts = false;
-        }
-
-        // Hide top instruction initially.
-        // It will appear after GOT IT.
-        if (persistentInstructionCanvasGroup != null)
-        {
-            persistentInstructionCanvasGroup.alpha = 0f;
-            persistentInstructionCanvasGroup.interactable = false;
-            persistentInstructionCanvasGroup.blocksRaycasts = false;
-        }
+        HideLargeInstructionImmediately();
+        HidePersistentInstructionImmediately();
     }
 
     // =========================================================
@@ -55,10 +45,30 @@ public class Room2InstructionManager : MonoBehaviour
 
     public void ShowInstruction()
     {
+        // Make sure the panel root is active.
+        if (instructionPanelRoot != null &&
+            !instructionPanelRoot.activeSelf)
+        {
+            instructionPanelRoot.SetActive(true);
+        }
+
+        // Also ensure the CanvasGroup object is active.
+        if (instructionCanvasGroup != null &&
+            !instructionCanvasGroup.gameObject.activeSelf)
+        {
+            instructionCanvasGroup.gameObject.SetActive(true);
+        }
+
         if (instructionText != null)
         {
             instructionText.text =
                 "CHALLENGE 1 AWAITS — PROCEED TO TABLE 1";
+        }
+
+        if (instructionCanvasGroup != null)
+        {
+            instructionCanvasGroup.interactable = true;
+            instructionCanvasGroup.blocksRaycasts = true;
         }
 
         FadeTo(1f);
@@ -72,49 +82,31 @@ public class Room2InstructionManager : MonoBehaviour
     {
         Debug.Log("ROOM 2 INSTRUCTION CONFIRMED.");
 
-        // Hide large instruction panel
+        // Hide the large instruction panel.
         HideInstruction();
 
-        // Show top persistent instruction
+        // Show the persistent top instruction.
         ShowPersistentInstruction();
 
-        // =========================================
-        // SHOW CONTROLS AGAIN
-        // =========================================
-
+        // Restore controls.
         if (controlsPanel != null)
         {
             controlsPanel.SetActive(true);
-
-            Debug.Log(
-                "CONTROLS PANEL SHOWN AGAIN IN ROOM 2."
-            );
+            Debug.Log("ROOM 2 CONTROLS SHOWN.");
         }
 
-        // =========================================
-        // SHOW CENTER DOT AGAIN
-        // =========================================
-
+        // Restore the center dot.
         if (centerDot != null)
         {
             centerDot.SetActive(true);
-
-            Debug.Log(
-                "CENTER DOT SHOWN AGAIN IN ROOM 2."
-            );
+            Debug.Log("ROOM 2 CENTER DOT SHOWN.");
         }
 
-        // =========================================
-        // START ROOM 2 TIMER
-        // =========================================
-
+        // Start the Room 2 timer only after GOT IT.
         if (Room2ChallengeTimer.Instance != null)
         {
             Room2ChallengeTimer.Instance.StartTimer();
-
-            Debug.Log(
-                "ROOM 2 GLOBAL TIMER STARTED AFTER GOT IT."
-            );
+            Debug.Log("ROOM 2 TIMER STARTED AFTER GOT IT.");
         }
         else
         {
@@ -122,6 +114,10 @@ public class Room2InstructionManager : MonoBehaviour
                 "Room2ChallengeTimer Instance NOT FOUND!"
             );
         }
+
+        // Lock the cursor for gameplay.
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     // =========================================================
@@ -136,7 +132,11 @@ public class Room2InstructionManager : MonoBehaviour
         if (persistentFadeCoroutine != null)
         {
             StopCoroutine(persistentFadeCoroutine);
+            persistentFadeCoroutine = null;
         }
+
+        persistentInstructionCanvasGroup.interactable = false;
+        persistentInstructionCanvasGroup.blocksRaycasts = false;
 
         persistentFadeCoroutine =
             StartCoroutine(
@@ -156,6 +156,7 @@ public class Room2InstructionManager : MonoBehaviour
         if (persistentFadeCoroutine != null)
         {
             StopCoroutine(persistentFadeCoroutine);
+            persistentFadeCoroutine = null;
         }
 
         persistentFadeCoroutine =
@@ -165,14 +166,70 @@ public class Room2InstructionManager : MonoBehaviour
     }
 
     // =========================================================
-    // RESET ROOM 2 INSTRUCTION
+    // RESET ROOM 2 INSTRUCTION FOR TRY AGAIN / RESTART
     // =========================================================
 
     public void ResetForTryAgain()
     {
         Debug.Log("RESETTING ROOM 2 INSTRUCTIONS...");
 
-        // Stop current fades
+        StopInstructionFades();
+
+        // Restore the initial challenge instruction text.
+        if (instructionText != null)
+        {
+            instructionText.text =
+                "CHALLENGE 1 AWAITS — PROCEED TO TABLE 1";
+        }
+
+        // Hide the persistent top instruction until GOT IT.
+        HidePersistentInstructionImmediately();
+
+        // Hide controls and center dot until GOT IT is clicked.
+        if (controlsPanel != null)
+        {
+            controlsPanel.SetActive(false);
+        }
+
+        if (centerDot != null)
+        {
+            centerDot.SetActive(false);
+        }
+
+        // Restore and show the large challenge panel.
+        if (instructionPanelRoot != null)
+        {
+            instructionPanelRoot.SetActive(true);
+        }
+
+        if (instructionCanvasGroup != null)
+        {
+            if (!instructionCanvasGroup.gameObject.activeSelf)
+            {
+                instructionCanvasGroup.gameObject.SetActive(true);
+            }
+
+            // Start the fade from transparent.
+            instructionCanvasGroup.alpha = 0f;
+            instructionCanvasGroup.interactable = true;
+            instructionCanvasGroup.blocksRaycasts = true;
+        }
+
+        ShowInstruction();
+
+        // Allow the user to click GOT IT.
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        Debug.Log("ROOM 2 INSTRUCTION PANEL RESTORED.");
+    }
+
+    // =========================================================
+    // STOP ACTIVE FADE COROUTINES
+    // =========================================================
+
+    private void StopInstructionFades()
+    {
         if (fadeCoroutine != null)
         {
             StopCoroutine(fadeCoroutine);
@@ -184,39 +241,41 @@ public class Room2InstructionManager : MonoBehaviour
             StopCoroutine(persistentFadeCoroutine);
             persistentFadeCoroutine = null;
         }
+    }
 
-        // Reset large instruction
-        if (instructionText != null)
-        {
-            instructionText.text =
-                "CHALLENGE 1 AWAITS — PROCEED TO TABLE 1";
-        }
+    // =========================================================
+    // HIDE LARGE INSTRUCTION IMMEDIATELY
+    // =========================================================
 
-        if (instructionCanvasGroup != null)
-        {
-            instructionCanvasGroup.alpha = 0f;
-            instructionCanvasGroup.interactable = false;
-            instructionCanvasGroup.blocksRaycasts = false;
-        }
+    private void HideLargeInstructionImmediately()
+    {
+        if (instructionCanvasGroup == null)
+            return;
 
-        // Reset TOP instruction
-        if (persistentInstructionCanvasGroup != null)
-        {
-            persistentInstructionCanvasGroup.alpha = 1f;
-            persistentInstructionCanvasGroup.interactable = false;
-            persistentInstructionCanvasGroup.blocksRaycasts = false;
-        }
+        instructionCanvasGroup.alpha = 0f;
+        instructionCanvasGroup.interactable = false;
+        instructionCanvasGroup.blocksRaycasts = false;
+    }
 
-        Debug.Log(
-            "ROOM 2 INSTRUCTION RESET COMPLETE."
-        );
+    // =========================================================
+    // HIDE PERSISTENT INSTRUCTION IMMEDIATELY
+    // =========================================================
+
+    private void HidePersistentInstructionImmediately()
+    {
+        if (persistentInstructionCanvasGroup == null)
+            return;
+
+        persistentInstructionCanvasGroup.alpha = 0f;
+        persistentInstructionCanvasGroup.interactable = false;
+        persistentInstructionCanvasGroup.blocksRaycasts = false;
     }
 
     // =========================================================
     // PERSISTENT TEXT FADE
     // =========================================================
 
-    IEnumerator FadePersistentInstruction(float targetAlpha)
+    private IEnumerator FadePersistentInstruction(float targetAlpha)
     {
         if (persistentInstructionCanvasGroup == null)
             yield break;
@@ -224,27 +283,23 @@ public class Room2InstructionManager : MonoBehaviour
         float startAlpha =
             persistentInstructionCanvasGroup.alpha;
 
+        float duration = Mathf.Max(0.01f, fadeDuration);
         float elapsed = 0f;
 
-        while (elapsed < fadeDuration)
+        while (elapsed < duration)
         {
-            elapsed += Time.deltaTime;
+            elapsed += Time.unscaledDeltaTime;
 
-            float t =
-                elapsed / fadeDuration;
+            float t = Mathf.Clamp01(elapsed / duration);
 
             persistentInstructionCanvasGroup.alpha =
-                Mathf.Lerp(
-                    startAlpha,
-                    targetAlpha,
-                    t
-                );
+                Mathf.Lerp(startAlpha, targetAlpha, t);
 
             yield return null;
         }
 
-        persistentInstructionCanvasGroup.alpha =
-            targetAlpha;
+        persistentInstructionCanvasGroup.alpha = targetAlpha;
+        persistentFadeCoroutine = null;
     }
 
     // =========================================================
@@ -253,6 +308,13 @@ public class Room2InstructionManager : MonoBehaviour
 
     public void HideInstruction()
     {
+        if (instructionCanvasGroup == null)
+            return;
+
+        // Prevent clicks through the fading panel.
+        instructionCanvasGroup.interactable = false;
+        instructionCanvasGroup.blocksRaycasts = false;
+
         FadeTo(0f);
     }
 
@@ -268,7 +330,7 @@ public class Room2InstructionManager : MonoBehaviour
                 "CHALLENGE CLEARED — PROCEED TO TABLE 2";
         }
 
-        FadeTo(1f);
+        ShowInstruction();
     }
 
     // =========================================================
@@ -283,7 +345,7 @@ public class Room2InstructionManager : MonoBehaviour
                 "NEXT CHALLENGE AWAITS — FIND THE TABLE";
         }
 
-        FadeTo(1f);
+        ShowInstruction();
     }
 
     // =========================================================
@@ -298,14 +360,14 @@ public class Room2InstructionManager : MonoBehaviour
                 "FINAL CHALLENGE AWAITS — PROCEED TO THE LAST TABLE";
         }
 
-        FadeTo(1f);
+        ShowInstruction();
     }
 
     // =========================================================
     // GENERAL FADE
     // =========================================================
 
-    void FadeTo(float targetAlpha)
+    private void FadeTo(float targetAlpha)
     {
         if (instructionCanvasGroup == null)
             return;
@@ -313,6 +375,7 @@ public class Room2InstructionManager : MonoBehaviour
         if (fadeCoroutine != null)
         {
             StopCoroutine(fadeCoroutine);
+            fadeCoroutine = null;
         }
 
         fadeCoroutine =
@@ -325,7 +388,7 @@ public class Room2InstructionManager : MonoBehaviour
     // GENERAL FADE COROUTINE
     // =========================================================
 
-    IEnumerator FadeCoroutine(float targetAlpha)
+    private IEnumerator FadeCoroutine(float targetAlpha)
     {
         if (instructionCanvasGroup == null)
             yield break;
@@ -333,26 +396,22 @@ public class Room2InstructionManager : MonoBehaviour
         float startAlpha =
             instructionCanvasGroup.alpha;
 
+        float duration = Mathf.Max(0.01f, fadeDuration);
         float elapsed = 0f;
 
-        while (elapsed < fadeDuration)
+        while (elapsed < duration)
         {
-            elapsed += Time.deltaTime;
+            elapsed += Time.unscaledDeltaTime;
 
-            float t =
-                elapsed / fadeDuration;
+            float t = Mathf.Clamp01(elapsed / duration);
 
             instructionCanvasGroup.alpha =
-                Mathf.Lerp(
-                    startAlpha,
-                    targetAlpha,
-                    t
-                );
+                Mathf.Lerp(startAlpha, targetAlpha, t);
 
             yield return null;
         }
 
-        instructionCanvasGroup.alpha =
-            targetAlpha;
+        instructionCanvasGroup.alpha = targetAlpha;
+        fadeCoroutine = null;
     }
 }

@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using TMPro;
 
@@ -6,7 +7,7 @@ public class Room2ChallengeTimer : MonoBehaviour
     public static Room2ChallengeTimer Instance;
 
     [Header("Timer Settings")]
-    public float startingTime = 900f; // 15 minutes
+    public float startingTime = 900f;
     public float wrongAnswerPenalty = 10f;
 
     [Header("Timer Warning Settings")]
@@ -27,6 +28,9 @@ public class Room2ChallengeTimer : MonoBehaviour
     [Header("Game Over")]
     public GameObject gameOverPanel;
 
+    [Header("Pause Menu")]
+    [SerializeField] private PauseMenuController pauseMenuController;
+
     [Header("Puzzle Panels")]
     public GameObject sudokuPanel;
     public GameObject crosswordPanel;
@@ -41,10 +45,9 @@ public class Room2ChallengeTimer : MonoBehaviour
 
     private Color normalTimerColor;
 
-
-    // =========================================================
+    // ==========================================
     // AWAKE
-    // =========================================================
+    // ==========================================
 
     private void Awake()
     {
@@ -59,30 +62,19 @@ public class Room2ChallengeTimer : MonoBehaviour
         }
     }
 
-
-    // =========================================================
+    // ==========================================
     // START
-    // =========================================================
+    // ==========================================
 
     private void Start()
     {
         timeRemaining = startingTime;
 
-        // -----------------------------------------------------
-        // TIMER TEXT
-        // -----------------------------------------------------
-
         if (timerText != null)
         {
             normalTimerColor = timerText.color;
-
             timerText.gameObject.SetActive(false);
         }
-
-
-        // -----------------------------------------------------
-        // TICKING AUDIO
-        // -----------------------------------------------------
 
         if (timerAudioSource != null)
         {
@@ -92,31 +84,16 @@ public class Room2ChallengeTimer : MonoBehaviour
             timerAudioSource.pitch = normalTickPitch;
         }
 
-
-        // -----------------------------------------------------
-        // GAME OVER AUDIO
-        // -----------------------------------------------------
-
         if (gameOverAudioSource != null)
         {
             gameOverAudioSource.Stop();
             gameOverAudioSource.playOnAwake = false;
         }
 
-
-        // -----------------------------------------------------
-        // HIDE GAME OVER
-        // -----------------------------------------------------
-
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(false);
         }
-
-
-        // -----------------------------------------------------
-        // CLOSE PUZZLES
-        // -----------------------------------------------------
 
         if (sudokuPanel != null)
         {
@@ -128,52 +105,35 @@ public class Room2ChallengeTimer : MonoBehaviour
             crosswordPanel.SetActive(false);
         }
 
-
         UpdateTimerDisplay();
     }
 
-
-    // =========================================================
+    // ==========================================
     // UPDATE
-    // =========================================================
+    // ==========================================
 
     private void Update()
     {
-        if (!timerRunning)
+        if (!timerRunning || timerFinished)
             return;
-
-        if (timerFinished)
-            return;
-
 
         timeRemaining -= Time.deltaTime;
-
-
-        // -----------------------------------------------------
-        // TIME REACHED ZERO
-        // -----------------------------------------------------
 
         if (timeRemaining <= 0f)
         {
             timeRemaining = 0f;
-
             UpdateTimerDisplay();
-
             TimeUp();
-
             return;
         }
 
-
         UpdateTimerDisplay();
-
         UpdateTimerWarning();
     }
 
-
-    // =========================================================
+    // ==========================================
     // START TIMER
-    // =========================================================
+    // ==========================================
 
     public void StartTimer()
     {
@@ -182,25 +142,13 @@ public class Room2ChallengeTimer : MonoBehaviour
 
         timerRunning = true;
 
-
-        // -----------------------------------------------------
-        // SHOW TIMER
-        // -----------------------------------------------------
-
         if (timerText != null)
         {
             timerText.gameObject.SetActive(true);
-
             timerText.color = normalTimerColor;
         }
 
-
-        // -----------------------------------------------------
-        // START TICKING
-        // -----------------------------------------------------
-
-        if (timerAudioSource != null &&
-            tickingSound != null)
+        if (timerAudioSource != null && tickingSound != null)
         {
             timerAudioSource.clip = tickingSound;
             timerAudioSource.loop = true;
@@ -212,16 +160,14 @@ public class Room2ChallengeTimer : MonoBehaviour
             }
         }
 
-
         UpdateTimerDisplay();
 
         Debug.Log("ROOM 2 TIMER STARTED!");
     }
 
-
-    // =========================================================
+    // ==========================================
     // STOP TIMER
-    // =========================================================
+    // ==========================================
 
     public void StopTimer()
     {
@@ -235,32 +181,24 @@ public class Room2ChallengeTimer : MonoBehaviour
         Debug.Log("ROOM 2 TIMER STOPPED!");
     }
 
-
-    // =========================================================
+    // ==========================================
     // WRONG ANSWER
-    // =========================================================
+    // ==========================================
 
     public void WrongAnswer()
     {
-        if (!timerRunning)
+        if (!timerRunning || timerFinished)
             return;
-
-        if (timerFinished)
-            return;
-
 
         timeRemaining -= wrongAnswerPenalty;
-
 
         if (timeRemaining < 0f)
         {
             timeRemaining = 0f;
         }
 
-
         UpdateTimerDisplay();
         UpdateTimerWarning();
-
 
         Debug.Log(
             "WRONG ANSWER! -" +
@@ -268,24 +206,18 @@ public class Room2ChallengeTimer : MonoBehaviour
             " seconds."
         );
 
-
         if (timeRemaining <= 0f)
         {
             TimeUp();
         }
     }
 
-
-    // =========================================================
+    // ==========================================
     // TIMER WARNING
-    // =========================================================
+    // ==========================================
 
     private void UpdateTimerWarning()
     {
-        // -----------------------------------------------------
-        // RED TIMER
-        // -----------------------------------------------------
-
         if (timerText != null)
         {
             if (timeRemaining <= redTimeThreshold)
@@ -297,11 +229,6 @@ public class Room2ChallengeTimer : MonoBehaviour
                 timerText.color = normalTimerColor;
             }
         }
-
-
-        // -----------------------------------------------------
-        // FAST TICK
-        // -----------------------------------------------------
 
         if (timerAudioSource != null)
         {
@@ -316,119 +243,90 @@ public class Room2ChallengeTimer : MonoBehaviour
         }
     }
 
-
-    // =========================================================
+    // ==========================================
     // UPDATE TIMER TEXT
-    // =========================================================
+    // ==========================================
 
     private void UpdateTimerDisplay()
     {
         if (timerText == null)
             return;
 
+        int minutes = Mathf.FloorToInt(timeRemaining / 60f);
+        int seconds = Mathf.FloorToInt(timeRemaining % 60f);
 
-        int minutes =
-            Mathf.FloorToInt(
-                timeRemaining / 60f
-            );
-
-        int seconds =
-            Mathf.FloorToInt(
-                timeRemaining % 60f
-            );
-
-
-        timerText.text =
-            string.Format(
-                "{0:00}:{1:00}",
-                minutes,
-                seconds
-            );
+        timerText.text = string.Format(
+            "{0:00}:{1:00}",
+            minutes,
+            seconds
+        );
     }
 
-
-    // =========================================================
-    // TIME UP
-    // =========================================================
+    // ==========================================
+    // TIME UP / GAME OVER
+    // ==========================================
 
     private void TimeUp()
     {
         if (timerFinished)
             return;
 
-
         timerFinished = true;
         timerRunning = false;
 
-
-        // -----------------------------------------------------
-        // STOP TICKING
-        // -----------------------------------------------------
-
+        // Stop ticking sound.
         if (timerAudioSource != null)
         {
             timerAudioSource.Stop();
+            timerAudioSource.pitch = normalTickPitch;
         }
 
-
-        // -----------------------------------------------------
-        // MAKE TIMER RED
-        // -----------------------------------------------------
-
+        // Make timer red.
         if (timerText != null)
         {
             timerText.color = Color.red;
         }
 
-
         Debug.Log("ROOM 2 TIME UP!");
 
-
-        // -----------------------------------------------------
-        // CLOSE SUDOKU
-        // -----------------------------------------------------
-
+        // Close Sudoku.
         if (sudokuPanel != null)
         {
             sudokuPanel.SetActive(false);
-
             Debug.Log("SUDOKU PANEL CLOSED!");
         }
 
-
-        // -----------------------------------------------------
-        // CLOSE CROSSWORD
-        // -----------------------------------------------------
-
+        // Close Crossword.
         if (crosswordPanel != null)
         {
             crosswordPanel.SetActive(false);
-
             Debug.Log("CROSSWORD PANEL CLOSED!");
         }
 
+        // Hide Pause button and Pause Menu.
+        if (pauseMenuController != null)
+        {
+            pauseMenuController.HidePauseMenuForGameOver();
+        }
+        else
+        {
+            Debug.LogWarning(
+                "Pause Menu Controller is not assigned " +
+                "in Room2ChallengeTimer Inspector!"
+            );
+        }
 
-        // -----------------------------------------------------
-        // PLAY GAME OVER SOUND
-        // -----------------------------------------------------
-
-        if (gameOverAudioSource != null &&
-            gameOverSound != null)
+        // Play Game Over sound.
+        if (gameOverAudioSource != null && gameOverSound != null)
         {
             gameOverAudioSource.PlayOneShot(gameOverSound);
-
             Debug.Log("GAME OVER SOUND PLAYED!");
         }
 
-
-        // -----------------------------------------------------
-        // SHOW GAME OVER PANEL
-        // -----------------------------------------------------
-
+        // Show Game Over panel.
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
-
             Debug.Log("ROOM 2 GAME OVER PANEL ACTIVATED!");
         }
         else
@@ -438,108 +336,79 @@ public class Room2ChallengeTimer : MonoBehaviour
             );
         }
 
-
-        // -----------------------------------------------------
-        // UNLOCK CURSOR
-        // -----------------------------------------------------
-
+        // Unlock cursor for Game Over buttons.
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
 
-
-    // =========================================================
+    // ==========================================
     // GET TIME
-    // =========================================================
+    // ==========================================
 
     public float GetRemainingTime()
     {
         return timeRemaining;
     }
 
-
-    // =========================================================
+    // ==========================================
     // CHECK RUNNING
-    // =========================================================
+    // ==========================================
 
     public bool IsTimerRunning()
     {
         return timerRunning;
     }
 
-
-    // =========================================================
-    // RESET TIMER
-    // =========================================================
+    // ==========================================
+    // RESET TIMER / TRY AGAIN
+    // ==========================================
 
     public void ResetTimer()
     {
-        // -----------------------------------------------------
-        // RESET TIME
-        // -----------------------------------------------------
-
+        // Reset timer state.
         timeRemaining = startingTime;
-
         timerRunning = false;
         timerFinished = false;
 
-
-        // -----------------------------------------------------
-        // RESET TIMER TEXT
-        // -----------------------------------------------------
-
+        // Reset timer text.
         if (timerText != null)
         {
             timerText.color = normalTimerColor;
-
             timerText.gameObject.SetActive(false);
         }
 
-
-        // -----------------------------------------------------
-        // STOP TICKING
-        // -----------------------------------------------------
-
+        // Stop ticking and restore normal pitch.
         if (timerAudioSource != null)
         {
             timerAudioSource.Stop();
-
             timerAudioSource.pitch = normalTickPitch;
         }
 
-
-        // -----------------------------------------------------
-        // HIDE GAME OVER
-        // -----------------------------------------------------
-
+        // Hide Game Over.
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(false);
         }
 
-
-        // -----------------------------------------------------
-        // CLOSE SUDOKU
-        // -----------------------------------------------------
-
+        // Close Sudoku.
         if (sudokuPanel != null)
         {
             sudokuPanel.SetActive(false);
         }
 
-
-        // -----------------------------------------------------
-        // CLOSE CROSSWORD
-        // -----------------------------------------------------
-
+        // Close Crossword.
         if (crosswordPanel != null)
         {
             crosswordPanel.SetActive(false);
         }
 
+        // Restore Pause button after restart.
+        if (pauseMenuController != null)
+        {
+            pauseMenuController.ShowPauseButton();
+        }
 
         UpdateTimerDisplay();
-
 
         Debug.Log("ROOM 2 TIMER RESET!");
     }

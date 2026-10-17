@@ -4903,7 +4903,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Room2InstructionPanel
   instructionPanel: {fileID: 131122995}
-  playerMovement: {fileID: 1620056347}
+  playerMovement: {fileID: 1620056349}
   playerController: {fileID: 1620056347}
 --- !u!1 &131740392
 GameObject:
@@ -8084,7 +8084,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -40.12, y: -4.9}
+  m_AnchoredPosition: {x: -75.9, y: -0.6}
   m_SizeDelta: {x: 25, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &221980264
@@ -12229,6 +12229,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4321026226760780, guid: 7e9db585073230b438ac03f1ddea8b07, type: 3}
   m_PrefabInstance: {fileID: 305585636}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &316350610
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 316350611}
+  m_Layer: 0
+  m_Name: SpawnPointHallway
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &316350611
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 316350610}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.1139, y: -1.24, z: 3.86}
+  m_LocalScale: {x: 1.0336995, y: 0.9594962, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &324159750
 GameObject:
   m_ObjectHideFlags: 0
@@ -16344,6 +16375,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Room2InstructionManager
   instructionCanvasGroup: {fileID: 1991537493}
+  instructionPanelRoot: {fileID: 131122995}
   instructionText: {fileID: 1991537494}
   persistentInstructionCanvasGroup: {fileID: 1991537493}
   controlsPanel: {fileID: 1914603536}
@@ -21126,6 +21158,7 @@ MonoBehaviour:
   timerText: {fileID: 1420513989}
   gameOverPanel: {fileID: 668809789}
   instructionPanel: {fileID: 0}
+  pauseMenuController: {fileID: 0}
   playerMove: {fileID: 0}
   playerLook: {fileID: 0}
   gameOverAudioSource: {fileID: 0}
@@ -25456,6 +25489,7 @@ GameObject:
   - component: {fileID: 622049300}
   - component: {fileID: 622049299}
   - component: {fileID: 622049301}
+  - component: {fileID: 622049302}
   m_Layer: 0
   m_Name: GameManagerRoom1
   m_TagString: Untagged
@@ -25479,6 +25513,7 @@ MonoBehaviour:
   timerText: {fileID: 1420513989}
   gameOverPanel: {fileID: 901895655}
   instructionPanel: {fileID: 256100277}
+  pauseMenuController: {fileID: 1103261768}
   playerMove: {fileID: 1620056349}
   playerLook: {fileID: 1620056347}
   gameOverAudioSource: {fileID: 622049301}
@@ -25596,6 +25631,29 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &622049302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 622049298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 230ac5675172fe04ba9848801711477e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Room1GameOverController
+  player: {fileID: 1620056338}
+  playerMovement: {fileID: 1620056349}
+  playerLook: {fileID: 1620056347}
+  hallwaySpawnPoint: {fileID: 316350611}
+  gameOverPanel: {fileID: 901895655}
+  taskManager: {fileID: 266563934}
+  checklistManager: {fileID: 1789237632}
+  room1Timer: {fileID: 622049299}
+  roomEntryTrigger: {fileID: 24972054}
+  room1Door: {fileID: 26364930}
+  pauseMenuController: {fileID: 1103261768}
 --- !u!1001 &622434980
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27846,6 +27904,7 @@ MonoBehaviour:
   sudokuPanel: {fileID: 0}
   sudokuInteractionDistance: 3
   sudokuManager: {fileID: 0}
+  teleportTransitionManager: {fileID: 1415302882}
   canProceed: 0
   testRoom2: 0
 --- !u!4 &677955355
@@ -28400,6 +28459,7 @@ MonoBehaviour:
   timerText: {fileID: 1420513989}
   gameOverPanel: {fileID: 668809789}
   instructionPanel: {fileID: 0}
+  pauseMenuController: {fileID: 0}
   playerMove: {fileID: 0}
   playerLook: {fileID: 0}
   gameOverAudioSource: {fileID: 0}
@@ -36940,6 +37000,7 @@ MonoBehaviour:
   sudokuManager: {fileID: 664374332}
   crosswordManager: {fileID: 37296788}
   instructionManager: {fileID: 411781668}
+  room2VoiceManager: {fileID: 0}
   sudokuInteractPrompt: {fileID: 1696763115}
   crosswordInteractPrompt: {fileID: 526314788}
 --- !u!114 &901895657
@@ -42056,6 +42117,7 @@ MonoBehaviour:
   normalTickPitch: 1
   fastTickPitch: 2.5
   gameOverPanel: {fileID: 1879392122}
+  pauseMenuController: {fileID: 1103261768}
   sudokuPanel: {fileID: 2031270140}
   crosswordPanel: {fileID: 2008009145}
   gameOverAudioSource: {fileID: 1034417945}
@@ -44744,6 +44806,94 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1081385363}
   m_CullTransparentMesh: 1
+--- !u!1 &1085847560
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1085847564}
+  - component: {fileID: 1085847563}
+  - component: {fileID: 1085847562}
+  - component: {fileID: 1085847561}
+  m_Layer: 5
+  m_Name: FadeOverlay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!225 &1085847561
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1085847560}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!114 &1085847562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1085847560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1085847563
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1085847560}
+  m_CullTransparentMesh: 1
+--- !u!224 &1085847564
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1085847560}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2031548543}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1086080883
 GameObject:
   m_ObjectHideFlags: 0
@@ -45913,8 +46063,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseMenuController
   pauseOverlay: {fileID: 193119693}
+  pauseButton: {fileID: 1247379599}
   playerMovement: {fileID: 1620056349}
   playerController: {fileID: 1620056347}
+  room1Root: {fileID: 422298753}
+  room1GameOverController: {fileID: 622049302}
+  room2Root: {fileID: 809894790}
+  room2GameOverController: {fileID: 1879392126}
 --- !u!4 &1103530421 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4356422241217904004, guid: 424622fb2f5ecf54b87e7c616e7ec1dd, type: 3}
@@ -55344,7 +55499,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 7305076445364285805, guid: 7699f5af06713974ba61777a8a830f6e, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4327680794412319598, guid: 7699f5af06713974ba61777a8a830f6e, type: 3}
@@ -57617,6 +57773,54 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1413451229}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1415302881
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1415302883}
+  - component: {fileID: 1415302882}
+  m_Layer: 0
+  m_Name: TeleportTransitionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1415302882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1415302881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9fc25c397787944a994d1a9766ddeb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TeleportTransitionManager
+  fadeGroup: {fileID: 1085847561}
+  fadeDuration: 0.6
+  playerMovement: {fileID: 1620056349}
+  playerController: {fileID: 1620056347}
+--- !u!4 &1415302883
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1415302881}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 251.06786, y: -0.00001, z: 2542.7559}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1417951824
 GameObject:
   m_ObjectHideFlags: 0
@@ -60310,7 +60514,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -73}
+  m_AnchoredPosition: {x: 0, y: -82}
   m_SizeDelta: {x: 360, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1463926462
@@ -60360,8 +60564,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 42
-  m_fontSizeBase: 42
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -64356,7 +64560,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1571496149}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1103261768}
+        m_TargetAssemblyTypeName: PauseMenuController, Assembly-CSharp
+        m_MethodName: RestartChallenge
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1571496149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65999,9 +66215,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 622049299}
-        m_TargetAssemblyTypeName: GameTimer, Assembly-CSharp
-        m_MethodName: RestartGame
+      - m_Target: {fileID: 622049302}
+        m_TargetAssemblyTypeName: Room1GameOverController, Assembly-CSharp
+        m_MethodName: RestartFromHallway
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -75362,6 +75578,7 @@ MonoBehaviour:
   sudokuPanel: {fileID: 2031270140}
   sudokuInteractionDistance: 3
   sudokuManager: {fileID: 664374332}
+  teleportTransitionManager: {fileID: 1415302882}
   canProceed: 0
   testRoom2: 0
 --- !u!4 &1859170311
@@ -76261,6 +76478,7 @@ MonoBehaviour:
   sudokuManager: {fileID: 664374332}
   crosswordManager: {fileID: 37296788}
   instructionManager: {fileID: 411781668}
+  room2VoiceManager: {fileID: 454492380}
   sudokuInteractPrompt: {fileID: 1696763115}
   crosswordInteractPrompt: {fileID: 526314788}
 --- !u!1 &1881203137
@@ -82391,6 +82609,109 @@ MonoBehaviour:
   playerLook: {fileID: 1620056347}
   playerCamera: {fileID: 330585546}
   interactPrompt: {fileID: 1696763115}
+--- !u!1 &2031548542
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2031548543}
+  - component: {fileID: 2031548546}
+  - component: {fileID: 2031548545}
+  - component: {fileID: 2031548544}
+  m_Layer: 5
+  m_Name: TeleportTransitionCanvas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2031548543
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031548542}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1085847564}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
+--- !u!114 &2031548544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031548542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &2031548545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031548542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
+  m_UiScaleMode: 1
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
+--- !u!223 &2031548546
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031548542}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 2000
+  m_TargetDisplay: 0
 --- !u!1 &2031702782
 GameObject:
   m_ObjectHideFlags: 0
@@ -86953,6 +87274,7 @@ SceneRoots:
   - {fileID: 1620056338}
   - {fileID: 1142479023}
   - {fileID: 1103261767}
+  - {fileID: 2031548543}
   - {fileID: 674569812}
   - {fileID: 1545731899}
   - {fileID: 929362564}
@@ -86991,3 +87313,5 @@ SceneRoots:
   - {fileID: 1434355080}
   - {fileID: 411781669}
   - {fileID: 1864959097}
+  - {fileID: 1415302883}
+  - {fileID: 316350611}
