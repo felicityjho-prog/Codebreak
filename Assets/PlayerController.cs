@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public float mouseSensitivity = 100f;
     public Transform cameraTransform;
 
+    private float baseMouseSensitivity;
     private float xRotation = 0f;
     private bool cursorLocked = true;
     private bool lookEnabled = true;
@@ -15,15 +16,28 @@ public class PlayerController : MonoBehaviour
     public bool IsLookEnabled => lookEnabled;
 
     // =====================================================
+    // AWAKE
+    // =====================================================
+
+    private void Awake()
+    {
+        // Preserve the Inspector value as the base sensitivity.
+        baseMouseSensitivity = mouseSensitivity;
+    }
+
+    // =====================================================
     // START
     // =====================================================
 
-    void Start()
+    private void Start()
     {
         float sensitivityMultiplier =
-            PlayerPrefs.GetFloat("MouseSensitivityMultiplier", 1f);
+            PlayerPrefs.GetFloat(
+                "MouseSensitivityMultiplier",
+                1f
+            );
 
-        mouseSensitivity *= sensitivityMultiplier;
+        SetSensitivityMultiplier(sensitivityMultiplier);
 
         LockCursor();
 
@@ -47,7 +61,28 @@ public class PlayerController : MonoBehaviour
         Debug.Log(
             "PlayerController started. " +
             "Look Enabled: " + lookEnabled +
-            " | Camera Assigned: " + (cameraTransform != null)
+            " | Camera Assigned: " + (cameraTransform != null) +
+            " | Mouse Sensitivity: " + mouseSensitivity
+        );
+    }
+
+    // =====================================================
+    // APPLY SENSITIVITY MULTIPLIER
+    // =====================================================
+
+    public void SetSensitivityMultiplier(float multiplier)
+    {
+        multiplier = Mathf.Clamp(multiplier, 0.5f, 3f);
+
+        // Always calculate from the original base value.
+        // This prevents multiplying an already-multiplied value.
+        mouseSensitivity = baseMouseSensitivity * multiplier;
+
+        Debug.Log(
+            "Mouse sensitivity updated. Multiplier: " +
+            multiplier +
+            " | Effective Sensitivity: " +
+            mouseSensitivity
         );
     }
 
@@ -55,7 +90,7 @@ public class PlayerController : MonoBehaviour
     // UPDATE
     // =====================================================
 
-    void Update()
+    private void Update()
     {
         // Toggle cursor with F.
         if (Input.GetKeyDown(KeyCode.F))
@@ -63,7 +98,7 @@ public class PlayerController : MonoBehaviour
             UnlockCursor();
         }
 
-        // Lock the cursor only when clicking outside the UI.
+        // Lock cursor only when clicking outside the UI.
         if (Input.GetMouseButtonDown(0) &&
             !cursorLocked &&
             lookEnabled)

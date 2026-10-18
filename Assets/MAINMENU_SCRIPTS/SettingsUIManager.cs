@@ -15,41 +15,43 @@ public class SettingsUIManager : MonoBehaviour
     public Slider mouseSensitivitySlider;
     public TMP_Text mouseSensitivityValue;
 
+    [Header("Player Controller")]
+    [SerializeField] private PlayerController playerController;
+
     private const string VolumeKey = "MasterVolume";
     private const string FullscreenKey = "FullscreenEnabled";
     private const string SensitivityKey = "MouseSensitivityMultiplier";
 
     private void Start()
     {
+        // Find the player in MainGame if one exists.
+        if (playerController == null)
+        {
+            playerController = FindFirstObjectByType<PlayerController>();
+        }
+
         InitializeMasterVolume();
         InitializeFullscreen();
         InitializeMouseSensitivity();
     }
 
-    // =========================================
-    // MASTER VOLUME
-    // =========================================
+    // ---------------- MASTER VOLUME ----------------
 
     private void InitializeMasterVolume()
     {
-        float savedVolume =
-            Mathf.Clamp01(PlayerPrefs.GetFloat(VolumeKey, 1f));
+        float savedVolume = PlayerPrefs.GetFloat(VolumeKey, 1f);
 
         AudioListener.volume = savedVolume;
 
-        if (masterVolumeSlider == null)
+        if (masterVolumeSlider != null)
         {
-            Debug.LogWarning("Master Volume Slider is not assigned.");
-            return;
+            masterVolumeSlider.minValue = 0f;
+            masterVolumeSlider.maxValue = 1f;
+
+            masterVolumeSlider.SetValueWithoutNotify(savedVolume);
+            masterVolumeSlider.onValueChanged.RemoveListener(SetMasterVolume);
+            masterVolumeSlider.onValueChanged.AddListener(SetMasterVolume);
         }
-
-        masterVolumeSlider.minValue = 0f;
-        masterVolumeSlider.maxValue = 1f;
-
-        masterVolumeSlider.SetValueWithoutNotify(savedVolume);
-
-        masterVolumeSlider.onValueChanged.RemoveListener(SetMasterVolume);
-        masterVolumeSlider.onValueChanged.AddListener(SetMasterVolume);
     }
 
     public void SetMasterVolume(float value)
@@ -62,25 +64,21 @@ public class SettingsUIManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    // =========================================
-    // FULLSCREEN
-    // =========================================
+    // ---------------- FULLSCREEN ----------------
 
     private void InitializeFullscreen()
     {
-        bool savedFullscreen = true;
+        bool savedFullscreen =
+            PlayerPrefs.GetInt(FullscreenKey, 1) == 1;
 
-        if (fullscreenToggle == null)
+        if (fullscreenToggle != null)
         {
-            Debug.LogWarning("Fullscreen Toggle is not assigned.");
-            return;
+            fullscreenToggle.SetIsOnWithoutNotify(savedFullscreen);
+            fullscreenToggle.onValueChanged.RemoveListener(SetFullscreen);
+            fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
         }
 
-        fullscreenToggle.SetIsOnWithoutNotify(savedFullscreen);
-
-        fullscreenToggle.onValueChanged.RemoveListener(SetFullscreen);
-        fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
-
+        // Apply the saved setting in a built game.
         if (!Application.isEditor)
         {
             ApplyFullscreen(savedFullscreen);
@@ -102,11 +100,11 @@ public class SettingsUIManager : MonoBehaviour
     {
         if (enabled)
         {
-            Resolution currentResolution = Screen.currentResolution;
+            Resolution resolution = Screen.currentResolution;
 
             Screen.SetResolution(
-                currentResolution.width,
-                currentResolution.height,
+                resolution.width,
+                resolution.height,
                 FullScreenMode.FullScreenWindow
             );
         }
@@ -120,72 +118,75 @@ public class SettingsUIManager : MonoBehaviour
         }
     }
 
-    // =========================================
-    // MOUSE SENSITIVITY
-    // =========================================
+    // ---------------- MOUSE SENSITIVITY ----------------
 
     private void InitializeMouseSensitivity()
     {
-        if (mouseSensitivitySlider == null)
+        float savedSensitivity = Mathf.Clamp(
+            PlayerPrefs.GetFloat(SensitivityKey, 1f),
+            0.5f,
+            3f
+        );
+
+        if (mouseSensitivitySlider != null)
         {
-            Debug.LogWarning("Mouse Sensitivity Slider is not assigned.");
-            return;
+            mouseSensitivitySlider.minValue = 0.5f;
+            mouseSensitivitySlider.maxValue = 3f;
+
+            mouseSensitivitySlider.SetValueWithoutNotify(savedSensitivity);
+            mouseSensitivitySlider.onValueChanged.RemoveListener(UpdateSensitivityValue);
+            mouseSensitivitySlider.onValueChanged.AddListener(UpdateSensitivityValue);
         }
 
-        mouseSensitivitySlider.minValue = 0.5f;
-        mouseSensitivitySlider.maxValue = 3f;
-
-        float savedSensitivity =
-            PlayerPrefs.GetFloat(SensitivityKey, 1f);
-
-        savedSensitivity = Mathf.Clamp(savedSensitivity, 0.5f, 3f);
-
-        mouseSensitivitySlider.SetValueWithoutNotify(savedSensitivity);
-
-        UpdateSensitivityValue(savedSensitivity);
-
-        mouseSensitivitySlider.onValueChanged
-            .RemoveListener(UpdateSensitivityValue);
-
-        mouseSensitivitySlider.onValueChanged
-            .AddListener(UpdateSensitivityValue);
+        UpdateSensitivityLabel(savedSensitivity);
+        ApplySensitivityToPlayer(savedSensitivity);
     }
 
     public void UpdateSensitivityValue(float value)
     {
-        value = Mathf.Clamp(value, 0f, 3f);
+        value = Mathf.Clamp(value, 0.5f, 3f);
 
+        UpdateSensitivityLabel(value);
+
+        PlayerPrefs.SetFloat(SensitivityKey, value);
+        PlayerPrefs.Save();
+
+        ApplySensitivityToPlayer(value);
+    }
+
+    private void UpdateSensitivityLabel(float value)
+    {
         if (mouseSensitivityValue != null)
         {
             mouseSensitivityValue.text = value.ToString("F1");
         }
-
-        PlayerPrefs.SetFloat(SensitivityKey, value);
-        PlayerPrefs.Save();
     }
 
-    // =========================================
-    // CLEANUP
-    // =========================================
+    private void ApplySensitivityToPlayer(float multiplier)
+    {
+        if (playerController == null)
+        {
+            return;
+        }
+
+        playerController.SetSensitivityMultiplier(multiplier);
+    }
 
     private void OnDestroy()
     {
         if (masterVolumeSlider != null)
         {
-            masterVolumeSlider.onValueChanged
-                .RemoveListener(SetMasterVolume);
+            masterVolumeSlider.onValueChanged.RemoveListener(SetMasterVolume);
         }
 
         if (fullscreenToggle != null)
         {
-            fullscreenToggle.onValueChanged
-                .RemoveListener(SetFullscreen);
+            fullscreenToggle.onValueChanged.RemoveListener(SetFullscreen);
         }
 
         if (mouseSensitivitySlider != null)
         {
-            mouseSensitivitySlider.onValueChanged
-                .RemoveListener(UpdateSensitivityValue);
+            mouseSensitivitySlider.onValueChanged.RemoveListener(UpdateSensitivityValue);
         }
     }
 }

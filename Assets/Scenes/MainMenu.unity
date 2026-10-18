@@ -561,7 +561,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 0.2264151, g: 0.16441794, b: 0.082235664, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1257,6 +1257,7 @@ MonoBehaviour:
   fullscreenToggle: {fileID: 2083883513}
   mouseSensitivitySlider: {fileID: 1470752385}
   mouseSensitivityValue: {fileID: 1272338298}
+  playerController: {fileID: 0}
 --- !u!21 &398287565
 Material:
   serializedVersion: 8

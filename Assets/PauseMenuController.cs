@@ -1,12 +1,16 @@
 
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class PauseMenuController : MonoBehaviour
 {
     [Header("Pause Menu UI")]
     [SerializeField] private GameObject pauseOverlay;
     [SerializeField] private GameObject pauseButton;
+    [SerializeField] private GameObject pauseMenuCard;
+    [SerializeField] private GameObject pauseSettingsPanel;
 
     [Header("Player Controls")]
     [SerializeField] private PlayerMovement playerMovement;
@@ -21,6 +25,9 @@ public class PauseMenuController : MonoBehaviour
     [SerializeField] private Room2GameOverController room2GameOverController;
 
     private bool isPaused;
+    private bool isOpeningOptions;
+    private bool isClosingOptions;
+    private bool isReturningToMainMenu;
 
     private bool movementWasEnabled;
     private bool controllerWasEnabled;
@@ -32,6 +39,9 @@ public class PauseMenuController : MonoBehaviour
     private CursorLockMode previousCursorLockState;
     private bool previousCursorVisible;
 
+    private const float OptionsButtonSoundDelay = 0.15f;
+    private const float MainMenuButtonSoundDelay = 0.4f;
+
     private void Awake()
     {
         Time.timeScale = 1f;
@@ -40,6 +50,12 @@ public class PauseMenuController : MonoBehaviour
 
     private void Start()
     {
+        if (pauseMenuCard != null)
+            pauseMenuCard.SetActive(true);
+
+        if (pauseSettingsPanel != null)
+            pauseSettingsPanel.SetActive(false);
+
         if (pauseOverlay != null)
             pauseOverlay.SetActive(false);
         else
@@ -82,6 +98,12 @@ public class PauseMenuController : MonoBehaviour
         if (EventSystem.current != null)
             EventSystem.current.SetSelectedGameObject(null);
 
+        if (pauseMenuCard != null)
+            pauseMenuCard.SetActive(true);
+
+        if (pauseSettingsPanel != null)
+            pauseSettingsPanel.SetActive(false);
+
         isPaused = true;
         pauseOverlay.SetActive(true);
 
@@ -92,6 +114,101 @@ public class PauseMenuController : MonoBehaviour
         Cursor.visible = true;
 
         Debug.Log("GAME PAUSED");
+    }
+
+    // ==========================================
+    // OPEN OPTIONS
+    // ==========================================
+
+    public void OpenOptions()
+    {
+        if (!isPaused || isOpeningOptions)
+            return;
+
+        if (pauseMenuCard == null || pauseSettingsPanel == null)
+        {
+            Debug.LogError(
+                "Assign PauseMenuCard and PauseSettingsPanel " +
+                "in the PauseMenuController Inspector.",
+                this
+            );
+            return;
+        }
+
+        isOpeningOptions = true;
+        StartCoroutine(OpenOptionsAfterClickSound());
+    }
+
+    private IEnumerator OpenOptionsAfterClickSound()
+    {
+        yield return new WaitForSecondsRealtime(
+            OptionsButtonSoundDelay
+        );
+
+        if (!isPaused)
+        {
+            isOpeningOptions = false;
+            yield break;
+        }
+
+        pauseMenuCard.SetActive(false);
+        pauseSettingsPanel.SetActive(true);
+
+        if (EventSystem.current != null)
+            EventSystem.current.SetSelectedGameObject(null);
+
+        isOpeningOptions = false;
+
+        Debug.Log("PAUSE MENU OPTIONS OPENED");
+    }
+
+    // ==========================================
+    // CLOSE OPTIONS - RETURN TO PAUSE MENU
+    // ==========================================
+
+    public void CloseOptions()
+    {
+        if (!isPaused || isClosingOptions)
+            return;
+
+        if (pauseSettingsPanel == null || pauseMenuCard == null)
+        {
+            Debug.LogError(
+                "Assign PauseSettingsPanel and PauseMenuCard " +
+                "in the PauseMenuController Inspector.",
+                this
+            );
+            return;
+        }
+
+        isClosingOptions = true;
+        StartCoroutine(CloseOptionsAfterClickSound());
+    }
+
+    private IEnumerator CloseOptionsAfterClickSound()
+    {
+        yield return new WaitForSecondsRealtime(
+            OptionsButtonSoundDelay
+        );
+
+        if (!isPaused)
+        {
+            isClosingOptions = false;
+            yield break;
+        }
+
+        pauseSettingsPanel.SetActive(false);
+        pauseMenuCard.SetActive(true);
+
+        if (EventSystem.current != null)
+            EventSystem.current.SetSelectedGameObject(null);
+
+        // Keep the game and timer paused.
+        // Do not modify Time.timeScale or AudioListener.pause.
+
+        isClosingOptions = false;
+
+        Debug.Log("RETURNED TO PAUSE MENU");
     }
 
     // ==========================================
@@ -230,6 +347,38 @@ public class PauseMenuController : MonoBehaviour
     {
         if (pauseButton != null)
             pauseButton.SetActive(true);
+    }
+
+    // ==========================================
+    // RETURN TO MAIN MENU
+    // ==========================================
+
+    public void ReturnToMainMenu()
+    {
+        if (isReturningToMainMenu)
+            return;
+
+        isReturningToMainMenu = true;
+
+        StartCoroutine(ReturnToMainMenuAfterClickSound());
+    }
+
+    private IEnumerator ReturnToMainMenuAfterClickSound()
+    {
+        // Give the click sound time to start playing.
+        yield return new WaitForSecondsRealtime(
+            MainMenuButtonSoundDelay
+        );
+
+        // Restore normal game state before changing scenes.
+        isPaused = false;
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        SceneManager.LoadScene("MainMenu");
     }
 
     // ==========================================

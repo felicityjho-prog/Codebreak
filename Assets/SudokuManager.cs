@@ -267,28 +267,22 @@ public class SudokuManager : MonoBehaviour
     // HIDE COMPLETION BANNER
     // =========================================================
 
-    private IEnumerator HideCompletionBanner()
+    
+private IEnumerator HideCompletionBanner()
+{
+    // Wait for the completion banner to finish displaying.
+    yield return new WaitForSeconds(2f);
+
+    // Hide the completion banner.
+    if (completionBanner != null)
     {
-        yield return new WaitForSeconds(2f);
-
-        // =====================================================
-        // HIDE COMPLETION BANNER
-        // =====================================================
-
-        if (completionBanner != null)
-        {
-            completionBanner.SetActive(false);
-        }
-
-        // =====================================================
-        // SHOW NEXT INSTRUCTION
-        // =====================================================
-
-        if (instructionManager != null)
-        {
-            instructionManager.ShowChallengeCleared();
-        }
+        completionBanner.SetActive(false);
     }
+
+    // Do not show the large instruction panel after Sudoku completion.
+    // The initial instruction panel should return through Try Again / Restart.
+}
+
 
     // =========================================================
     // RESET PUZZLE

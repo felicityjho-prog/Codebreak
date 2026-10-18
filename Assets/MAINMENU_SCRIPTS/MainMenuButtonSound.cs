@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,9 +14,15 @@ public class MainMenuButtonSound : MonoBehaviour
     {
         button = GetComponent<Button>();
 
+        // Allow UI click sounds to play while the game is paused.
+        if (audioSource != null)
+        {
+            audioSource.ignoreListenerPause = true;
+        }
+
         button.onClick.AddListener(PlayClickSound);
     }
-    
+
     private void PlayClickSound()
     {
         if (audioSource != null && clickSound != null)
@@ -26,11 +33,9 @@ public class MainMenuButtonSound : MonoBehaviour
 
     private void OnDestroy()
     {
-        if(button != null)
+        if (button != null)
         {
             button.onClick.RemoveListener(PlayClickSound);
         }
     }
-
-
 }
