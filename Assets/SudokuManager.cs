@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using UnityEngine;
 
 public class SudokuManager : MonoBehaviour
@@ -87,55 +88,38 @@ public class SudokuManager : MonoBehaviour
     {
         if (sudokuGrid == null)
         {
-            Debug.LogError(
-                "Sudoku Grid is NOT assigned!"
-            );
-
+            Debug.LogError("Sudoku Grid is NOT assigned!", this);
             return;
         }
 
         if (sudokuCellPrefab == null)
         {
-            Debug.LogError(
-                "Sudoku Cell Prefab is NOT assigned!"
-            );
-
+            Debug.LogError("Sudoku Cell Prefab is NOT assigned!", this);
             return;
         }
 
-        // =====================================================
-        // DESTROY OLD CELLS
-        // =====================================================
-
+        // Remove previously generated cells.
         foreach (Transform child in sudokuGrid)
         {
             Destroy(child.gameObject);
         }
 
-        // =====================================================
-        // GENERATE FRESH 6x6 BOARD
-        // =====================================================
-
+        // Generate a fresh 6x6 board.
         for (int row = 0; row < 6; row++)
         {
             for (int col = 0; col < 6; col++)
             {
                 GameObject cellObject =
-                    Instantiate(
-                        sudokuCellPrefab,
-                        sudokuGrid
-                    );
+                    Instantiate(sudokuCellPrefab, sudokuGrid);
 
-                cellObject.name =
-                    "Cell_" + (row * 6 + col);
+                cellObject.name = "Cell_" + (row * 6 + col);
 
                 SudokuCell cell =
                     cellObject.GetComponent<SudokuCell>();
 
                 if (cell != null)
                 {
-                    bool editable =
-                        puzzle[row, col] == 0;
+                    bool editable = puzzle[row, col] == 0;
 
                     cell.Setup(
                         puzzle[row, col],
@@ -148,7 +132,8 @@ public class SudokuManager : MonoBehaviour
                 {
                     Debug.LogError(
                         "SudokuCell component NOT FOUND on " +
-                        cellObject.name
+                        cellObject.name,
+                        cellObject
                     );
                 }
             }
@@ -161,7 +146,6 @@ public class SudokuManager : MonoBehaviour
 
     public void CheckSudokuComplete()
     {
-        // Already completed
         if (puzzleCompleted)
             return;
 
@@ -179,12 +163,7 @@ public class SudokuManager : MonoBehaviour
             }
         }
 
-        // =====================================================
-        // ALL CORRECT
-        // =====================================================
-
         puzzleCompleted = true;
-
         ShowCompletion();
     }
 
@@ -194,8 +173,7 @@ public class SudokuManager : MonoBehaviour
 
     public void PlayWrongAnswerSound()
     {
-        if (wrongAnswerAudio != null &&
-            wrongAnswerSound != null)
+        if (wrongAnswerAudio != null && wrongAnswerSound != null)
         {
             wrongAnswerAudio.PlayOneShot(wrongAnswerSound);
         }
@@ -207,169 +185,112 @@ public class SudokuManager : MonoBehaviour
 
     private void ShowCompletion()
     {
-        Debug.Log(
-            "TABLE 1 CHALLENGE COMPLETED!"
-        );
+        Debug.Log("TABLE 1 CHALLENGE COMPLETED!");
 
-        // =====================================================
-        // CLOSE SUDOKU
-        // =====================================================
-
+        // Close Sudoku.
         if (sudokuPanelController != null)
         {
             sudokuPanelController.CloseSudoku();
         }
-        else
+        else if (sudokuPanel != null)
         {
-            if (sudokuPanel != null)
-            {
-                sudokuPanel.SetActive(false);
-            }
+            sudokuPanel.SetActive(false);
         }
 
-        // =====================================================
-        // SHOW COMPLETION BANNER
-        // =====================================================
-
+        // Show completion banner.
         if (completionBanner != null)
         {
             completionBanner.SetActive(true);
         }
 
-        // =====================================================
-        // PLAY COMPLETION SOUND
-        // =====================================================
-
+        // Play completion sound.
         if (completionAudio != null)
         {
             completionAudio.Play();
         }
 
-        // =====================================================
-        // UNLOCK TABLE 2
-        // =====================================================
-
+        // Unlock Table 2.
         if (ChallengeProgressManager.Instance != null)
         {
             ChallengeProgressManager.Instance.CompleteTable(1);
         }
 
-        // =====================================================
-        // WAIT THEN SHOW INSTRUCTION
-        // =====================================================
-
-        StartCoroutine(
-            HideCompletionBanner()
-        );
+        // Hide the banner and restore the top instruction afterward.
+        StartCoroutine(HideCompletionBanner());
     }
 
     // =========================================================
-    // HIDE COMPLETION BANNER
+    // HIDE COMPLETION BANNER AND RESTORE TOP INSTRUCTION
     // =========================================================
 
-    
-private IEnumerator HideCompletionBanner()
-{
-    // Wait for the completion banner to finish displaying.
-    yield return new WaitForSeconds(2f);
-
-    // Hide the completion banner.
-    if (completionBanner != null)
+    private IEnumerator HideCompletionBanner()
     {
-        completionBanner.SetActive(false);
-    }
-
-    // Do not show the large instruction panel after Sudoku completion.
-    // The initial instruction panel should return through Try Again / Restart.
-}
-
-
-    // =========================================================
-    // RESET PUZZLE
-    // =========================================================
-    //
-    // Called by:
-    // Room2GameOverController.TryAgain()
-    //
-    // PURPOSE:
-    // - Remove all player-entered numbers
-    // - Restore original Sudoku
-    // - Keep given numbers
-    // - Remove red/green feedback
-    // - Reset completion state
-    // - Stop old completion coroutine
-    // =========================================================
-
-    public void ResetPuzzle()
-    {
-        Debug.Log(
-            "================================="
-        );
-
-        Debug.Log(
-            "RESETTING SUDOKU"
-        );
-
-        Debug.Log(
-            "================================="
-        );
-
-        // =====================================================
-        // STOP OLD COROUTINES
-        // =====================================================
-
-        StopAllCoroutines();
-
-        // =====================================================
-        // RESET COMPLETION STATE
-        // =====================================================
-
-        puzzleCompleted = false;
-
-        // =====================================================
-        // HIDE COMPLETION BANNER
-        // =====================================================
+        yield return new WaitForSeconds(2f);
 
         if (completionBanner != null)
         {
             completionBanner.SetActive(false);
         }
 
-        // =====================================================
-        // RESET COMPLETION AUDIO
-        // =====================================================
+        if (instructionManager != null)
+        {
+            // Updates the persistent top text only.
+            // It must not reopen the large instruction panel.
+            instructionManager.ShowChallengeCleared();
+        }
+        else
+        {
+            Debug.LogWarning(
+                "SudokuManager: Room2InstructionManager is not assigned!",
+                this
+            );
+        }
+    }
 
+    // =========================================================
+    // RESET PUZZLE
+    // Called by Room2GameOverController.TryAgain()
+    // =========================================================
+
+    public void ResetPuzzle()
+    {
+        Debug.Log("=================================");
+        Debug.Log("RESETTING SUDOKU");
+        Debug.Log("=================================");
+
+        // Stop the old completion coroutine.
+        StopAllCoroutines();
+
+        // Reset completion state.
+        puzzleCompleted = false;
+
+        // Hide completion banner.
+        if (completionBanner != null)
+        {
+            completionBanner.SetActive(false);
+        }
+
+        // Stop completion audio.
         if (completionAudio != null)
         {
             completionAudio.Stop();
         }
 
-        // =====================================================
-        // CLOSE SUDOKU PANEL
-        // =====================================================
-
+        // Close Sudoku panel.
         if (sudokuPanel != null)
         {
             sudokuPanel.SetActive(false);
         }
 
-        // =====================================================
-        // FORCE RESET PLAYER CONTROL
-        // =====================================================
-
+        // Restore player control through the existing controller.
         if (sudokuPanelController != null)
         {
             sudokuPanelController.ForceCloseSudoku();
         }
 
-        // =====================================================
-        // REGENERATE ENTIRE BOARD
-        // =====================================================
-
+        // Regenerate the Sudoku board.
         GenerateBoard();
 
-        Debug.Log(
-            "SUDOKU RESET COMPLETE!"
-        );
+        Debug.Log("SUDOKU RESET COMPLETE!");
     }
 }

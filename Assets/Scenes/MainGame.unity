@@ -28652,7 +28652,7 @@ MonoBehaviour:
   sudokuManager: {fileID: 0}
   teleportTransitionManager: {fileID: 1415302882}
   canProceed: 0
-  testRoom2: 0
+  testRoom2: 1
 --- !u!4 &677955355
 Transform:
   m_ObjectHideFlags: 0
