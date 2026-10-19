@@ -27360,7 +27360,7 @@ MonoBehaviour:
   sudokuInteractionDistance: 3
   sudokuManager: {fileID: 0}
   canProceed: 0
-  testRoom2: 1
+  testRoom2: 0
 --- !u!4 &677955355
 Transform:
   m_ObjectHideFlags: 0
