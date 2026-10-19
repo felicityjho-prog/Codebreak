@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using System.Collections;
 using TMPro;
@@ -6,6 +7,7 @@ public class Room2InstructionManager : MonoBehaviour
 {
     [Header("Instruction Panel")]
     public CanvasGroup instructionCanvasGroup;
+    public GameObject instructionPanelRoot;
 
     [Header("Instruction Text")]
     public TMP_Text instructionText;
@@ -25,40 +27,70 @@ public class Room2InstructionManager : MonoBehaviour
     private Coroutine fadeCoroutine;
     private Coroutine persistentFadeCoroutine;
 
-    // =========================================================
-    // START
-    // =========================================================
+    // Text belonging to the persistent top instruction.
+    private TMP_Text persistentInstructionText;
 
-    void Start()
+    private const string InitialInstruction =
+        "CHALLENGE 1 AWAITS — PROCEED TO TABLE 1";
+
+    private void Awake()
     {
-        // Hide the large instruction panel initially
-        if (instructionCanvasGroup != null)
+        CachePersistentInstructionText();
+    }
+
+    private void Start()
+    {
+        CachePersistentInstructionText();
+
+        if (persistentInstructionText != null)
         {
-            instructionCanvasGroup.alpha = 0f;
-            instructionCanvasGroup.interactable = false;
-            instructionCanvasGroup.blocksRaycasts = false;
+            persistentInstructionText.text = InitialInstruction;
         }
 
-        // Hide top instruction initially.
-        // It will appear after GOT IT.
-        if (persistentInstructionCanvasGroup != null)
+        HideLargeInstructionImmediately();
+        HidePersistentInstructionImmediately();
+    }
+
+    private void CachePersistentInstructionText()
+    {
+        if (persistentInstructionCanvasGroup == null)
         {
-            persistentInstructionCanvasGroup.alpha = 0f;
-            persistentInstructionCanvasGroup.interactable = false;
-            persistentInstructionCanvasGroup.blocksRaycasts = false;
+            persistentInstructionText = null;
+            return;
         }
+
+        persistentInstructionText =
+            persistentInstructionCanvasGroup.GetComponentInChildren<TMP_Text>(true);
     }
 
     // =========================================================
-    // SHOW INITIAL INSTRUCTION
+    // SHOW INITIAL LARGE INSTRUCTION PANEL
+    // Used by the initial instruction and Try Again / Restart.
     // =========================================================
 
     public void ShowInstruction()
     {
+        if (instructionPanelRoot != null &&
+            !instructionPanelRoot.activeSelf)
+        {
+            instructionPanelRoot.SetActive(true);
+        }
+
+        if (instructionCanvasGroup != null &&
+            !instructionCanvasGroup.gameObject.activeSelf)
+        {
+            instructionCanvasGroup.gameObject.SetActive(true);
+        }
+
         if (instructionText != null)
         {
-            instructionText.text =
-                "CHALLENGE 1 AWAITS — PROCEED TO TABLE 1";
+            instructionText.text = InitialInstruction;
+        }
+
+        if (instructionCanvasGroup != null)
+        {
+            instructionCanvasGroup.interactable = true;
+            instructionCanvasGroup.blocksRaycasts = true;
         }
 
         FadeTo(1f);
@@ -72,49 +104,25 @@ public class Room2InstructionManager : MonoBehaviour
     {
         Debug.Log("ROOM 2 INSTRUCTION CONFIRMED.");
 
-        // Hide large instruction panel
         HideInstruction();
-
-        // Show top persistent instruction
         ShowPersistentInstruction();
-
-        // =========================================
-        // SHOW CONTROLS AGAIN
-        // =========================================
 
         if (controlsPanel != null)
         {
             controlsPanel.SetActive(true);
-
-            Debug.Log(
-                "CONTROLS PANEL SHOWN AGAIN IN ROOM 2."
-            );
+            Debug.Log("ROOM 2 CONTROLS SHOWN.");
         }
-
-        // =========================================
-        // SHOW CENTER DOT AGAIN
-        // =========================================
 
         if (centerDot != null)
         {
             centerDot.SetActive(true);
-
-            Debug.Log(
-                "CENTER DOT SHOWN AGAIN IN ROOM 2."
-            );
+            Debug.Log("ROOM 2 CENTER DOT SHOWN.");
         }
-
-        // =========================================
-        // START ROOM 2 TIMER
-        // =========================================
 
         if (Room2ChallengeTimer.Instance != null)
         {
             Room2ChallengeTimer.Instance.StartTimer();
-
-            Debug.Log(
-                "ROOM 2 GLOBAL TIMER STARTED AFTER GOT IT."
-            );
+            Debug.Log("ROOM 2 TIMER STARTED AFTER GOT IT.");
         }
         else
         {
@@ -122,6 +130,9 @@ public class Room2InstructionManager : MonoBehaviour
                 "Room2ChallengeTimer Instance NOT FOUND!"
             );
         }
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     // =========================================================
@@ -133,15 +144,22 @@ public class Room2InstructionManager : MonoBehaviour
         if (persistentInstructionCanvasGroup == null)
             return;
 
+        if (!persistentInstructionCanvasGroup.gameObject.activeSelf)
+        {
+            persistentInstructionCanvasGroup.gameObject.SetActive(true);
+        }
+
         if (persistentFadeCoroutine != null)
         {
             StopCoroutine(persistentFadeCoroutine);
+            persistentFadeCoroutine = null;
         }
 
+        persistentInstructionCanvasGroup.interactable = false;
+        persistentInstructionCanvasGroup.blocksRaycasts = false;
+
         persistentFadeCoroutine =
-            StartCoroutine(
-                FadePersistentInstruction(1f)
-            );
+            StartCoroutine(FadePersistentInstruction(1f));
     }
 
     // =========================================================
@@ -156,23 +174,77 @@ public class Room2InstructionManager : MonoBehaviour
         if (persistentFadeCoroutine != null)
         {
             StopCoroutine(persistentFadeCoroutine);
+            persistentFadeCoroutine = null;
         }
 
         persistentFadeCoroutine =
-            StartCoroutine(
-                FadePersistentInstruction(0f)
-            );
+            StartCoroutine(FadePersistentInstruction(0f));
     }
 
     // =========================================================
-    // RESET ROOM 2 INSTRUCTION
+    // RESET ROOM 2 INSTRUCTION FOR TRY AGAIN / RESTART
     // =========================================================
 
     public void ResetForTryAgain()
     {
         Debug.Log("RESETTING ROOM 2 INSTRUCTIONS...");
 
-        // Stop current fades
+        StopInstructionFades();
+        CachePersistentInstructionText();
+
+        if (instructionText != null)
+        {
+            instructionText.text = InitialInstruction;
+        }
+
+        if (persistentInstructionText != null)
+        {
+            persistentInstructionText.text = InitialInstruction;
+        }
+
+        HidePersistentInstructionImmediately();
+
+        if (controlsPanel != null)
+        {
+            controlsPanel.SetActive(false);
+        }
+
+        if (centerDot != null)
+        {
+            centerDot.SetActive(false);
+        }
+
+        if (instructionPanelRoot != null)
+        {
+            instructionPanelRoot.SetActive(true);
+        }
+
+        if (instructionCanvasGroup != null)
+        {
+            if (!instructionCanvasGroup.gameObject.activeSelf)
+            {
+                instructionCanvasGroup.gameObject.SetActive(true);
+            }
+
+            instructionCanvasGroup.alpha = 0f;
+            instructionCanvasGroup.interactable = true;
+            instructionCanvasGroup.blocksRaycasts = true;
+        }
+
+        ShowInstruction();
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        Debug.Log("ROOM 2 INSTRUCTION PANEL RESTORED.");
+    }
+
+    // =========================================================
+    // STOP ACTIVE FADE COROUTINES
+    // =========================================================
+
+    private void StopInstructionFades()
+    {
         if (fadeCoroutine != null)
         {
             StopCoroutine(fadeCoroutine);
@@ -184,12 +256,62 @@ public class Room2InstructionManager : MonoBehaviour
             StopCoroutine(persistentFadeCoroutine);
             persistentFadeCoroutine = null;
         }
+    }
 
-        // Reset large instruction
-        if (instructionText != null)
+    // =========================================================
+    // HIDE LARGE INSTRUCTION IMMEDIATELY
+    // =========================================================
+
+    private void HideLargeInstructionImmediately()
+    {
+        if (instructionCanvasGroup == null)
+            return;
+
+        instructionCanvasGroup.alpha = 0f;
+        instructionCanvasGroup.interactable = false;
+        instructionCanvasGroup.blocksRaycasts = false;
+    }
+
+    // =========================================================
+    // HIDE PERSISTENT INSTRUCTION IMMEDIATELY
+    // =========================================================
+
+    private void HidePersistentInstructionImmediately()
+    {
+        if (persistentInstructionCanvasGroup == null)
+            return;
+
+        persistentInstructionCanvasGroup.alpha = 0f;
+        persistentInstructionCanvasGroup.interactable = false;
+        persistentInstructionCanvasGroup.blocksRaycasts = false;
+    }
+
+    // =========================================================
+    // UPDATE TOP INSTRUCTION WITHOUT SHOWING LARGE PANEL
+    // =========================================================
+
+    private void ShowPersistentStatusOnly(string message)
+    {
+        StopInstructionFades();
+        CachePersistentInstructionText();
+
+        if (persistentInstructionText == null)
         {
-            instructionText.text =
-                "CHALLENGE 1 AWAITS — PROCEED TO TABLE 1";
+            Debug.LogWarning(
+                "Persistent instruction TMP_Text was not found. " +
+                "Check the Persistent Instruction CanvasGroup assignment.",
+                this
+            );
+            return;
+        }
+
+        // Update the TMP text under the persistent top instruction.
+        persistentInstructionText.text = message;
+
+        // Keep the large challenge panel hidden.
+        if (instructionPanelRoot != null)
+        {
+            instructionPanelRoot.SetActive(false);
         }
 
         if (instructionCanvasGroup != null)
@@ -199,52 +321,132 @@ public class Room2InstructionManager : MonoBehaviour
             instructionCanvasGroup.blocksRaycasts = false;
         }
 
-        // Reset TOP instruction
+        // Fade the top instruction back in.
         if (persistentInstructionCanvasGroup != null)
         {
-            persistentInstructionCanvasGroup.alpha = 1f;
+            if (!persistentInstructionCanvasGroup.gameObject.activeSelf)
+            {
+                persistentInstructionCanvasGroup.gameObject.SetActive(true);
+            }
+
+            persistentInstructionCanvasGroup.alpha = 0f;
             persistentInstructionCanvasGroup.interactable = false;
             persistentInstructionCanvasGroup.blocksRaycasts = false;
-        }
 
-        Debug.Log(
-            "ROOM 2 INSTRUCTION RESET COMPLETE."
+            ShowPersistentInstruction();
+        }
+        else
+        {
+            Debug.LogWarning(
+                "Persistent Instruction CanvasGroup is not assigned!",
+                this
+            );
+        }
+    }
+
+    // =========================================================
+    // AFTER TABLE 1 — UPDATE TOP TEXT ONLY
+    // =========================================================
+
+    public void ShowChallengeCleared()
+    {
+        ShowPersistentStatusOnly(
+            "CHALLENGE CLEARED — PROCEED TO TABLE 2"
         );
     }
 
     // =========================================================
-    // PERSISTENT TEXT FADE
+    // NEXT TABLE — UPDATE TOP TEXT ONLY
     // =========================================================
 
-    IEnumerator FadePersistentInstruction(float targetAlpha)
+    public void ShowNextTableInstruction()
     {
-        if (persistentInstructionCanvasGroup == null)
+        ShowPersistentStatusOnly(
+            "NEXT CHALLENGE AWAITS — FIND THE TABLE"
+        );
+    }
+
+    // =========================================================
+    // TABLE 3 — UPDATE TOP TEXT ONLY
+    // =========================================================
+
+    public void ShowFinalChallengeInstruction()
+    {
+        ShowPersistentStatusOnly(
+            "FINAL CHALLENGE AWAITS — PROCEED TO THE LAST TABLE"
+        );
+    }
+
+    // =========================================================
+    // GENERAL LARGE-PANEL FADE
+    // =========================================================
+
+    private void FadeTo(float targetAlpha)
+    {
+        if (instructionCanvasGroup == null)
+            return;
+
+        if (fadeCoroutine != null)
+        {
+            StopCoroutine(fadeCoroutine);
+            fadeCoroutine = null;
+        }
+
+        fadeCoroutine = StartCoroutine(FadeCoroutine(targetAlpha));
+    }
+
+    private IEnumerator FadeCoroutine(float targetAlpha)
+    {
+        if (instructionCanvasGroup == null)
             yield break;
 
-        float startAlpha =
-            persistentInstructionCanvasGroup.alpha;
-
+        float startAlpha = instructionCanvasGroup.alpha;
+        float duration = Mathf.Max(0.01f, fadeDuration);
         float elapsed = 0f;
 
-        while (elapsed < fadeDuration)
+        while (elapsed < duration)
         {
-            elapsed += Time.deltaTime;
+            elapsed += Time.unscaledDeltaTime;
 
-            float t =
-                elapsed / fadeDuration;
+            float t = Mathf.Clamp01(elapsed / duration);
 
-            persistentInstructionCanvasGroup.alpha =
-                Mathf.Lerp(
-                    startAlpha,
-                    targetAlpha,
-                    t
-                );
+            instructionCanvasGroup.alpha =
+                Mathf.Lerp(startAlpha, targetAlpha, t);
 
             yield return null;
         }
 
-        persistentInstructionCanvasGroup.alpha =
-            targetAlpha;
+        instructionCanvasGroup.alpha = targetAlpha;
+        fadeCoroutine = null;
+    }
+
+    // =========================================================
+    // PERSISTENT TOP-TEXT FADE
+    // =========================================================
+
+    private IEnumerator FadePersistentInstruction(float targetAlpha)
+    {
+        if (persistentInstructionCanvasGroup == null)
+            yield break;
+
+        float startAlpha = persistentInstructionCanvasGroup.alpha;
+        float duration = Mathf.Max(0.01f, fadeDuration);
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+
+            float t = Mathf.Clamp01(elapsed / duration);
+
+            persistentInstructionCanvasGroup.alpha =
+                Mathf.Lerp(startAlpha, targetAlpha, t);
+
+            yield return null;
+        }
+
+        persistentInstructionCanvasGroup.alpha = targetAlpha;
+        persistentFadeCoroutine = null;
     }
 
     // =========================================================
@@ -253,106 +455,12 @@ public class Room2InstructionManager : MonoBehaviour
 
     public void HideInstruction()
     {
-        FadeTo(0f);
-    }
-
-    // =========================================================
-    // AFTER TABLE 1
-    // =========================================================
-
-    public void ShowChallengeCleared()
-    {
-        if (instructionText != null)
-        {
-            instructionText.text =
-                "CHALLENGE CLEARED — PROCEED TO TABLE 2";
-        }
-
-        FadeTo(1f);
-    }
-
-    // =========================================================
-    // AFTER TABLE 2
-    // =========================================================
-
-    public void ShowNextTableInstruction()
-    {
-        if (instructionText != null)
-        {
-            instructionText.text =
-                "NEXT CHALLENGE AWAITS — FIND THE TABLE";
-        }
-
-        FadeTo(1f);
-    }
-
-    // =========================================================
-    // TABLE 3
-    // =========================================================
-
-    public void ShowFinalChallengeInstruction()
-    {
-        if (instructionText != null)
-        {
-            instructionText.text =
-                "FINAL CHALLENGE AWAITS — PROCEED TO THE LAST TABLE";
-        }
-
-        FadeTo(1f);
-    }
-
-    // =========================================================
-    // GENERAL FADE
-    // =========================================================
-
-    void FadeTo(float targetAlpha)
-    {
         if (instructionCanvasGroup == null)
             return;
 
-        if (fadeCoroutine != null)
-        {
-            StopCoroutine(fadeCoroutine);
-        }
+        instructionCanvasGroup.interactable = false;
+        instructionCanvasGroup.blocksRaycasts = false;
 
-        fadeCoroutine =
-            StartCoroutine(
-                FadeCoroutine(targetAlpha)
-            );
-    }
-
-    // =========================================================
-    // GENERAL FADE COROUTINE
-    // =========================================================
-
-    IEnumerator FadeCoroutine(float targetAlpha)
-    {
-        if (instructionCanvasGroup == null)
-            yield break;
-
-        float startAlpha =
-            instructionCanvasGroup.alpha;
-
-        float elapsed = 0f;
-
-        while (elapsed < fadeDuration)
-        {
-            elapsed += Time.deltaTime;
-
-            float t =
-                elapsed / fadeDuration;
-
-            instructionCanvasGroup.alpha =
-                Mathf.Lerp(
-                    startAlpha,
-                    targetAlpha,
-                    t
-                );
-
-            yield return null;
-        }
-
-        instructionCanvasGroup.alpha =
-            targetAlpha;
+        FadeTo(0f);
     }
 }

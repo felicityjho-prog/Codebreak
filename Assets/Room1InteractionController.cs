@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class Room1InteractionController : MonoBehaviour
@@ -7,6 +8,10 @@ public class Room1InteractionController : MonoBehaviour
 
     private bool room1Active = false;
 
+    // ==========================================
+    // ENABLE ROOM 1 INTERACTIONS
+    // ==========================================
+
     public void EnableRoom1Interactions()
     {
         if (room1Active)
@@ -14,14 +19,41 @@ public class Room1InteractionController : MonoBehaviour
 
         room1Active = true;
 
-        foreach (NotClickable obj in room1Objects)
+        if (room1Objects != null)
         {
-            if (obj != null)
+            foreach (NotClickable obj in room1Objects)
             {
-                obj.EnableInteraction();
+                if (obj != null)
+                {
+                    obj.EnableInteraction();
+                }
             }
         }
 
         Debug.Log("ROOM 1 INTERACTIONS ENABLED!");
+    }
+
+    // ==========================================
+    // RESET ROOM 1 INTERACTIONS
+    // ==========================================
+
+    public void ResetRoom1Interactions()
+    {
+        // Allow interactions to be enabled again on re-entry.
+        room1Active = false;
+
+        // Disable each interaction until the player re-enters Room 1.
+        if (room1Objects != null)
+        {
+            foreach (NotClickable obj in room1Objects)
+            {
+                if (obj != null)
+                {
+                    obj.DisableInteraction();
+                }
+            }
+        }
+
+        Debug.Log("ROOM 1 INTERACTIONS RESET!");
     }
 }

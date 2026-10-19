@@ -1,4 +1,6 @@
+
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Room2GameOverController : MonoBehaviour
 {
@@ -38,12 +40,14 @@ public class Room2GameOverController : MonoBehaviour
     [Header("Room 2 Instructions")]
     public Room2InstructionManager instructionManager;
 
+    [Header("Room 2 Voice")]
+    public Room2VoiceSubtitleManager room2VoiceManager;
+
     [Header("Interaction Prompts")]
     public GameObject sudokuInteractPrompt;
     public GameObject crosswordInteractPrompt;
 
     private bool gameOverShown = false;
-
 
     // =========================================================
     // GAME OVER
@@ -60,19 +64,10 @@ public class Room2GameOverController : MonoBehaviour
         Debug.Log("ROOM 2 GAME OVER");
         Debug.Log("=================================");
 
-        // =====================================================
-        // STOP TIMER
-        // =====================================================
-
         if (room2Timer != null)
-        {
             room2Timer.StopTimer();
-        }
 
-        // =====================================================
-        // FORCE CLOSE SUDOKU
-        // =====================================================
-
+        // Close Sudoku.
         if (sudokuPanelController != null)
         {
             sudokuPanelController.ForceCloseSudoku();
@@ -82,10 +77,7 @@ public class Room2GameOverController : MonoBehaviour
             sudokuPanel.SetActive(false);
         }
 
-        // =====================================================
-        // FORCE CLOSE CROSSWORD
-        // =====================================================
-
+        // Close Crossword.
         if (crosswordPanelController != null)
         {
             crosswordPanelController.ForceCloseCrossword();
@@ -95,37 +87,21 @@ public class Room2GameOverController : MonoBehaviour
             crosswordPanel.SetActive(false);
         }
 
-        // =====================================================
-        // HIDE INTERACTION PROMPTS
-        // =====================================================
-
+        // Hide interaction prompts.
         if (sudokuInteractPrompt != null)
-        {
             sudokuInteractPrompt.SetActive(false);
-        }
 
         if (crosswordInteractPrompt != null)
-        {
             crosswordInteractPrompt.SetActive(false);
-        }
 
-        // =====================================================
-        // ENABLE ROOM 2 CANVAS
-        // =====================================================
-
+        // Ensure Room 2 canvas is visible.
         if (room2Canvas != null)
-        {
             room2Canvas.SetActive(true);
-        }
 
-        // =====================================================
-        // SHOW GAME OVER PANEL
-        // =====================================================
-
+        // Show Game Over panel.
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
-
             gameOverPanel.transform.SetAsLastSibling();
 
             CanvasGroup canvasGroup =
@@ -140,233 +116,147 @@ public class Room2GameOverController : MonoBehaviour
         }
         else
         {
-            Debug.LogError(
-                "GAME OVER PANEL IS NOT ASSIGNED!"
-            );
+            Debug.LogError("GAME OVER PANEL IS NOT ASSIGNED!");
         }
 
-        // =====================================================
-        // FREEZE PLAYER
-        // =====================================================
-
+        // Freeze player movement.
         if (playerMovement != null)
-        {
             playerMovement.enabled = false;
-        }
 
-        // =====================================================
-        // DISABLE CAMERA LOOK
-        // =====================================================
-
+        // Disable camera look.
         if (playerLook != null)
-        {
             playerLook.DisableLook();
-        }
 
-        // =====================================================
-        // UNLOCK CURSOR
-        // =====================================================
-
-        Cursor.lockState =
-            CursorLockMode.None;
-
+        // Unlock cursor for Game Over buttons.
+        Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        Debug.Log(
-            "ROOM 2 GAME OVER PANEL ACTIVATED!"
-        );
+        Debug.Log("ROOM 2 GAME OVER PANEL ACTIVATED!");
     }
 
-
     // =========================================================
-    // TRY AGAIN
+    // TRY AGAIN / RESTART ROOM 2
     // =========================================================
 
     public void TryAgain()
     {
-        Debug.Log(
-            "================================="
-        );
+        Debug.Log("=================================");
+        Debug.Log("ROOM 2 TRY AGAIN / RESTART");
+        Debug.Log("=================================");
 
-        Debug.Log(
-            "ROOM 2 TRY AGAIN"
-        );
+        // Restore game time and audio.
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
 
-        Debug.Log(
-            "================================="
-        );
-
-        // =====================================================
-        // RESET GAME OVER STATE
-        // =====================================================
-
+        // Reset Game Over state.
         gameOverShown = false;
 
-        // =====================================================
-        // HIDE GAME OVER
-        // =====================================================
-
+        // Hide Game Over panel.
         if (gameOverPanel != null)
-        {
             gameOverPanel.SetActive(false);
-        }
 
-        // =====================================================
-        // RESET ROOM 2 PROGRESS
-        // =====================================================
-
+        // Reset Room 2 challenge progress.
         if (ChallengeProgressManager.Instance != null)
         {
-            ChallengeProgressManager.Instance
-                .ResetRoom2Progress();
+            ChallengeProgressManager.Instance.ResetRoom2Progress();
         }
 
-        // =====================================================
-        // FORCE CLOSE SUDOKU
-        // =====================================================
-
+        // Close Sudoku.
         if (sudokuPanelController != null)
-        {
             sudokuPanelController.ForceCloseSudoku();
-        }
 
         if (sudokuPanel != null)
-        {
             sudokuPanel.SetActive(false);
-        }
 
-        // =====================================================
-        // FORCE CLOSE CROSSWORD
-        // =====================================================
-
+        // Close Crossword.
         if (crosswordPanelController != null)
-        {
             crosswordPanelController.ForceCloseCrossword();
-        }
 
         if (crosswordPanel != null)
-        {
             crosswordPanel.SetActive(false);
-        }
 
-        // =====================================================
-        // HIDE INTERACTION PROMPTS
-        // =====================================================
-
+        // Hide interaction prompts.
         if (sudokuInteractPrompt != null)
-        {
             sudokuInteractPrompt.SetActive(false);
-        }
 
         if (crosswordInteractPrompt != null)
-        {
             crosswordInteractPrompt.SetActive(false);
-        }
 
-        // =====================================================
-        // RESET SUDOKU
-        // =====================================================
-
+        // Reset Sudoku.
         if (sudokuManager != null)
         {
             sudokuManager.ResetPuzzle();
         }
         else
         {
-            Debug.LogWarning(
-                "SudokuManager is NOT assigned!"
-            );
+            Debug.LogWarning("SudokuManager is NOT assigned!");
         }
 
-        // =====================================================
-        // RESET CROSSWORD
-        // =====================================================
-
+        // Reset Crossword.
         if (crosswordManager != null)
         {
             crosswordManager.ResetCrossword();
         }
         else
         {
-            Debug.LogWarning(
-                "CrosswordManager is NOT assigned!"
-            );
+            Debug.LogWarning("CrosswordManager is NOT assigned!");
         }
 
-        // =====================================================
-        // MOVE PLAYER TO ROOM 2 SPAWN
-        // =====================================================
-
-        if (player != null &&
-            room2SpawnPoint != null)
+        // Return player to Room 2 spawn.
+        if (player != null && room2SpawnPoint != null)
         {
             CharacterController controller =
                 player.GetComponent<CharacterController>();
 
             if (controller != null)
-            {
                 controller.enabled = false;
-            }
 
-            player.position =
-                room2SpawnPoint.position;
-
-            player.rotation =
-                room2SpawnPoint.rotation;
+            player.SetPositionAndRotation(
+                room2SpawnPoint.position,
+                room2SpawnPoint.rotation
+            );
 
             if (controller != null)
-            {
                 controller.enabled = true;
-            }
 
-            Debug.Log(
-                "Player returned to Room 2 spawn."
+            Debug.Log("Player returned to Room 2 spawn.");
+        }
+        else
+        {
+            Debug.LogError(
+                "Player or Room 2 Spawn Point is NOT assigned!"
             );
         }
 
-        // =====================================================
-        // RESTORE PLAYER MOVEMENT
-        // =====================================================
-
+        // Restore player movement.
         if (playerMovement != null)
-        {
             playerMovement.enabled = true;
-        }
 
-        // =====================================================
-        // RESTORE CAMERA LOOK
-        // =====================================================
-
+        // Restore camera look.
         if (playerLook != null)
         {
+            playerLook.enabled = true;
             playerLook.EnableLook();
         }
 
-        // =====================================================
-        // RESET TIMER AND START AGAIN
-        // =====================================================
-
+        // Reset the timer, but do NOT start it yet.
+        // The GOT IT button starts it through OnGotItClicked().
         if (room2Timer != null)
         {
             room2Timer.ResetTimer();
-            room2Timer.StartTimer();
 
             Debug.Log(
-                "ROOM 2 TIMER RESET AND STARTED."
+                "ROOM 2 TIMER RESET. Waiting for GOT IT."
             );
         }
 
-        // =====================================================
-        // RESET ROOM 2 INSTRUCTION
-        // =====================================================
-
+        // Reset and show the main instruction panel again.
         if (instructionManager != null)
         {
             instructionManager.ResetForTryAgain();
+            instructionManager.ShowInstruction();
 
-            Debug.Log(
-                "ROOM 2 INSTRUCTION RESET."
-            );
+            Debug.Log("ROOM 2 INSTRUCTION PANEL SHOWN AGAIN.");
         }
         else
         {
@@ -375,28 +265,28 @@ public class Room2GameOverController : MonoBehaviour
             );
         }
 
-        // =====================================================
-        // LOCK CURSOR
-        // =====================================================
+        // Replay the complete Room 2 voice sequence.
+        if (room2VoiceManager != null)
+        {
+            room2VoiceManager.RestartVoiceSequence();
 
-        Cursor.lockState =
-            CursorLockMode.Locked;
+            Debug.Log("ROOM 2 VOICE SEQUENCE RESTARTED.");
+        }
+        else
+        {
+            Debug.LogWarning(
+                "Room2VoiceSubtitleManager is NOT assigned!"
+            );
+        }
 
-        Cursor.visible = false;
+        // Keep cursor visible so the player can click GOT IT.
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
 
-        Debug.Log(
-            "================================="
-        );
-
-        Debug.Log(
-            "ROOM 2 TRY AGAIN COMPLETE!"
-        );
-
-        Debug.Log(
-            "================================="
-        );
+        Debug.Log("=================================");
+        Debug.Log("ROOM 2 RESTART COMPLETE!");
+        Debug.Log("=================================");
     }
-
 
     // =========================================================
     // MAIN MENU
@@ -404,33 +294,14 @@ public class Room2GameOverController : MonoBehaviour
 
     public void MainMenu()
     {
-        Debug.Log(
-            "RETURNING TO CODEBREAK MAIN MENU..."
-        );
+        Debug.Log("RETURNING TO CODEBREAK MAIN MENU...");
 
-        // Reset time scale
         Time.timeScale = 1f;
+        AudioListener.pause = false;
 
-        // Unlock cursor
-        Cursor.lockState =
-            CursorLockMode.None;
-
+        Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        // =====================================================
-        // OPEN WEB MAIN MENU
-        // =====================================================
-
-        Application.OpenURL(
-            "http://127.0.0.1:5500/index.html"
-        );
-
-        Debug.Log(
-            "MAIN MENU URL OPENED:"
-        );
-
-        Debug.Log(
-            "http://127.0.0.1:5500/index.html"
-        );
+        SceneManager.LoadScene("MainMenu");
     }
 }

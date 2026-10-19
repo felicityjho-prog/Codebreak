@@ -1,0 +1,3016 @@
+fileFormatVersion: 2
+guid: 86710bc9db975bf4abb46053ec225438
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7141521146534175320
+    second: Minimal Neon Cyan Pause Button Icon_0
+  - first:
+      213: 5054228020981561559
+    second: Minimal Neon Cyan Pause Button Icon_1
+  - first:
+      213: -1468048408362780205
+    second: Minimal Neon Cyan Pause Button Icon_2
+  - first:
+      213: 8370164215942650507
+    second: Minimal Neon Cyan Pause Button Icon_3
+  - first:
+      213: 6054435785433548374
+    second: Minimal Neon Cyan Pause Button Icon_4
+  - first:
+      213: 7629070429480546375
+    second: Minimal Neon Cyan Pause Button Icon_5
+  - first:
+      213: 927296479075438946
+    second: Minimal Neon Cyan Pause Button Icon_6
+  - first:
+      213: 8996828426464318150
+    second: Minimal Neon Cyan Pause Button Icon_7
+  - first:
+      213: 580122362550636344
+    second: Minimal Neon Cyan Pause Button Icon_8
+  - first:
+      213: 2066420618627776676
+    second: Minimal Neon Cyan Pause Button Icon_9
+  - first:
+      213: 2178726060966995641
+    second: Minimal Neon Cyan Pause Button Icon_10
+  - first:
+      213: 5465822474485339019
+    second: Minimal Neon Cyan Pause Button Icon_11
+  - first:
+      213: 7162390894259057787
+    second: Minimal Neon Cyan Pause Button Icon_12
+  - first:
+      213: -639483708472342286
+    second: Minimal Neon Cyan Pause Button Icon_13
+  - first:
+      213: -6315637696586000382
+    second: Minimal Neon Cyan Pause Button Icon_14
+  - first:
+      213: 3063935489073549995
+    second: Minimal Neon Cyan Pause Button Icon_15
+  - first:
+      213: 8496006197425319930
+    second: Minimal Neon Cyan Pause Button Icon_16
+  - first:
+      213: 2647303948084776817
+    second: Minimal Neon Cyan Pause Button Icon_17
+  - first:
+      213: 1644995330072359836
+    second: Minimal Neon Cyan Pause Button Icon_18
+  - first:
+      213: -6611366834604149760
+    second: Minimal Neon Cyan Pause Button Icon_19
+  - first:
+      213: 3339608126453703190
+    second: Minimal Neon Cyan Pause Button Icon_20
+  - first:
+      213: -180496547313261892
+    second: Minimal Neon Cyan Pause Button Icon_21
+  - first:
+      213: 108326784505735815
+    second: Minimal Neon Cyan Pause Button Icon_22
+  - first:
+      213: 5448998376041226381
+    second: Minimal Neon Cyan Pause Button Icon_23
+  - first:
+      213: 1451836312683641279
+    second: Minimal Neon Cyan Pause Button Icon_24
+  - first:
+      213: 1996916694514023160
+    second: Minimal Neon Cyan Pause Button Icon_25
+  - first:
+      213: -2832103527043425750
+    second: Minimal Neon Cyan Pause Button Icon_26
+  - first:
+      213: 4395626389585572061
+    second: Minimal Neon Cyan Pause Button Icon_27
+  - first:
+      213: -2248508397302703300
+    second: Minimal Neon Cyan Pause Button Icon_28
+  - first:
+      213: -1136849539690582057
+    second: Minimal Neon Cyan Pause Button Icon_29
+  - first:
+      213: -2425630690716082292
+    second: Minimal Neon Cyan Pause Button Icon_30
+  - first:
+      213: 7973973339723954107
+    second: Minimal Neon Cyan Pause Button Icon_31
+  - first:
+      213: -5721454410546093078
+    second: Minimal Neon Cyan Pause Button Icon_32
+  - first:
+      213: 3468482091014542393
+    second: Minimal Neon Cyan Pause Button Icon_33
+  - first:
+      213: -6826306496713689483
+    second: Minimal Neon Cyan Pause Button Icon_34
+  - first:
+      213: -3013632459526484007
+    second: Minimal Neon Cyan Pause Button Icon_35
+  - first:
+      213: 8450350036667353952
+    second: Minimal Neon Cyan Pause Button Icon_36
+  - first:
+      213: 4868601420386564878
+    second: Minimal Neon Cyan Pause Button Icon_37
+  - first:
+      213: 7133831447813389765
+    second: Minimal Neon Cyan Pause Button Icon_38
+  - first:
+      213: 1756700516134133044
+    second: Minimal Neon Cyan Pause Button Icon_39
+  - first:
+      213: -4986046951886710041
+    second: Minimal Neon Cyan Pause Button Icon_40
+  - first:
+      213: 7357624603221864028
+    second: Minimal Neon Cyan Pause Button Icon_41
+  - first:
+      213: 1666632278206873864
+    second: Minimal Neon Cyan Pause Button Icon_42
+  - first:
+      213: -2243807129742626633
+    second: Minimal Neon Cyan Pause Button Icon_43
+  - first:
+      213: -1523377631583042619
+    second: Minimal Neon Cyan Pause Button Icon_44
+  - first:
+      213: -2602142765205387653
+    second: Minimal Neon Cyan Pause Button Icon_45
+  - first:
+      213: 8166015929652805142
+    second: Minimal Neon Cyan Pause Button Icon_46
+  - first:
+      213: 7872833297570371557
+    second: Minimal Neon Cyan Pause Button Icon_47
+  - first:
+      213: -989486667848640865
+    second: Minimal Neon Cyan Pause Button Icon_48
+  - first:
+      213: 1826703686919913346
+    second: Minimal Neon Cyan Pause Button Icon_49
+  - first:
+      213: 4305258586697322324
+    second: Minimal Neon Cyan Pause Button Icon_50
+  - first:
+      213: -1992564229598618465
+    second: Minimal Neon Cyan Pause Button Icon_51
+  - first:
+      213: -2739419536104537119
+    second: Minimal Neon Cyan Pause Button Icon_52
+  - first:
+      213: -2939631788137023044
+    second: Minimal Neon Cyan Pause Button Icon_53
+  - first:
+      213: -5526943268734366408
+    second: Minimal Neon Cyan Pause Button Icon_54
+  - first:
+      213: -7205117407986701807
+    second: Minimal Neon Cyan Pause Button Icon_55
+  - first:
+      213: 7371172523866964615
+    second: Minimal Neon Cyan Pause Button Icon_56
+  - first:
+      213: -8699726445458514307
+    second: Minimal Neon Cyan Pause Button Icon_57
+  - first:
+      213: -5108142214322901909
+    second: Minimal Neon Cyan Pause Button Icon_58
+  - first:
+      213: -7066520117258983026
+    second: Minimal Neon Cyan Pause Button Icon_59
+  - first:
+      213: 6965728358412293192
+    second: Minimal Neon Cyan Pause Button Icon_60
+  - first:
+      213: -6894805164344093836
+    second: Minimal Neon Cyan Pause Button Icon_61
+  - first:
+      213: -1806128578663290695
+    second: Minimal Neon Cyan Pause Button Icon_62
+  - first:
+      213: -4095739043748033763
+    second: Minimal Neon Cyan Pause Button Icon_63
+  - first:
+      213: 2573129075902408322
+    second: Minimal Neon Cyan Pause Button Icon_64
+  - first:
+      213: -5824846024100192012
+    second: Minimal Neon Cyan Pause Button Icon_65
+  - first:
+      213: 1112412300530534420
+    second: Minimal Neon Cyan Pause Button Icon_66
+  - first:
+      213: -7286308762933065229
+    second: Minimal Neon Cyan Pause Button Icon_67
+  - first:
+      213: -8943312407599791651
+    second: Minimal Neon Cyan Pause Button Icon_68
+  - first:
+      213: -1648733750405811065
+    second: Minimal Neon Cyan Pause Button Icon_69
+  - first:
+      213: -2273304355469486226
+    second: Minimal Neon Cyan Pause Button Icon_70
+  - first:
+      213: -6314547568151439452
+    second: Minimal Neon Cyan Pause Button Icon_71
+  - first:
+      213: 2301655172358186635
+    second: Minimal Neon Cyan Pause Button Icon_72
+  - first:
+      213: -4095035823878483045
+    second: Minimal Neon Cyan Pause Button Icon_73
+  - first:
+      213: 4359308895813596016
+    second: Minimal Neon Cyan Pause Button Icon_74
+  - first:
+      213: -4105804498797860901
+    second: Minimal Neon Cyan Pause Button Icon_75
+  - first:
+      213: -2125444878221040683
+    second: Minimal Neon Cyan Pause Button Icon_76
+  - first:
+      213: 8783407716117053098
+    second: Minimal Neon Cyan Pause Button Icon_77
+  - first:
+      213: 8953201912644559216
+    second: Minimal Neon Cyan Pause Button Icon_78
+  - first:
+      213: 6533164856512097314
+    second: Minimal Neon Cyan Pause Button Icon_79
+  - first:
+      213: -144428253594251855
+    second: Minimal Neon Cyan Pause Button Icon_80
+  - first:
+      213: 1914447963386431089
+    second: Minimal Neon Cyan Pause Button Icon_81
+  - first:
+      213: -2243700327427395782
+    second: Minimal Neon Cyan Pause Button Icon_82
+  - first:
+      213: 5111972735126885210
+    second: Minimal Neon Cyan Pause Button Icon_83
+  - first:
+      213: 8710431051821022093
+    second: Minimal Neon Cyan Pause Button Icon_84
+  - first:
+      213: -1054502076119724324
+    second: Minimal Neon Cyan Pause Button Icon_85
+  - first:
+      213: -622197917984906865
+    second: Minimal Neon Cyan Pause Button Icon_86
+  - first:
+      213: -4985312068917820230
+    second: Minimal Neon Cyan Pause Button Icon_87
+  - first:
+      213: -529741585398038713
+    second: Minimal Neon Cyan Pause Button Icon_88
+  - first:
+      213: 8065678095263203434
+    second: Minimal Neon Cyan Pause Button Icon_89
+  - first:
+      213: 8110506255453815533
+    second: Minimal Neon Cyan Pause Button Icon_90
+  - first:
+      213: 3366612841098874954
+    second: Minimal Neon Cyan Pause Button Icon_91
+  - first:
+      213: -1100843463042141136
+    second: Minimal Neon Cyan Pause Button Icon_92
+  - first:
+      213: 1299837070802941361
+    second: Minimal Neon Cyan Pause Button Icon_93
+  - first:
+      213: -2770613868768533327
+    second: Minimal Neon Cyan Pause Button Icon_94
+  - first:
+      213: -1336842827194293956
+    second: Minimal Neon Cyan Pause Button Icon_95
+  - first:
+      213: -1592968006410159674
+    second: Minimal Neon Cyan Pause Button Icon_96
+  - first:
+      213: -1844091311617493118
+    second: Minimal Neon Cyan Pause Button Icon_97
+  - first:
+      213: 4390662529734127980
+    second: Minimal Neon Cyan Pause Button Icon_98
+  - first:
+      213: 1789708906244714328
+    second: Minimal Neon Cyan Pause Button Icon_99
+  - first:
+      213: -5855576154145237214
+    second: Minimal Neon Cyan Pause Button Icon_100
+  - first:
+      213: -6282113846396076714
+    second: Minimal Neon Cyan Pause Button Icon_101
+  - first:
+      213: -826851303435147882
+    second: Minimal Neon Cyan Pause Button Icon_102
+  - first:
+      213: -4809821322276253109
+    second: Minimal Neon Cyan Pause Button Icon_103
+  - first:
+      213: 7819253642257418577
+    second: Minimal Neon Cyan Pause Button Icon_104
+  - first:
+      213: -9113843609020466406
+    second: Minimal Neon Cyan Pause Button Icon_105
+  - first:
+      213: -1169626662079982611
+    second: Minimal Neon Cyan Pause Button Icon_106
+  - first:
+      213: 3126925918907492195
+    second: Minimal Neon Cyan Pause Button Icon_107
+  - first:
+      213: -6139470002451046650
+    second: Minimal Neon Cyan Pause Button Icon_108
+  - first:
+      213: 2549620299090068999
+    second: Minimal Neon Cyan Pause Button Icon_109
+  - first:
+      213: -2160451286439113857
+    second: Minimal Neon Cyan Pause Button Icon_110
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 876
+        width: 395
+        height: 356
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8522c1735a7cb1360800000000000000
+      internalID: 7141521146534175320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_1
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 1128
+        width: 61
+        height: 112
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d87e6c4b99342640800000000000000
+      internalID: 5054228020981561559
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_2
+      rect:
+        serializedVersion: 2
+        x: 547
+        y: 1222
+        width: 11
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d9757a20c170abe0800000000000000
+      internalID: -1468048408362780205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_3
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 1086
+        width: 43
+        height: 138
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8a92f2e10cc82470800000000000000
+      internalID: 8370164215942650507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_4
+      rect:
+        serializedVersion: 2
+        x: 646
+        y: 1222
+        width: 54
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6560e22e44da50450800000000000000
+      internalID: 6054435785433548374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_5
+      rect:
+        serializedVersion: 2
+        x: 705
+        y: 1213
+        width: 72
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 740ff939227efd960800000000000000
+      internalID: 7629070429480546375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_6
+      rect:
+        serializedVersion: 2
+        x: 502
+        y: 1165
+        width: 54
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26113c41c3b6edc00800000000000000
+      internalID: 927296479075438946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_7
+      rect:
+        serializedVersion: 2
+        x: 571
+        y: 1173
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c2da8069c72bdc70800000000000000
+      internalID: 8996828426464318150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_8
+      rect:
+        serializedVersion: 2
+        x: 617
+        y: 1164
+        width: 33
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83f471217320d0800800000000000000
+      internalID: 580122362550636344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_9
+      rect:
+        serializedVersion: 2
+        x: 663
+        y: 1171
+        width: 37
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a00ad1ba966dac10800000000000000
+      internalID: 2066420618627776676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_10
+      rect:
+        serializedVersion: 2
+        x: 705
+        y: 1132
+        width: 64
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b6e2de1fc36c3e10800000000000000
+      internalID: 2178726060966995641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_11
+      rect:
+        serializedVersion: 2
+        x: 762
+        y: 1108
+        width: 77
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b839b05d4908adb40800000000000000
+      internalID: 5465822474485339019
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_12
+      rect:
+        serializedVersion: 2
+        x: 822
+        y: 1140
+        width: 31
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b74bdc2029ce56360800000000000000
+      internalID: 7162390894259057787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_13
+      rect:
+        serializedVersion: 2
+        x: 340
+        y: 1147
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f84bdc84f81027f0800000000000000
+      internalID: -639483708472342286
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_14
+      rect:
+        serializedVersion: 2
+        x: 731
+        y: 1137
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 208dce40af85a58a0800000000000000
+      internalID: -6315637696586000382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_15
+      rect:
+        serializedVersion: 2
+        x: 876
+        y: 1068
+        width: 56
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba211f80819458a20800000000000000
+      internalID: 3063935489073549995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_16
+      rect:
+        serializedVersion: 2
+        x: 388
+        y: 1116
+        width: 17
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: affad0f6f90e7e570800000000000000
+      internalID: 8496006197425319930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_17
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 1124
+        width: 12
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17f051e2aec1db420800000000000000
+      internalID: 2647303948084776817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_18
+      rect:
+        serializedVersion: 2
+        x: 723
+        y: 1132
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c93b322898234d610800000000000000
+      internalID: 1644995330072359836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_19
+      rect:
+        serializedVersion: 2
+        x: 846
+        y: 1114
+        width: 35
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 004fe9774e4bf34a0800000000000000
+      internalID: -6611366834604149760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_20
+      rect:
+        serializedVersion: 2
+        x: 385
+        y: 1097
+        width: 18
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 612e742a5eba85e20800000000000000
+      internalID: 3339608126453703190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_21
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 1091
+        width: 41
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb26536b85fbe7df0800000000000000
+      internalID: -180496547313261892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_22
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 1094
+        width: 15
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78aef16f2aad08100800000000000000
+      internalID: 108326784505735815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_23
+      rect:
+        serializedVersion: 2
+        x: 806
+        y: 1107
+        width: 13
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d802e99272bbe9b40800000000000000
+      internalID: 5448998376041226381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_24
+      rect:
+        serializedVersion: 2
+        x: 1069
+        y: 962
+        width: 130
+        height: 157
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb975892f65f52410800000000000000
+      internalID: 1451836312683641279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_25
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 1076
+        width: 21
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fa3e8e472976bb10800000000000000
+      internalID: 1996916694514023160
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_26
+      rect:
+        serializedVersion: 2
+        x: 856
+        y: 1080
+        width: 27
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2a1277e8d852b8d0800000000000000
+      internalID: -2832103527043425750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_27
+      rect:
+        serializedVersion: 2
+        x: 930
+        y: 1050
+        width: 38
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd0b49c89e6600d30800000000000000
+      internalID: 4395626389585572061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_28
+      rect:
+        serializedVersion: 2
+        x: 971
+        y: 1040
+        width: 43
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3b1a489681bbc0e0800000000000000
+      internalID: -2248508397302703300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_29
+      rect:
+        serializedVersion: 2
+        x: 394
+        y: 1068
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7df2dafed591930f0800000000000000
+      internalID: -1136849539690582057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_30
+      rect:
+        serializedVersion: 2
+        x: 745
+        y: 1046
+        width: 12
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8f15930dbd665ed0800000000000000
+      internalID: -2425630690716082292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_31
+      rect:
+        serializedVersion: 2
+        x: 891
+        y: 1048
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb77eaa218e39ae60800000000000000
+      internalID: 7973973339723954107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_32
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 1051
+        width: 11
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae3eec4f68f4990b0800000000000000
+      internalID: -5721454410546093078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_33
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 1050
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 934d9b0c516822030800000000000000
+      internalID: 3468482091014542393
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_34
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 0
+        width: 1199
+        height: 1045
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 576707798661441a0800000000000000
+      internalID: -6826306496713689483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_35
+      rect:
+        serializedVersion: 2
+        x: 1001
+        y: 1016
+        width: 27
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9df4656be3d6d26d0800000000000000
+      internalID: -3013632459526484007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_36
+      rect:
+        serializedVersion: 2
+        x: 1027
+        y: 1026
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06b4443269ca54570800000000000000
+      internalID: 8450350036667353952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_37
+      rect:
+        serializedVersion: 2
+        x: 1043
+        y: 988
+        width: 33
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0b7a17623fb09340800000000000000
+      internalID: 4868601420386564878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_38
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 964
+        width: 39
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5cd7d66b7e5700360800000000000000
+      internalID: 7133831447813389765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_39
+      rect:
+        serializedVersion: 2
+        x: 1023
+        y: 1000
+        width: 15
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43d9be0efcd016810800000000000000
+      internalID: 1756700516134133044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_40
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 980
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ea9f57e6b00ecab0800000000000000
+      internalID: -4986046951886710041
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_41
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 930
+        width: 16
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5ea6b128988b1660800000000000000
+      internalID: 7357624603221864028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_42
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 907
+        width: 11
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80188b11a31112710800000000000000
+      internalID: 1666632278206873864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_43
+      rect:
+        serializedVersion: 2
+        x: 183
+        y: 905
+        width: 21
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b0b33fbd456cd0e0800000000000000
+      internalID: -2243807129742626633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_44
+      rect:
+        serializedVersion: 2
+        x: 1059
+        y: 933
+        width: 23
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c387b28d10ebdae0800000000000000
+      internalID: -1523377631583042619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_45
+      rect:
+        serializedVersion: 2
+        x: 1073
+        y: 911
+        width: 33
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b76841911f453ebd0800000000000000
+      internalID: -2602142765205387653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_46
+      rect:
+        serializedVersion: 2
+        x: 1093
+        y: 855
+        width: 35
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61ef22df834835170800000000000000
+      internalID: 8166015929652805142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_47
+      rect:
+        serializedVersion: 2
+        x: 1127
+        y: 917
+        width: 20
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e79c8d0c2ce14d60800000000000000
+      internalID: 7872833297570371557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_48
+      rect:
+        serializedVersion: 2
+        x: 1067
+        y: 886
+        width: 19
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9695ec3e13a442f0800000000000000
+      internalID: -989486667848640865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_49
+      rect:
+        serializedVersion: 2
+        x: 1123
+        y: 887
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28ff1c03351c95910800000000000000
+      internalID: 1826703686919913346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_50
+      rect:
+        serializedVersion: 2
+        x: 1123
+        y: 854
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45f4b46dfd95fbb30800000000000000
+      internalID: 4305258586697322324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_51
+      rect:
+        serializedVersion: 2
+        x: 1132
+        y: 809
+        width: 47
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9cdf96e36df854e0800000000000000
+      internalID: -1992564229598618465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_52
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 763
+        width: 70
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e349bb2270abf9d0800000000000000
+      internalID: -2739419536104537119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_53
+      rect:
+        serializedVersion: 2
+        x: 1113
+        y: 777
+        width: 16
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb975a9a6745437d0800000000000000
+      internalID: -2939631788137023044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_54
+      rect:
+        serializedVersion: 2
+        x: 1127
+        y: 793
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83d0a5d416a5c43b0800000000000000
+      internalID: -5526943268734366408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_55
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 638
+        width: 62
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11a28fb44e7420c90800000000000000
+      internalID: -7205117407986701807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_56
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 714
+        width: 68
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 782c5373b5aab4660800000000000000
+      internalID: 7371172523866964615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_57
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 684
+        width: 29
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7e9f5714ec544780800000000000000
+      internalID: -8699726445458514307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_58
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 674
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6c2b1d58bb3c19b0800000000000000
+      internalID: -5108142214322901909
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_59
+      rect:
+        serializedVersion: 2
+        x: 1212
+        y: 629
+        width: 29
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8960a4b46daeed90800000000000000
+      internalID: -7066520117258983026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_60
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 578
+        width: 37
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8449705390d3ba060800000000000000
+      internalID: 6965728358412293192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_61
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 576
+        width: 28
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 473ddb7bb3bb050a0800000000000000
+      internalID: -6894805164344093836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_62
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 570
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b8e71280a75fe6e0800000000000000
+      internalID: -1806128578663290695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_63
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 530
+        width: 25
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1b43b43a030927c0800000000000000
+      internalID: -4095739043748033763
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_64
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 481
+        width: 82
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2866462f24795b320800000000000000
+      internalID: 2573129075902408322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_65
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 393
+        width: 35
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f06926076df92fa0800000000000000
+      internalID: -5824846024100192012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_66
+      rect:
+        serializedVersion: 2
+        x: 1083
+        y: 385
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 418c5e0f715107f00800000000000000
+      internalID: 1112412300530534420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_67
+      rect:
+        serializedVersion: 2
+        x: 1174
+        y: 425
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f90f8dd8c4d1ea90800000000000000
+      internalID: -7286308762933065229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_68
+      rect:
+        serializedVersion: 2
+        x: 1051
+        y: 353
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd1cbadbfb8f2e380800000000000000
+      internalID: -8943312407599791651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_69
+      rect:
+        serializedVersion: 2
+        x: 1099
+        y: 360
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7843ddda3658e19e0800000000000000
+      internalID: -1648733750405811065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_70
+      rect:
+        serializedVersion: 2
+        x: 181
+        y: 337
+        width: 11
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6794e1bbb99370e0800000000000000
+      internalID: -2273304355469486226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_71
+      rect:
+        serializedVersion: 2
+        x: 1141
+        y: 345
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a7d60351783e58a0800000000000000
+      internalID: -6314547568151439452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_72
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 312
+        width: 9
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b86a9df3f2f11ff10800000000000000
+      internalID: 2301655172358186635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_73
+      rect:
+        serializedVersion: 2
+        x: 1012
+        y: 328
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9359375d928b27c0800000000000000
+      internalID: -4095035823878483045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_74
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 267
+        width: 37
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0737b2918506f7c30800000000000000
+      internalID: 4359308895813596016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_75
+      rect:
+        serializedVersion: 2
+        x: 1045
+        y: 296
+        width: 15
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd7e3f3df804507c0800000000000000
+      internalID: -4105804498797860901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_76
+      rect:
+        serializedVersion: 2
+        x: 1059
+        y: 294
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d326f3f427e082e0800000000000000
+      internalID: -2125444878221040683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_77
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 240
+        width: 27
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aaef49408cee4e970800000000000000
+      internalID: 8783407716117053098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_78
+      rect:
+        serializedVersion: 2
+        x: 1051
+        y: 264
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 071e68514b9204c70800000000000000
+      internalID: 8953201912644559216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_79
+      rect:
+        serializedVersion: 2
+        x: 1059
+        y: 276
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22c2873a2d67aaa50800000000000000
+      internalID: 6533164856512097314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_80
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 226
+        width: 21
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bd0cf0c443eefdf0800000000000000
+      internalID: -144428253594251855
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_81
+      rect:
+        serializedVersion: 2
+        x: 215
+        y: 209
+        width: 13
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1764e9e874c719a10800000000000000
+      internalID: 1914447963386431089
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_82
+      rect:
+        serializedVersion: 2
+        x: 289
+        y: 212
+        width: 36
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3f23499076ccd0e0800000000000000
+      internalID: -2243700327427395782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_83
+      rect:
+        serializedVersion: 2
+        x: 1023
+        y: 223
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5358b24e1061f640800000000000000
+      internalID: 5111972735126885210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_84
+      rect:
+        serializedVersion: 2
+        x: 247
+        y: 178
+        width: 43
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8bf25c44eaa1e870800000000000000
+      internalID: 8710431051821022093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_85
+      rect:
+        serializedVersion: 2
+        x: 313
+        y: 203
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdec8f1e2f7ad51f0800000000000000
+      internalID: -1054502076119724324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_86
+      rect:
+        serializedVersion: 2
+        x: 890
+        y: 192
+        width: 11
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f81a5864a428d57f0800000000000000
+      internalID: -622197917984906865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_87
+      rect:
+        serializedVersion: 2
+        x: 983
+        y: 200
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab48fad261d90dab0800000000000000
+      internalID: -4985312068917820230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_88
+      rect:
+        serializedVersion: 2
+        x: 295
+        y: 160
+        width: 16
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74ff893b5daf5a8f0800000000000000
+      internalID: -529741585398038713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_89
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 167
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6000dc6e7b0fef60800000000000000
+      internalID: 8065678095263203434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_90
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 175
+        width: 25
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de288e0d77e4e8070800000000000000
+      internalID: 8110506255453815533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_91
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 162
+        width: 19
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4097f9ba8c98be20800000000000000
+      internalID: 3366612841098874954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_92
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 130
+        width: 46
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 034ff00f3b409b0f0800000000000000
+      internalID: -1100843463042141136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_93
+      rect:
+        serializedVersion: 2
+        x: 454
+        y: 128
+        width: 19
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b5f717dde2f90210800000000000000
+      internalID: 1299837070802941361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_94
+      rect:
+        serializedVersion: 2
+        x: 872
+        y: 117
+        width: 35
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b4e74e9d5dcc89d0800000000000000
+      internalID: -2770613868768533327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_95
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 95
+        width: 15
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c312e841884927de0800000000000000
+      internalID: -1336842827194293956
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_96
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 95
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c93c5fb904a4e9e0800000000000000
+      internalID: -1592968006410159674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_97
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 79
+        width: 12
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 287b7a5f8b87866e0800000000000000
+      internalID: -1844091311617493118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_98
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 53
+        width: 30
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c61bb6dde44ceec30800000000000000
+      internalID: 4390662529734127980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_99
+      rect:
+        serializedVersion: 2
+        x: 593
+        y: 87
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85fa11894c256d810800000000000000
+      internalID: 1789708906244714328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_100
+      rect:
+        serializedVersion: 2
+        x: 754
+        y: 69
+        width: 35
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 227dce01380dcbea0800000000000000
+      internalID: -5855576154145237214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_101
+      rect:
+        serializedVersion: 2
+        x: 786
+        y: 85
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65dbff2adb271d8a0800000000000000
+      internalID: -6282113846396076714
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_102
+      rect:
+        serializedVersion: 2
+        x: 794
+        y: 87
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 695eda0de1f6684f0800000000000000
+      internalID: -826851303435147882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_103
+      rect:
+        serializedVersion: 2
+        x: 825
+        y: 87
+        width: 28
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b42df9cadf4104db0800000000000000
+      internalID: -4809821322276253109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_104
+      rect:
+        serializedVersion: 2
+        x: 464
+        y: 61
+        width: 17
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 159ce6b62c1938c60800000000000000
+      internalID: 7819253642257418577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_105
+      rect:
+        serializedVersion: 2
+        x: 571
+        y: 44
+        width: 67
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1bfed9568f158180800000000000000
+      internalID: -9113843609020466406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_106
+      rect:
+        serializedVersion: 2
+        x: 866
+        y: 80
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de395ee6fb6a4cfe0800000000000000
+      internalID: -1169626662079982611
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_107
+      rect:
+        serializedVersion: 2
+        x: 541
+        y: 63
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 367617b5e82156b20800000000000000
+      internalID: 3126925918907492195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_108
+      rect:
+        serializedVersion: 2
+        x: 723
+        y: 55
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60f1db2af883ccaa0800000000000000
+      internalID: -6139470002451046650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_109
+      rect:
+        serializedVersion: 2
+        x: 623
+        y: 20
+        width: 21
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 706836f4722126320800000000000000
+      internalID: 2549620299090068999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minimal Neon Cyan Pause Button Icon_110
+      rect:
+        serializedVersion: 2
+        x: 721
+        y: 29
+        width: 28
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7bc24560098402e0800000000000000
+      internalID: -2160451286439113857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Minimal Neon Cyan Pause Button Icon_0: 7141521146534175320
+      Minimal Neon Cyan Pause Button Icon_1: 5054228020981561559
+      Minimal Neon Cyan Pause Button Icon_10: 2178726060966995641
+      Minimal Neon Cyan Pause Button Icon_100: -5855576154145237214
+      Minimal Neon Cyan Pause Button Icon_101: -6282113846396076714
+      Minimal Neon Cyan Pause Button Icon_102: -826851303435147882
+      Minimal Neon Cyan Pause Button Icon_103: -4809821322276253109
+      Minimal Neon Cyan Pause Button Icon_104: 7819253642257418577
+      Minimal Neon Cyan Pause Button Icon_105: -9113843609020466406
+      Minimal Neon Cyan Pause Button Icon_106: -1169626662079982611
+      Minimal Neon Cyan Pause Button Icon_107: 3126925918907492195
+      Minimal Neon Cyan Pause Button Icon_108: -6139470002451046650
+      Minimal Neon Cyan Pause Button Icon_109: 2549620299090068999
+      Minimal Neon Cyan Pause Button Icon_11: 5465822474485339019
+      Minimal Neon Cyan Pause Button Icon_110: -2160451286439113857
+      Minimal Neon Cyan Pause Button Icon_12: 7162390894259057787
+      Minimal Neon Cyan Pause Button Icon_13: -639483708472342286
+      Minimal Neon Cyan Pause Button Icon_14: -6315637696586000382
+      Minimal Neon Cyan Pause Button Icon_15: 3063935489073549995
+      Minimal Neon Cyan Pause Button Icon_16: 8496006197425319930
+      Minimal Neon Cyan Pause Button Icon_17: 2647303948084776817
+      Minimal Neon Cyan Pause Button Icon_18: 1644995330072359836
+      Minimal Neon Cyan Pause Button Icon_19: -6611366834604149760
+      Minimal Neon Cyan Pause Button Icon_2: -1468048408362780205
+      Minimal Neon Cyan Pause Button Icon_20: 3339608126453703190
+      Minimal Neon Cyan Pause Button Icon_21: -180496547313261892
+      Minimal Neon Cyan Pause Button Icon_22: 108326784505735815
+      Minimal Neon Cyan Pause Button Icon_23: 5448998376041226381
+      Minimal Neon Cyan Pause Button Icon_24: 1451836312683641279
+      Minimal Neon Cyan Pause Button Icon_25: 1996916694514023160
+      Minimal Neon Cyan Pause Button Icon_26: -2832103527043425750
+      Minimal Neon Cyan Pause Button Icon_27: 4395626389585572061
+      Minimal Neon Cyan Pause Button Icon_28: -2248508397302703300
+      Minimal Neon Cyan Pause Button Icon_29: -1136849539690582057
+      Minimal Neon Cyan Pause Button Icon_3: 8370164215942650507
+      Minimal Neon Cyan Pause Button Icon_30: -2425630690716082292
+      Minimal Neon Cyan Pause Button Icon_31: 7973973339723954107
+      Minimal Neon Cyan Pause Button Icon_32: -5721454410546093078
+      Minimal Neon Cyan Pause Button Icon_33: 3468482091014542393
+      Minimal Neon Cyan Pause Button Icon_34: -6826306496713689483
+      Minimal Neon Cyan Pause Button Icon_35: -3013632459526484007
+      Minimal Neon Cyan Pause Button Icon_36: 8450350036667353952
+      Minimal Neon Cyan Pause Button Icon_37: 4868601420386564878
+      Minimal Neon Cyan Pause Button Icon_38: 7133831447813389765
+      Minimal Neon Cyan Pause Button Icon_39: 1756700516134133044
+      Minimal Neon Cyan Pause Button Icon_4: 6054435785433548374
+      Minimal Neon Cyan Pause Button Icon_40: -4986046951886710041
+      Minimal Neon Cyan Pause Button Icon_41: 7357624603221864028
+      Minimal Neon Cyan Pause Button Icon_42: 1666632278206873864
+      Minimal Neon Cyan Pause Button Icon_43: -2243807129742626633
+      Minimal Neon Cyan Pause Button Icon_44: -1523377631583042619
+      Minimal Neon Cyan Pause Button Icon_45: -2602142765205387653
+      Minimal Neon Cyan Pause Button Icon_46: 8166015929652805142
+      Minimal Neon Cyan Pause Button Icon_47: 7872833297570371557
+      Minimal Neon Cyan Pause Button Icon_48: -989486667848640865
+      Minimal Neon Cyan Pause Button Icon_49: 1826703686919913346
+      Minimal Neon Cyan Pause Button Icon_5: 7629070429480546375
+      Minimal Neon Cyan Pause Button Icon_50: 4305258586697322324
+      Minimal Neon Cyan Pause Button Icon_51: -1992564229598618465
+      Minimal Neon Cyan Pause Button Icon_52: -2739419536104537119
+      Minimal Neon Cyan Pause Button Icon_53: -2939631788137023044
+      Minimal Neon Cyan Pause Button Icon_54: -5526943268734366408
+      Minimal Neon Cyan Pause Button Icon_55: -7205117407986701807
+      Minimal Neon Cyan Pause Button Icon_56: 7371172523866964615
+      Minimal Neon Cyan Pause Button Icon_57: -8699726445458514307
+      Minimal Neon Cyan Pause Button Icon_58: -5108142214322901909
+      Minimal Neon Cyan Pause Button Icon_59: -7066520117258983026
+      Minimal Neon Cyan Pause Button Icon_6: 927296479075438946
+      Minimal Neon Cyan Pause Button Icon_60: 6965728358412293192
+      Minimal Neon Cyan Pause Button Icon_61: -6894805164344093836
+      Minimal Neon Cyan Pause Button Icon_62: -1806128578663290695
+      Minimal Neon Cyan Pause Button Icon_63: -4095739043748033763
+      Minimal Neon Cyan Pause Button Icon_64: 2573129075902408322
+      Minimal Neon Cyan Pause Button Icon_65: -5824846024100192012
+      Minimal Neon Cyan Pause Button Icon_66: 1112412300530534420
+      Minimal Neon Cyan Pause Button Icon_67: -7286308762933065229
+      Minimal Neon Cyan Pause Button Icon_68: -8943312407599791651
+      Minimal Neon Cyan Pause Button Icon_69: -1648733750405811065
+      Minimal Neon Cyan Pause Button Icon_7: 8996828426464318150
+      Minimal Neon Cyan Pause Button Icon_70: -2273304355469486226
+      Minimal Neon Cyan Pause Button Icon_71: -6314547568151439452
+      Minimal Neon Cyan Pause Button Icon_72: 2301655172358186635
+      Minimal Neon Cyan Pause Button Icon_73: -4095035823878483045
+      Minimal Neon Cyan Pause Button Icon_74: 4359308895813596016
+      Minimal Neon Cyan Pause Button Icon_75: -4105804498797860901
+      Minimal Neon Cyan Pause Button Icon_76: -2125444878221040683
+      Minimal Neon Cyan Pause Button Icon_77: 8783407716117053098
+      Minimal Neon Cyan Pause Button Icon_78: 8953201912644559216
+      Minimal Neon Cyan Pause Button Icon_79: 6533164856512097314
+      Minimal Neon Cyan Pause Button Icon_8: 580122362550636344
+      Minimal Neon Cyan Pause Button Icon_80: -144428253594251855
+      Minimal Neon Cyan Pause Button Icon_81: 1914447963386431089
+      Minimal Neon Cyan Pause Button Icon_82: -2243700327427395782
+      Minimal Neon Cyan Pause Button Icon_83: 5111972735126885210
+      Minimal Neon Cyan Pause Button Icon_84: 8710431051821022093
+      Minimal Neon Cyan Pause Button Icon_85: -1054502076119724324
+      Minimal Neon Cyan Pause Button Icon_86: -622197917984906865
+      Minimal Neon Cyan Pause Button Icon_87: -4985312068917820230
+      Minimal Neon Cyan Pause Button Icon_88: -529741585398038713
+      Minimal Neon Cyan Pause Button Icon_89: 8065678095263203434
+      Minimal Neon Cyan Pause Button Icon_9: 2066420618627776676
+      Minimal Neon Cyan Pause Button Icon_90: 8110506255453815533
+      Minimal Neon Cyan Pause Button Icon_91: 3366612841098874954
+      Minimal Neon Cyan Pause Button Icon_92: -1100843463042141136
+      Minimal Neon Cyan Pause Button Icon_93: 1299837070802941361
+      Minimal Neon Cyan Pause Button Icon_94: -2770613868768533327
+      Minimal Neon Cyan Pause Button Icon_95: -1336842827194293956
+      Minimal Neon Cyan Pause Button Icon_96: -1592968006410159674
+      Minimal Neon Cyan Pause Button Icon_97: -1844091311617493118
+      Minimal Neon Cyan Pause Button Icon_98: 4390662529734127980
+      Minimal Neon Cyan Pause Button Icon_99: 1789708906244714328
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

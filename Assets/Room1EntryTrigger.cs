@@ -174,4 +174,49 @@ public class RoomEntryTrigger : MonoBehaviour
             room1Interaction.EnableRoom1Interactions();
         }
     }
+
+    public void ResetForHallwayRestart()
+    {
+        // Ignore Room 1 reset in Room 2 test mode.
+        if (roomSwitcher != null && roomSwitcher.testRoom2)
+            return;
+
+        // Stop any previous welcome-voice coroutine.
+        StopAllCoroutines();
+
+        // Allow the player to enter Room 1 again.
+        triggered = false;
+
+        // Reset Room 1 interactions.
+        if (room1Interaction != null)
+            room1Interaction.ResetRoom1Interactions();
+
+        // Keep the timer stopped in the hallway.
+        if (gameTimer != null)
+            gameTimer.StopTimer();
+
+        // Restore hallway UI and hide Room 1 challenge UI.
+        if (hallwayInstruction != null)
+            hallwayInstruction.SetActive(true);
+
+        if (challengeUI != null)
+            challengeUI.SetActive(false);
+
+        if (instructionPanel != null)
+            instructionPanel.SetActive(false);
+
+        // Replay the existing welcome voice.
+        if (voiceOver != null)
+        {
+            voiceOver.Stop();
+
+            if (voiceOver.clip != null)
+            {
+                voiceOver.Play();
+                StartCoroutine(WaitForVoiceToFinish());
+            }
+        }
+
+        Debug.Log("ROOM 1 HALLWAY SEQUENCE RESET!");
+    }
 }

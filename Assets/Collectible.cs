@@ -6,13 +6,29 @@ public class Collectible : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (!collected)
+        if (collected)
+            return;
+
+        TaskManager taskManager =
+            FindFirstObjectByType<TaskManager>();
+
+        if (taskManager == null)
         {
-            collected = true;
-
-            FindObjectOfType<TaskManager>().CollectObject();
-
-            gameObject.SetActive(false);
+            Debug.LogWarning("TaskManager not found!");
+            return;
         }
+
+        collected = true;
+
+        taskManager.CollectObject();
+
+        gameObject.SetActive(false);
+    }
+
+    // Called when restarting the Room 1 challenge.
+    public void ResetCollectible()
+    {
+        collected = false;
+        gameObject.SetActive(true);
     }
 }

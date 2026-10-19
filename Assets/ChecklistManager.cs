@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 
@@ -18,32 +19,71 @@ public class ChecklistManager : MonoBehaviour
     [Header("Objective Counter")]
     public TMP_Text objectiveCount;
 
-    void Start()
+    private List<Color> originalTextColors = new List<Color>();
+
+    private void Awake()
+    {
+        CacheOriginalTextColors();
+    }
+
+    private void Start()
     {
         UpdateObjectiveCount();
     }
 
-    public void CollectItem(string objectName)
+    // ==========================================
+    // SAVE ORIGINAL TEXT COLORS
+    // ==========================================
+
+    private void CacheOriginalTextColors()
     {
+        originalTextColors.Clear();
+
+        if (items == null)
+            return;
+
         foreach (ChecklistItem item in items)
         {
-            if (item.itemName == objectName && !item.isCollected)
+            if (item != null && item.uiText != null)
+            {
+                originalTextColors.Add(item.uiText.color);
+            }
+            else
+            {
+                originalTextColors.Add(Color.white);
+            }
+        }
+    }
+
+    // ==========================================
+    // COLLECT CHECKLIST ITEM
+    // ==========================================
+
+    public void CollectItem(string objectName)
+    {
+        if (items == null)
+            return;
+
+        foreach (ChecklistItem item in items)
+        {
+            if (item != null &&
+                item.itemName == objectName &&
+                !item.isCollected)
             {
                 item.isCollected = true;
 
-                // Make the text green
+                // Make the collected item text green.
                 if (item.uiText != null)
                 {
                     item.uiText.color = Color.green;
                 }
 
-                // Show THIS item's checkmark
+                // Show this item's checkmark.
                 if (item.checkmark != null)
                 {
                     item.checkmark.SetActive(true);
                 }
 
-                // Update 0 / 12 counter
                 UpdateObjectiveCount();
 
                 Debug.Log(item.itemName + " collected!");
@@ -54,21 +94,84 @@ public class ChecklistManager : MonoBehaviour
         Debug.LogWarning("Checklist item not found: " + objectName);
     }
 
-    void UpdateObjectiveCount()
-    {
-        int collectedCount = 0;
+    // ==========================================
+    // RESET CHECKLIST FOR ROOM 1 RESTART
+    // ==========================================
 
-        foreach (ChecklistItem item in items)
+    public void ResetChecklist()
+    {
+        if (items == null)
+            return;
+
+        // Re-cache colors if the list changed.
+        if (originalTextColors.Count != items.Count)
         {
-            if (item.isCollected)
+            CacheOriginalTextColors();
+        }
+
+        for (int i = 0; i < items.Count; i++)
+        {
+            ChecklistItem item = items[i];
+
+            if (item == null)
+                continue;
+
+            // Reset collected state.
+            item.isCollected = false;
+
+            // Restore original objective text color.
+            if (item.uiText != null)
             {
-                collectedCount++;
+                if (i < originalTextColors.Count)
+                {
+                    item.uiText.color = originalTextColors[i];
+                }
+                else
+                {
+                    item.uiText.color = Color.white;
+                }
+            }
+
+            // Hide the checkmark.
+            if (item.checkmark != null)
+            {
+                item.checkmark.SetActive(false);
             }
         }
 
-        if (objectiveCount != null)
+        // Return objective counter to 0 / total.
+        UpdateObjectiveCount();
+
+        Debug.Log("ROOM 1 CHECKLIST RESET!");
+    }
+
+    // ==========================================
+    // UPDATE OBJECTIVE COUNTER
+    // ==========================================
+
+    private void UpdateObjectiveCount()
+    {
+        if (objectiveCount == null)
+            return;
+
+        int collectedCount = 0;
+
+        if (items != null)
         {
-            objectiveCount.text = collectedCount + " / " + items.Count;
+            foreach (ChecklistItem item in items)
+            {
+                if (item != null && item.isCollected)
+                {
+                    collectedCount++;
+                }
+            }
+
+            objectiveCount.text =
+                collectedCount + " / " + items.Count;
+        }
+        else
+        {
+            objectiveCount.text = "0 / 0";
         }
     }
 }

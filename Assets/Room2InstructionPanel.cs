@@ -6,7 +6,7 @@ public class Room2InstructionPanel : MonoBehaviour
     public GameObject instructionPanel;
 
     [Header("Player")]
-    public MonoBehaviour playerMovement;
+    public PlayerMovement playerMovement;
     public PlayerController playerController;
 
     private bool instructionClosed = false;

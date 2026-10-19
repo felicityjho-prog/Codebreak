@@ -205,4 +205,38 @@ void OnTriggerExit(Collider other)
                 doorCollider.enabled = true;
         }
     }
+
+
+    public void ResetDoorToClosed()
+    {
+        if (doorPivot == null)
+        {
+            Debug.LogWarning("Cannot reset door: Door Pivot is missing!");
+            return;
+        }
+
+        // Reset every door state.
+        isOpen = false;
+        playerInside = false;
+        closeTimer = 0f;
+        hasOpenedManually = false;
+
+        // Immediately restore the original closed rotation.
+        doorPivot.localRotation = closedRotation;
+
+        // Restore the door collider.
+        if (doorCollider != null)
+        {
+            doorCollider.enabled = true;
+        }
+
+        // Hide the interaction prompt until the next update.
+        if (interactionPrompt != null)
+        {
+            interactionPrompt.SetActive(false);
+        }
+
+        Debug.Log("ROOM 1 DOOR RESET TO CLOSED!");
+    }
+
 }
