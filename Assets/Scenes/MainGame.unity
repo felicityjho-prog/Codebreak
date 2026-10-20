@@ -8836,7 +8836,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -15, y: -334.9125}
-  m_SizeDelta: {x: 592.859, y: 56.175}
+  m_SizeDelta: {x: 1000, y: 56.175}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &235964735
 MonoBehaviour:
@@ -39490,8 +39490,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -34}
-  m_SizeDelta: {x: -36, y: -78.7964}
+  m_AnchoredPosition: {x: 6.1785, y: -29}
+  m_SizeDelta: {x: -12.357, y: -78.7964}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &903126887
 MonoBehaviour:
@@ -39517,8 +39517,7 @@ MonoBehaviour:
 
     ACROSS
 
-
-    1. Apple''s mobile operating system.
+    1. Connects different software systems.
 
     2. Temporary
     computer memory.
@@ -39530,7 +39529,6 @@ MonoBehaviour:
 
 
     DOWN
-
 
     5. Main processing unit of a computer.
 
@@ -39562,13 +39560,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22
-  m_fontSizeBase: 22
+  m_fontSize: 23
+  m_fontSizeBase: 23
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535

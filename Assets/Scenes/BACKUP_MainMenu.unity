@@ -2420,8 +2420,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: "<size=120%>MOVEMENT & CONTROLS</size>\n\n<color=#FFFFFF><size=90%>W A
     S D  \u2014 Move\nMouse \u2014 Look Around\nShift \u2014 Sprint\nF \u2014 Toggle
-    Mouse Cursor</color></size>\n\n<size=120%>YOUR OBJECTIVE</size> \n\n<color=#FFFFFF><size=90%>Explore
-    each room, interact with objects, and solve the puzzles to complete the challenges.</color></size>"
+    Mouse Cursor</color></size>\n\n<size=120%>YOUR OBJECTIVE</size> \n\n<color=#FFFFFF><size=90%>Search
+    for hidden items, solve challenging puzzles, and crack the coding challenges.
+    Complete all three rooms to escape!</color></size>"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 1119613398}
