@@ -1,0 +1,36 @@
+CodeBreak Stage 1 recovery note
+Recorded before the approved Transform trial.
+Scene: Assets/Scenes/MainGame.unity
+Scene dirty before trial: true
+Unity Play Mode before trial: false
+Target: Player/Ch22_nonPBR
+Original local Position: (0, 0, 1.141)
+Original local Rotation: (0, 0, 0)
+Original local Scale: (1, 1.08, 1)
+
+This note records pre-existing Git status at the time of the trial:
+ M Assets/ChecklistManager.cs
+ M Assets/ClickableObjects.cs
+ M Assets/GlobalCameraCollision.cs
+ M Assets/MouseClickSound.cs
+ M Assets/PauseMenuController.cs
+ M Assets/PlayerAnimator.controller
+ M Assets/PlayerMovement.cs
+ M Assets/Scenes/MainGame.unity
+ D Assets/Scenes/MainGame_Backup_Latest.unity
+ D Assets/Scenes/MainGame_Backup_Latest.unity.meta
+ M "Assets/Standing Idle.fbx.meta"
+ M Packages/manifest.json
+ M Packages/packages-lock.json
+?? "Assets/Mous&ItemCollect Sound.meta"
+?? "Assets/Mous&ItemCollect Sound/"
+?? Assets/PlayerAnimator_Backup.controller
+?? Assets/PlayerAnimator_Backup.controller.meta
+?? Assets/ROOM1HW_VOICE.mp3
+?? Assets/ROOM1HW_VOICE.mp3.meta
+?? "Assets/ROOM2VOICE (2).mp3"
+?? "Assets/ROOM2VOICE (2).mp3.meta"
+?? Assets/Scenes/MainGame_BACKUP.unity
+?? Assets/Scenes/MainGame_BACKUP.unity.meta
+
+No scene save, Git operation, or project-object change is authorized by this recovery note.

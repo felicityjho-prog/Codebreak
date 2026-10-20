@@ -1,0 +1,212 @@
+using UnityEngine;
+
+/// <summary>
+/// Sweeps query-only capsules along the current humanoid pose before the
+/// CharacterController moves. The CharacterController remains responsible for
+/// root/body collision, gravity, and vertical movement.
+/// </summary>
+[DisallowMultipleComponent]
+public sealed class PlayerBodyCollisionSolver : MonoBehaviour
+{
+    [SerializeField] private Animator bodyAnimator;
+    [SerializeField] private LayerMask obstacleLayers = Physics.DefaultRaycastLayers;
+    [SerializeField, Min(0f)] private float collisionSkin = 0.03f;
+
+    private const int MaxShapes = 16;
+    private const int MaxHits = 128;
+
+    private readonly CapsuleShape[] shapes = new CapsuleShape[MaxShapes];
+    private readonly RaycastHit[] hits = new RaycastHit[MaxHits];
+    private int shapeCount;
+
+    private struct CapsuleShape
+    {
+        public Vector3 pointA;
+        public Vector3 pointB;
+        public float radius;
+    }
+
+    /// <summary>
+    /// Returns the largest horizontal displacement that does not sweep any
+    /// mapped body, arm, hand, leg, or foot capsule into a blocking collider.
+    /// </summary>
+    public Vector3 ConstrainHorizontalDisplacement(Vector3 displacement)
+    {
+        if (displacement.sqrMagnitude <= Mathf.Epsilon || !TryGetAnimator())
+            return displacement;
+
+        BuildPoseShapes();
+        if (shapeCount == 0)
+            return displacement;
+
+        Vector3 direction = displacement.normalized;
+        float allowedDistance = displacement.magnitude;
+
+        for (int shapeIndex = 0; shapeIndex < shapeCount; shapeIndex++)
+        {
+            CapsuleShape shape = shapes[shapeIndex];
+            int hitCount = Physics.CapsuleCastNonAlloc(
+                shape.pointA,
+                shape.pointB,
+                shape.radius,
+                direction,
+                hits,
+                allowedDistance,
+                obstacleLayers,
+                QueryTriggerInteraction.Ignore);
+
+            // Fail closed if the reusable buffer fills, so a dense collider
+            // cluster cannot silently omit the nearest obstruction.
+            if (hitCount >= hits.Length)
+                return Vector3.zero;
+
+            for (int hitIndex = 0; hitIndex < hitCount; hitIndex++)
+            {
+                Collider hitCollider = hits[hitIndex].collider;
+                if (IsIgnored(hitCollider))
+                    continue;
+
+                allowedDistance = Mathf.Min(
+                    allowedDistance,
+                    Mathf.Max(0f, hits[hitIndex].distance - collisionSkin));
+
+                if (allowedDistance <= 0f)
+                    return Vector3.zero;
+            }
+        }
+
+        return direction * allowedDistance;
+    }
+
+    private bool TryGetAnimator()
+    {
+        if (bodyAnimator == null)
+            bodyAnimator = GetComponentInChildren<Animator>();
+
+        return bodyAnimator != null && bodyAnimator.isHuman;
+    }
+
+    private void BuildPoseShapes()
+    {
+        shapeCount = 0;
+
+        Transform hips = GetBone(HumanBodyBones.Hips);
+        Transform neck = GetBone(HumanBodyBones.Neck);
+        Transform head = GetBone(HumanBodyBones.Head);
+        AddSegment(hips, neck, 0.19f, 0.10f);
+
+        AddArm(HumanBodyBones.LeftUpperArm, HumanBodyBones.LeftLowerArm, HumanBodyBones.LeftHand);
+        AddArm(HumanBodyBones.RightUpperArm, HumanBodyBones.RightLowerArm, HumanBodyBones.RightHand);
+        AddLeg(HumanBodyBones.LeftUpperLeg, HumanBodyBones.LeftLowerLeg,
+            HumanBodyBones.LeftFoot, HumanBodyBones.LeftToes);
+        AddLeg(HumanBodyBones.RightUpperLeg, HumanBodyBones.RightLowerLeg,
+            HumanBodyBones.RightFoot, HumanBodyBones.RightToes);
+
+        if (neck != null && head != null)
+        {
+            float headRadius = Mathf.Max(
+                Vector3.Distance(neck.position, head.position) * 0.85f,
+                0.08f);
+            AddCapsule(head.position, head.position, headRadius);
+        }
+    }
+
+    private void AddArm(
+        HumanBodyBones upperArmBone,
+        HumanBodyBones lowerArmBone,
+        HumanBodyBones handBone)
+    {
+        Transform upperArm = GetBone(upperArmBone);
+        Transform lowerArm = GetBone(lowerArmBone);
+        Transform hand = GetBone(handBone);
+
+        AddSegment(upperArm, lowerArm, 0.23f, 0.06f);
+        AddSegment(lowerArm, hand, 0.25f, 0.06f);
+
+        if (lowerArm != null && hand != null)
+        {
+            float handRadius = Mathf.Max(
+                Vector3.Distance(lowerArm.position, hand.position) * 0.34f,
+                0.07f);
+            AddCapsule(hand.position, hand.position, handRadius);
+        }
+    }
+
+    private void AddLeg(
+        HumanBodyBones upperLegBone,
+        HumanBodyBones lowerLegBone,
+        HumanBodyBones footBone,
+        HumanBodyBones toesBone)
+    {
+        Transform upperLeg = GetBone(upperLegBone);
+        Transform lowerLeg = GetBone(lowerLegBone);
+        Transform foot = GetBone(footBone);
+        Transform toes = GetBone(toesBone);
+
+        AddSegment(upperLeg, lowerLeg, 0.24f, 0.08f);
+        AddSegment(lowerLeg, foot, 0.22f, 0.07f);
+
+        if (foot != null && toes != null)
+        {
+            AddSegment(foot, toes, 0.30f, 0.06f);
+        }
+        else if (foot != null && lowerLeg != null)
+        {
+            float footRadius = Mathf.Max(
+                Vector3.Distance(lowerLeg.position, foot.position) * 0.20f,
+                0.07f);
+            AddCapsule(foot.position, foot.position, footRadius);
+        }
+    }
+
+    private Transform GetBone(HumanBodyBones bone)
+    {
+        return bodyAnimator != null ? bodyAnimator.GetBoneTransform(bone) : null;
+    }
+
+    private void AddSegment(
+        Transform start,
+        Transform end,
+        float radiusFraction,
+        float minimumRadius)
+    {
+        if (start == null || end == null)
+            return;
+
+        float segmentLength = Vector3.Distance(start.position, end.position);
+        if (segmentLength <= Mathf.Epsilon)
+            return;
+
+        float radius = Mathf.Max(segmentLength * radiusFraction, minimumRadius);
+        AddCapsule(start.position, end.position, radius);
+    }
+
+    private void AddCapsule(Vector3 pointA, Vector3 pointB, float radius)
+    {
+        if (shapeCount >= shapes.Length || radius <= 0f)
+            return;
+
+        shapes[shapeCount++] = new CapsuleShape
+        {
+            pointA = pointA,
+            pointB = pointB,
+            radius = radius
+        };
+    }
+
+    private bool IsIgnored(Collider candidate)
+    {
+        if (candidate == null || !candidate.enabled || candidate.isTrigger)
+            return true;
+
+        Transform candidateTransform = candidate.transform;
+        if (candidateTransform == transform || candidateTransform.IsChildOf(transform))
+            return true;
+
+        // Collectibles are approached and targeted by existing interaction
+        // systems; their own colliders must not stop player movement.
+        return candidate.CompareTag("Collectible") ||
+               candidate.GetComponentInParent<Collectible>() != null ||
+               candidate.GetComponentInParent<ClickableObject>() != null;
+    }
+}

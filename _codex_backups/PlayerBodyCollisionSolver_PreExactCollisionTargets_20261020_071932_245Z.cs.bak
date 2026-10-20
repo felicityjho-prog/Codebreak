@@ -1,0 +1,507 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+[DisallowMultipleComponent]
+public sealed class PlayerBodyCollisionSolver : MonoBehaviour
+{
+    [Header("Collision Settings")]
+    [SerializeField, Min(0f)]
+    private float collisionSkin = 0.03f;
+
+    [Header("Optional Legacy Reference")]
+    [Tooltip("Kept for compatibility with the existing Inspector assignment.")]
+    [SerializeField]
+    private Animator bodyAnimator;
+
+    private const int MaxSlideIterations = 4;
+    private const int MaxHits = 256;
+
+    private const float MinDisplacementSqrMagnitude = 0.000001f;
+    private const float MinHorizontalNormalSqrMagnitude = 0.000001f;
+    private const float MinIntoSurfaceDot = -0.0001f;
+
+    private readonly HashSet<Collider> blockingColliders =
+        new HashSet<Collider>();
+
+    private readonly RaycastHit[] hitBuffer = new RaycastHit[MaxHits];
+
+    private CharacterController characterController;
+    private int blockingLayerMask;
+    private bool hasValidBlockingColliders;
+
+    private void Awake()
+    {
+        characterController = GetComponent<CharacterController>();
+
+        CacheRoom2BlockingColliders();
+    }
+
+    /// <summary>
+    /// Restricts horizontal player movement against the explicitly
+    /// cached Room 2 walls and Shelf13 display colliders only.
+    ///
+    /// Vertical movement and gravity remain handled by PlayerMovement
+    /// and CharacterController.
+    /// </summary>
+    public Vector3 ConstrainHorizontalDisplacement(
+        Vector3 proposedDisplacement)
+    {
+        // Preserve the existing horizontal-only solver contract.
+        proposedDisplacement.y = 0f;
+
+        if (proposedDisplacement.sqrMagnitude <
+            MinDisplacementSqrMagnitude)
+        {
+            return Vector3.zero;
+        }
+
+        if (characterController == null ||
+            !characterController.enabled ||
+            !hasValidBlockingColliders)
+        {
+            return proposedDisplacement;
+        }
+
+        Vector3 capsulePoint1;
+        Vector3 capsulePoint2;
+        float capsuleRadius;
+
+        if (!TryBuildControllerCapsule(
+                out capsulePoint1,
+                out capsulePoint2,
+                out capsuleRadius))
+        {
+            return proposedDisplacement;
+        }
+
+        Vector3 totalApplied = Vector3.zero;
+        Vector3 remaining = proposedDisplacement;
+
+        for (int iteration = 0;
+             iteration < MaxSlideIterations;
+             iteration++)
+        {
+            if (remaining.sqrMagnitude <
+                MinDisplacementSqrMagnitude)
+            {
+                break;
+            }
+
+            Vector3 direction = remaining.normalized;
+            float distance = remaining.magnitude;
+
+            // Move the virtual capsule by the displacement already
+            // accepted during previous slide iterations.
+            Vector3 castPoint1 = capsulePoint1 + totalApplied;
+            Vector3 castPoint2 = capsulePoint2 + totalApplied;
+
+            RaycastHit nearestHit;
+
+            bool foundHit = TryFindNearestBlockingHit(
+                castPoint1,
+                castPoint2,
+                capsuleRadius,
+                direction,
+                distance,
+                out nearestHit);
+
+            if (!foundHit)
+            {
+                totalApplied += remaining;
+                remaining = Vector3.zero;
+                break;
+            }
+
+            // Stop slightly before the blocker to avoid repeatedly
+            // pushing directly into its surface.
+            float safeDistance = Mathf.Max(
+                0f,
+                nearestHit.distance - collisionSkin);
+
+            Vector3 advance = direction * safeDistance;
+
+            totalApplied += advance;
+            remaining -= advance;
+
+            // Only horizontal surface normals should constrain
+            // horizontal movement. Ignore floor/ceiling-like normals.
+            Vector3 horizontalNormal = nearestHit.normal;
+            horizontalNormal.y = 0f;
+
+            float normalSqrMagnitude =
+                horizontalNormal.sqrMagnitude;
+
+            if (normalSqrMagnitude <
+                MinHorizontalNormalSqrMagnitude)
+            {
+                // There is no useful horizontal normal to slide along.
+                // Stop this movement attempt safely.
+                remaining = Vector3.zero;
+                break;
+            }
+
+            horizontalNormal /= Mathf.Sqrt(normalSqrMagnitude);
+
+            // Remove only the component moving INTO the surface.
+            // Tangential movement along walls and shelves is preserved.
+            float movementIntoSurface =
+                Vector3.Dot(remaining, horizontalNormal);
+
+            if (movementIntoSurface < 0f)
+            {
+                remaining -=
+                    horizontalNormal * movementIntoSurface;
+            }
+        }
+
+        totalApplied.y = 0f;
+        return totalApplied;
+    }
+
+    private bool TryBuildControllerCapsule(
+        out Vector3 point1,
+        out Vector3 point2,
+        out float radius)
+    {
+        point1 = Vector3.zero;
+        point2 = Vector3.zero;
+        radius = 0f;
+
+        if (characterController == null)
+        {
+            return false;
+        }
+
+        Vector3 scale = transform.lossyScale;
+
+        float scaleX = Mathf.Abs(scale.x);
+        float scaleY = Mathf.Abs(scale.y);
+        float scaleZ = Mathf.Abs(scale.z);
+
+        // Approximate the world-space dimensions of the
+        // CharacterController capsule, including player scale.
+        radius = characterController.radius *
+                 Mathf.Max(scaleX, scaleZ);
+
+        float height = characterController.height * scaleY;
+
+        if (radius <= 0f || height <= 0f)
+        {
+            return false;
+        }
+
+        height = Mathf.Max(height, radius * 2f);
+
+        Vector3 worldCenter =
+            transform.TransformPoint(characterController.center);
+
+        float segmentHalfLength =
+            Mathf.Max(0f, (height * 0.5f) - radius);
+
+        point1 = worldCenter +
+                 Vector3.up * segmentHalfLength;
+
+        point2 = worldCenter -
+                 Vector3.up * segmentHalfLength;
+
+        return true;
+    }
+
+    private bool TryFindNearestBlockingHit(
+        Vector3 point1,
+        Vector3 point2,
+        float radius,
+        Vector3 direction,
+        float maxDistance,
+        out RaycastHit nearestHit)
+    {
+        nearestHit = new RaycastHit();
+
+        if (blockingLayerMask == 0 ||
+            blockingColliders.Count == 0)
+        {
+            return false;
+        }
+
+        int hitCount = Physics.CapsuleCastNonAlloc(
+            point1,
+            point2,
+            radius,
+            direction,
+            hitBuffer,
+            maxDistance,
+            blockingLayerMask,
+            QueryTriggerInteraction.Ignore);
+
+        bool foundBlockingHit = false;
+        float nearestDistance = float.PositiveInfinity;
+
+        for (int i = 0; i < hitCount; i++)
+        {
+            RaycastHit hit = hitBuffer[i];
+            Collider hitCollider = hit.collider;
+
+            if (hitCollider == null)
+            {
+                continue;
+            }
+
+            // Only the explicitly cached Room 2 blockers are valid.
+            // Other colliders on the same Unity layer are ignored.
+            if (!blockingColliders.Contains(hitCollider))
+            {
+                continue;
+            }
+
+            if (!hitCollider.enabled ||
+                !hitCollider.gameObject.activeInHierarchy ||
+                hitCollider.isTrigger)
+            {
+                continue;
+            }
+
+            if (hit.distance < 0f ||
+                hit.distance > maxDistance)
+            {
+                continue;
+            }
+
+            Vector3 horizontalNormal = hit.normal;
+            horizontalNormal.y = 0f;
+
+            if (horizontalNormal.sqrMagnitude <
+                MinHorizontalNormalSqrMagnitude)
+            {
+                continue;
+            }
+
+            horizontalNormal.Normalize();
+
+            // Ignore surfaces the player is not moving into.
+            // This helps prevent tangential movement from stalling.
+            if (Vector3.Dot(direction, horizontalNormal) >=
+                MinIntoSurfaceDot)
+            {
+                continue;
+            }
+
+            if (hit.distance < nearestDistance)
+            {
+                nearestDistance = hit.distance;
+                nearestHit = hit;
+                foundBlockingHit = true;
+            }
+        }
+
+        return foundBlockingHit;
+    }
+
+    private void CacheRoom2BlockingColliders()
+    {
+        blockingColliders.Clear();
+        blockingLayerMask = 0;
+        hasValidBlockingColliders = false;
+
+        Transform room2Root = FindRoom2Root();
+
+        if (room2Root == null)
+        {
+            Debug.LogWarning(
+                "[PlayerBodyCollisionSolver] Could not find the Room 2 root. " +
+                "The solver will allow the proposed horizontal movement. " +
+                "Check that the Room 2 root is named 'room2' or 'Room2'.",
+                this);
+
+            return;
+        }
+
+        Transform[] room2Transforms =
+            room2Root.GetComponentsInChildren<Transform>(true);
+
+        int foundWallMask = 0;
+
+        for (int i = 0; i < room2Transforms.Length; i++)
+        {
+            Transform current = room2Transforms[i];
+
+            if (current == null)
+            {
+                continue;
+            }
+
+            switch (current.name)
+            {
+                case "Wall_1":
+                    foundWallMask |= 1;
+                    AddBlockingColliderRoot(current);
+                    break;
+
+                case "Wall_2":
+                    foundWallMask |= 2;
+                    AddBlockingColliderRoot(current);
+                    break;
+
+                case "Wall_3":
+                    foundWallMask |= 4;
+                    AddBlockingColliderRoot(current);
+                    break;
+
+                case "Wall_4":
+                    foundWallMask |= 8;
+                    AddBlockingColliderRoot(current);
+                    break;
+
+                case "Shelf13":
+                case "Shelf13_MirroredDisplay":
+                    AddBlockingColliderRoot(current);
+                    break;
+            }
+        }
+
+        hasValidBlockingColliders =
+            blockingColliders.Count > 0 &&
+            blockingLayerMask != 0;
+
+        if (foundWallMask != 15)
+        {
+            Debug.LogWarning(
+                "[PlayerBodyCollisionSolver] One or more Room 2 wall roots " +
+                "were not found by their exact names (Wall_1 through Wall_4). " +
+                "Review the Hierarchy if a wall is not being blocked.",
+                this);
+        }
+
+        if (!hasValidBlockingColliders)
+        {
+            Debug.LogWarning(
+                "[PlayerBodyCollisionSolver] No blocking colliders were found " +
+                "under the Room 2 wall and Shelf13 roots. " +
+                "Check the object names and their child colliders.",
+                this);
+        }
+    }
+
+    private Transform FindRoom2Root()
+    {
+        Scene activeScene = SceneManager.GetActiveScene();
+
+        if (!activeScene.IsValid() || !activeScene.isLoaded)
+        {
+            return null;
+        }
+
+        GameObject[] sceneRoots = activeScene.GetRootGameObjects();
+
+        for (int i = 0; i < sceneRoots.Length; i++)
+        {
+            GameObject sceneRoot = sceneRoots[i];
+
+            if (sceneRoot == null)
+            {
+                continue;
+            }
+
+            // Include inactive objects because Room 2 may be inactive
+            // when the game begins in Room 1.
+            Transform[] descendants =
+                sceneRoot.GetComponentsInChildren<Transform>(true);
+
+            for (int j = 0; j < descendants.Length; j++)
+            {
+                Transform candidate = descendants[j];
+
+                if (candidate == null)
+                {
+                    continue;
+                }
+
+                if (string.Equals(
+                    candidate.name,
+                    "room2",
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    if (ContainsAllRoom2WallNames(candidate))
+                    {
+                        return candidate;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private bool ContainsAllRoom2WallNames(Transform room2Root)
+    {
+        Transform[] descendants =
+            room2Root.GetComponentsInChildren<Transform>(true);
+
+        bool wall1 = false;
+        bool wall2 = false;
+        bool wall3 = false;
+        bool wall4 = false;
+
+        for (int i = 0; i < descendants.Length; i++)
+        {
+            Transform current = descendants[i];
+
+            if (current == null)
+            {
+                continue;
+            }
+
+            switch (current.name)
+            {
+                case "Wall_1":
+                    wall1 = true;
+                    break;
+
+                case "Wall_2":
+                    wall2 = true;
+                    break;
+
+                case "Wall_3":
+                    wall3 = true;
+                    break;
+
+                case "Wall_4":
+                    wall4 = true;
+                    break;
+            }
+        }
+
+        return wall1 && wall2 && wall3 && wall4;
+    }
+
+    private void AddBlockingColliderRoot(Transform blockerRoot)
+    {
+        if (blockerRoot == null)
+        {
+            return;
+        }
+
+        Collider[] colliders =
+            blockerRoot.GetComponentsInChildren<Collider>(true);
+
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            Collider currentCollider = colliders[i];
+
+            if (currentCollider == null)
+            {
+                continue;
+            }
+
+            if (blockingColliders.Add(currentCollider))
+            {
+                // Build a query mask from the layers actually used by
+                // the selected blocker colliders. The HashSet above
+                // still filters out unrelated objects on those layers.
+                blockingLayerMask |=
+                    1 << currentCollider.gameObject.layer;
+            }
+        }
+    }
+}

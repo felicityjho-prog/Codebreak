@@ -1,0 +1,303 @@
+using UnityEngine;
+
+/// <summary>
+/// Sweeps query-only capsules along the current humanoid pose before the
+/// CharacterController moves. The CharacterController remains responsible for
+/// root/body collision, gravity, and vertical movement.
+/// </summary>
+[DisallowMultipleComponent]
+public sealed class PlayerBodyCollisionSolver : MonoBehaviour
+{
+    [SerializeField] private Animator bodyAnimator;
+    [SerializeField] private LayerMask obstacleLayers = Physics.DefaultRaycastLayers;
+    [SerializeField, Min(0f)] private float collisionSkin = 0.03f;
+
+    private const int MaxShapes = 16;
+    private const int MaxHits = 128;
+    private const int MaxSlideIterations = 4;
+    private const float MinDisplacementSqrMagnitude = 0.000001f;
+    private const float TangentialNormalThreshold = 0.0001f;
+
+    private readonly CapsuleShape[] shapes = new CapsuleShape[MaxShapes];
+    private readonly RaycastHit[] hits = new RaycastHit[MaxHits];
+    private int shapeCount;
+
+    private struct CapsuleShape
+    {
+        public Vector3 pointA;
+        public Vector3 pointB;
+        public float radius;
+    }
+
+    /// <summary>
+    /// Sweeps mapped body, arm, hand, leg, and foot capsules horizontally,
+    /// sliding the remaining displacement along blocking surfaces.
+    /// </summary>
+    public Vector3 ConstrainHorizontalDisplacement(Vector3 displacement)
+    {
+        Vector3 remaining = new Vector3(displacement.x, 0f, displacement.z);
+        if (remaining.sqrMagnitude <= MinDisplacementSqrMagnitude || !TryGetAnimator())
+            return remaining;
+
+        BuildPoseShapes();
+        if (shapeCount == 0)
+            return remaining;
+
+        Vector3 applied = Vector3.zero;
+
+        for (int iteration = 0; iteration < MaxSlideIterations; iteration++)
+        {
+            float remainingDistance = remaining.magnitude;
+            if (remainingDistance * remainingDistance <= MinDisplacementSqrMagnitude)
+                break;
+
+            Vector3 direction = remaining / remainingDistance;
+            RaycastHit nearestHit;
+            bool hitBufferFull;
+            bool foundHit = TryFindNearestBlockingHit(
+                applied,
+                direction,
+                remainingDistance,
+                out nearestHit,
+                out hitBufferFull);
+
+            // Fail closed for this pass if the reusable hit buffer fills, so
+            // an incomplete query cannot move the remaining distance blindly.
+            if (hitBufferFull)
+                break;
+
+            if (!foundHit)
+            {
+                applied += remaining;
+                remaining = Vector3.zero;
+                break;
+            }
+
+            float advanceDistance = Mathf.Clamp(
+                nearestHit.distance - collisionSkin,
+                0f,
+                remainingDistance);
+            Vector3 advance = direction * advanceDistance;
+            applied += advance;
+            remaining -= advance;
+
+            Vector3 normal = nearestHit.normal;
+            if (!IsUsableNormal(normal))
+                break;
+
+            normal.Normalize();
+            float intoSurface = Vector3.Dot(remaining, normal);
+            if (intoSurface < 0f)
+                remaining -= normal * intoSurface;
+
+            // Discard tiny remainders to avoid jitter and repeated casts at
+            // contact. The next iteration re-sweeps every capsule for corners.
+            if (remaining.sqrMagnitude <= MinDisplacementSqrMagnitude)
+            {
+                remaining = Vector3.zero;
+                break;
+            }
+        }
+
+        return applied;
+    }
+
+    private bool TryFindNearestBlockingHit(
+        Vector3 offset,
+        Vector3 direction,
+        float distance,
+        out RaycastHit nearestHit,
+        out bool hitBufferFull)
+    {
+        nearestHit = default(RaycastHit);
+        hitBufferFull = false;
+        bool foundHit = false;
+
+        for (int shapeIndex = 0; shapeIndex < shapeCount; shapeIndex++)
+        {
+            CapsuleShape shape = shapes[shapeIndex];
+            int hitCount = Physics.CapsuleCastNonAlloc(
+                shape.pointA + offset,
+                shape.pointB + offset,
+                shape.radius,
+                direction,
+                hits,
+                distance,
+                obstacleLayers,
+                QueryTriggerInteraction.Ignore);
+
+            if (hitCount >= hits.Length)
+            {
+                hitBufferFull = true;
+                return false;
+            }
+
+            for (int hitIndex = 0; hitIndex < hitCount; hitIndex++)
+            {
+                RaycastHit candidate = hits[hitIndex];
+                if (IsIgnored(candidate.collider) || !IsFinite(candidate.distance) || candidate.distance < 0f)
+                    continue;
+
+                Vector3 candidateNormal = candidate.normal;
+                if (IsUsableNormal(candidateNormal) &&
+                    Vector3.Dot(direction, candidateNormal.normalized) >= -TangentialNormalThreshold)
+                {
+                    // Do not let a grazing or separating contact block the
+                    // move; the next sweep still checks all other surfaces.
+                    continue;
+                }
+
+                if (!foundHit || candidate.distance < nearestHit.distance)
+                {
+                    nearestHit = candidate;
+                    foundHit = true;
+                }
+            }
+        }
+
+        return foundHit;
+    }
+
+    private static bool IsUsableNormal(Vector3 normal)
+    {
+        return IsFinite(normal.x) && IsFinite(normal.y) && IsFinite(normal.z) &&
+               normal.sqrMagnitude > MinDisplacementSqrMagnitude;
+    }
+
+    private static bool IsFinite(float value)
+    {
+        return !float.IsNaN(value) && !float.IsInfinity(value);
+    }
+
+    private bool TryGetAnimator()
+    {
+        if (bodyAnimator == null)
+            bodyAnimator = GetComponentInChildren<Animator>();
+
+        return bodyAnimator != null && bodyAnimator.isHuman;
+    }
+
+    private void BuildPoseShapes()
+    {
+        shapeCount = 0;
+
+        Transform hips = GetBone(HumanBodyBones.Hips);
+        Transform neck = GetBone(HumanBodyBones.Neck);
+        Transform head = GetBone(HumanBodyBones.Head);
+        AddSegment(hips, neck, 0.19f, 0.10f);
+
+        AddArm(HumanBodyBones.LeftUpperArm, HumanBodyBones.LeftLowerArm, HumanBodyBones.LeftHand);
+        AddArm(HumanBodyBones.RightUpperArm, HumanBodyBones.RightLowerArm, HumanBodyBones.RightHand);
+        AddLeg(HumanBodyBones.LeftUpperLeg, HumanBodyBones.LeftLowerLeg,
+            HumanBodyBones.LeftFoot, HumanBodyBones.LeftToes);
+        AddLeg(HumanBodyBones.RightUpperLeg, HumanBodyBones.RightLowerLeg,
+            HumanBodyBones.RightFoot, HumanBodyBones.RightToes);
+
+        if (neck != null && head != null)
+        {
+            float headRadius = Mathf.Max(
+                Vector3.Distance(neck.position, head.position) * 0.85f,
+                0.08f);
+            AddCapsule(head.position, head.position, headRadius);
+        }
+    }
+
+    private void AddArm(
+        HumanBodyBones upperArmBone,
+        HumanBodyBones lowerArmBone,
+        HumanBodyBones handBone)
+    {
+        Transform upperArm = GetBone(upperArmBone);
+        Transform lowerArm = GetBone(lowerArmBone);
+        Transform hand = GetBone(handBone);
+
+        AddSegment(upperArm, lowerArm, 0.23f, 0.06f);
+        AddSegment(lowerArm, hand, 0.25f, 0.06f);
+
+        if (lowerArm != null && hand != null)
+        {
+            float handRadius = Mathf.Max(
+                Vector3.Distance(lowerArm.position, hand.position) * 0.34f,
+                0.07f);
+            AddCapsule(hand.position, hand.position, handRadius);
+        }
+    }
+
+    private void AddLeg(
+        HumanBodyBones upperLegBone,
+        HumanBodyBones lowerLegBone,
+        HumanBodyBones footBone,
+        HumanBodyBones toesBone)
+    {
+        Transform upperLeg = GetBone(upperLegBone);
+        Transform lowerLeg = GetBone(lowerLegBone);
+        Transform foot = GetBone(footBone);
+        Transform toes = GetBone(toesBone);
+
+        AddSegment(upperLeg, lowerLeg, 0.24f, 0.08f);
+        AddSegment(lowerLeg, foot, 0.22f, 0.07f);
+
+        if (foot != null && toes != null)
+        {
+            AddSegment(foot, toes, 0.30f, 0.06f);
+        }
+        else if (foot != null && lowerLeg != null)
+        {
+            float footRadius = Mathf.Max(
+                Vector3.Distance(lowerLeg.position, foot.position) * 0.20f,
+                0.07f);
+            AddCapsule(foot.position, foot.position, footRadius);
+        }
+    }
+
+    private Transform GetBone(HumanBodyBones bone)
+    {
+        return bodyAnimator != null ? bodyAnimator.GetBoneTransform(bone) : null;
+    }
+
+    private void AddSegment(
+        Transform start,
+        Transform end,
+        float radiusFraction,
+        float minimumRadius)
+    {
+        if (start == null || end == null)
+            return;
+
+        float segmentLength = Vector3.Distance(start.position, end.position);
+        if (segmentLength <= Mathf.Epsilon)
+            return;
+
+        float radius = Mathf.Max(segmentLength * radiusFraction, minimumRadius);
+        AddCapsule(start.position, end.position, radius);
+    }
+
+    private void AddCapsule(Vector3 pointA, Vector3 pointB, float radius)
+    {
+        if (shapeCount >= shapes.Length || radius <= 0f)
+            return;
+
+        shapes[shapeCount++] = new CapsuleShape
+        {
+            pointA = pointA,
+            pointB = pointB,
+            radius = radius
+        };
+    }
+
+    private bool IsIgnored(Collider candidate)
+    {
+        if (candidate == null || !candidate.enabled || candidate.isTrigger)
+            return true;
+
+        Transform candidateTransform = candidate.transform;
+        if (candidateTransform == transform || candidateTransform.IsChildOf(transform))
+            return true;
+
+        // Collectibles are approached and targeted by existing interaction
+        // systems; their own colliders must not stop player movement.
+        return candidate.CompareTag("Collectible") ||
+               candidate.GetComponentInParent<Collectible>() != null ||
+               candidate.GetComponentInParent<ClickableObject>() != null;
+    }
+}

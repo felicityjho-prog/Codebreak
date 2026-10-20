@@ -31,10 +31,27 @@ public class ChecklistManager : MonoBehaviour
         UpdateObjectiveCount();
     }
 
-    // ==========================================
-    // SAVE ORIGINAL TEXT COLORS
-    // ==========================================
+    // Check if the item exists in the checklist
+    // and has not been collected yet.
+    public bool CanCollectItem(string objectName)
+    {
+        if (items == null || string.IsNullOrEmpty(objectName))
+            return false;
 
+        foreach (ChecklistItem item in items)
+        {
+            if (item != null &&
+                item.itemName == objectName &&
+                !item.isCollected)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // SAVE ORIGINAL TEXT COLORS
     private void CacheOriginalTextColors()
     {
         originalTextColors.Clear();
@@ -55,10 +72,7 @@ public class ChecklistManager : MonoBehaviour
         }
     }
 
-    // ==========================================
     // COLLECT CHECKLIST ITEM
-    // ==========================================
-
     public void CollectItem(string objectName)
     {
         if (items == null)
@@ -72,13 +86,11 @@ public class ChecklistManager : MonoBehaviour
             {
                 item.isCollected = true;
 
-                // Make the collected item text green.
                 if (item.uiText != null)
                 {
                     item.uiText.color = Color.green;
                 }
 
-                // Show this item's checkmark.
                 if (item.checkmark != null)
                 {
                     item.checkmark.SetActive(true);
@@ -91,19 +103,15 @@ public class ChecklistManager : MonoBehaviour
             }
         }
 
-        Debug.LogWarning("Checklist item not found: " + objectName);
+        Debug.LogWarning("Checklist item not found or already collected: " + objectName);
     }
 
-    // ==========================================
     // RESET CHECKLIST FOR ROOM 1 RESTART
-    // ==========================================
-
     public void ResetChecklist()
     {
         if (items == null)
             return;
 
-        // Re-cache colors if the list changed.
         if (originalTextColors.Count != items.Count)
         {
             CacheOriginalTextColors();
@@ -116,10 +124,8 @@ public class ChecklistManager : MonoBehaviour
             if (item == null)
                 continue;
 
-            // Reset collected state.
             item.isCollected = false;
 
-            // Restore original objective text color.
             if (item.uiText != null)
             {
                 if (i < originalTextColors.Count)
@@ -132,23 +138,18 @@ public class ChecklistManager : MonoBehaviour
                 }
             }
 
-            // Hide the checkmark.
             if (item.checkmark != null)
             {
                 item.checkmark.SetActive(false);
             }
         }
 
-        // Return objective counter to 0 / total.
         UpdateObjectiveCount();
 
         Debug.Log("ROOM 1 CHECKLIST RESET!");
     }
 
-    // ==========================================
     // UPDATE OBJECTIVE COUNTER
-    // ==========================================
-
     private void UpdateObjectiveCount()
     {
         if (objectiveCount == null)

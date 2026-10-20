@@ -1,0 +1,119 @@
+﻿
+using UnityEngine;
+
+[RequireComponent(typeof(CharacterController))]
+public class PlayerMovement : MonoBehaviour
+{
+    [Header("Movement Settings")]
+    public float walkSpeed = 3f;
+    public float runSpeed = 6f;
+    public float gravity = -9.81f;
+
+    [Header("Character Animation")]
+    [SerializeField] private Animator playerAnimator;
+
+    private CharacterController controller;
+    private PlayerBodyCollisionSolver bodyCollisionSolver;
+    private float yVelocity;
+
+    void Start()
+    {
+        controller = GetComponent<CharacterController>();
+        bodyCollisionSolver = GetComponent<PlayerBodyCollisionSolver>();
+
+        // Find the character's Animator if it was not assigned.
+        if (playerAnimator == null)
+        {
+            playerAnimator = GetComponentInChildren<Animator>();
+        }
+
+        if (playerAnimator == null)
+        {
+            Debug.LogWarning(
+                "PlayerMovement: No Animator found on Player or its children.",
+                this
+            );
+        }
+    }
+
+    void Update()
+    {
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+
+        // Check whether the player is actually moving.
+        bool hasMovement =
+            new Vector2(x, z).sqrMagnitude > 0.01f;
+
+        // Running requires movement plus Left Shift.
+        bool isRunningNow =
+            hasMovement && Input.GetKey(KeyCode.LeftShift);
+
+        // Walking means moving without running.
+        bool isWalkingNow =
+            hasMovement && !isRunningNow;
+
+        // Update the existing Animator parameters.
+        if (playerAnimator != null)
+        {
+            playerAnimator.SetBool("isWalking", isWalkingNow);
+            playerAnimator.SetBool("isRunning", isRunningNow);
+        }
+
+        // Preserve the existing movement speed behavior.
+        float speed = Input.GetKey(KeyCode.LeftShift)
+            ? runSpeed
+            : walkSpeed;
+
+        Vector3 move = transform.right * x
+                     + transform.forward * z;
+
+        // Preserve the existing ground handling.
+        if (controller.isGrounded)
+        {
+            if (yVelocity < 0)
+            {
+                yVelocity = -2f;
+            }
+        }
+
+        // Gravity.
+        yVelocity += gravity * Time.deltaTime;
+        move.y = yVelocity;
+
+        // Preserve the existing vertical movement and constrain only horizontal
+        // travel against the animated body before CharacterController.Move.
+        Vector3 displacement = move * speed * Time.deltaTime;
+        if (bodyCollisionSolver != null && bodyCollisionSolver.enabled)
+        {
+            Vector3 horizontalDisplacement = new Vector3(
+                displacement.x,
+                0f,
+                displacement.z);
+            horizontalDisplacement =
+                bodyCollisionSolver.ConstrainHorizontalDisplacement(horizontalDisplacement);
+            displacement.x = horizontalDisplacement.x;
+            displacement.z = horizontalDisplacement.z;
+        }
+
+        // Move with CharacterController collision handling.
+        controller.Move(displacement);
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit == null || hit.collider == null)
+            return;
+
+        string objectName = hit.collider.name;
+
+        if (objectName.ToLower().Contains("wall") ||
+            objectName == "Shelf_Apt_01")
+        {
+            Debug.Log(
+                "[COLLISION DEBUG] CharacterController hit: " + objectName,
+                hit.collider
+            );
+        }
+    }
+}
