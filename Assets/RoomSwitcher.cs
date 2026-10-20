@@ -46,6 +46,9 @@ public class RoomSwitcher : MonoBehaviour
     [Header("Teleport Transition")]
     public TeleportTransitionManager teleportTransitionManager;
 
+    [Header("Room 1 Background Music")]
+    public AudioSource room1MusicSource;
+
     [Header("Settings")]
     public bool canProceed = false;
 
@@ -54,31 +57,133 @@ public class RoomSwitcher : MonoBehaviour
 
     private bool switched = false;
 
-    void Start()
-    {
-        // ==========================================
-        // ROOM 2 TEST MODE
-        // ==========================================
+    // ==========================================
+    // START
+    // ==========================================
 
+    private void Start()
+    {
         if (testRoom2)
         {
+            StopRoom1Music();
             StartRoom2Test();
+            return;
+        }
+
+        if (IsRoomNamed(currentRoom, "room1"))
+        {
+            PlayRoom1Music();
+        }
+        else
+        {
+            StopRoom1Music();
         }
     }
 
-    void Update()
+    // ==========================================
+    // ROOM CHECK
+    // ==========================================
+
+    private bool IsRoomNamed(
+        GameObject room,
+        string expectedName)
+    {
+        return room != null &&
+               string.Equals(
+                   room.name,
+                   expectedName,
+                   System.StringComparison.OrdinalIgnoreCase
+               );
+    }
+
+    // ==========================================
+    // ROOM 1 BACKGROUND MUSIC
+    // ==========================================
+
+    private void PlayRoom1Music()
+    {
+        if (room1MusicSource == null)
+        {
+            Debug.LogWarning(
+                "RoomSwitcher: Room 1 Music Source is not assigned.",
+                this
+            );
+            return;
+        }
+
+        room1MusicSource.loop = true;
+        room1MusicSource.spatialBlend = 0f;
+
+        if (!room1MusicSource.isPlaying)
+        {
+            room1MusicSource.Play();
+        }
+
+        Debug.Log("Room 1 Background Music Started.", this);
+    }
+
+    private void StopRoom1Music()
+    {
+        if (room1MusicSource != null &&
+            room1MusicSource.isPlaying)
+        {
+            room1MusicSource.Stop();
+
+            Debug.Log(
+                "Room 1 Background Music Stopped.",
+                this
+            );
+        }
+    }
+
+    // ==========================================
+    // SHOW ROOM 2 CHALLENGE PANEL
+    // ==========================================
+
+    private void ShowRoom2Instruction()
+    {
+        if (room2InstructionPanel == null)
+        {
+            Debug.LogError(
+                "RoomSwitcher: Room 2 Instruction Panel " +
+                "is not assigned in the Inspector.",
+                this
+            );
+            return;
+        }
+
+        // Activate the Canvas that contains Room2ChallengePanel,
+        // if that Canvas is currently inactive.
+        Canvas parentCanvas =
+            room2InstructionPanel.GetComponentInParent<Canvas>(true);
+
+        if (parentCanvas != null &&
+            !parentCanvas.gameObject.activeSelf)
+        {
+            parentCanvas.gameObject.SetActive(true);
+        }
+
+        // Show Room2ChallengePanel.
+        room2InstructionPanel.SetActive(true);
+
+        Debug.Log("ROOM 2 CHALLENGE PANEL SHOWN!", this);
+    }
+
+    // ==========================================
+    // UPDATE
+    // ==========================================
+
+    private void Update()
     {
         if (!Input.GetKeyDown(KeyCode.E))
             return;
 
         Debug.Log("E Pressed");
 
-        // ==========================================
-        // ROOM 2 INSTRUCTION
-        // ==========================================
-
+        // Do not process E while the Room 2 instructions
+        // are visible. The Got It button handles this panel.
         if (room2InstructionPanel != null &&
-            room2InstructionPanel.activeSelf)
+            room2InstructionPanel.activeInHierarchy)
         {
             Debug.Log("Room 2 Instruction is still open.");
             return;
@@ -93,11 +198,7 @@ public class RoomSwitcher : MonoBehaviour
             sudokuTable != null &&
             sudokuPanel != null)
         {
-            // ==========================================
-            // IMPORTANT:
-            // DO NOT OPEN SUDOKU AFTER IT IS COMPLETED
-            // ==========================================
-
+            // Do not reopen Sudoku after completion.
             if (sudokuManager != null &&
                 sudokuManager.IsPuzzleCompleted())
             {
@@ -106,7 +207,7 @@ public class RoomSwitcher : MonoBehaviour
                     "E interaction is disabled."
                 );
             }
-            else
+            else if (player != null)
             {
                 float distance = Vector3.Distance(
                     player.transform.position,
@@ -123,7 +224,8 @@ public class RoomSwitcher : MonoBehaviour
 
                     Debug.Log("Sudoku Panel Opened!");
 
-                    // Stop here so E does NOT switch to Room 3
+                    // E is for Sudoku interaction here,
+                    // not for switching to another room.
                     return;
                 }
             }
@@ -143,7 +245,7 @@ public class RoomSwitcher : MonoBehaviour
     // ENABLE PLAYER CONTROLS
     // ==========================================
 
-    void EnablePlayerControls()
+    private void EnablePlayerControls()
     {
         if (playerMovement != null)
         {
@@ -164,53 +266,39 @@ public class RoomSwitcher : MonoBehaviour
     // ROOM 2 TEST MODE
     // ==========================================
 
-    void StartRoom2Test()
+    private void StartRoom2Test()
     {
+        StopRoom1Music();
+
         Debug.Log("==========================================");
         Debug.Log("ROOM 2 TEST MODE ACTIVE");
         Debug.Log("Starting directly in Room 2...");
         Debug.Log("==========================================");
 
-        // ==========================================
-        // Disable Room 1
-        // ==========================================
-
+        // Disable Room 1.
         if (currentRoom != null)
         {
             currentRoom.SetActive(false);
         }
 
-        // ==========================================
-        // Enable Room 2
-        // ==========================================
-
+        // Enable Room 2.
         if (nextRoom != null)
         {
             nextRoom.SetActive(true);
         }
 
-        // ==========================================
-        // Disable Room 1 Game Manager
-        // ==========================================
-
+        // Switch game managers.
         if (currentGameManager != null)
         {
             currentGameManager.SetActive(false);
         }
-
-        // ==========================================
-        // Enable Room 2 Game Manager
-        // ==========================================
 
         if (nextGameManager != null)
         {
             nextGameManager.SetActive(true);
         }
 
-        // ==========================================
-        // TELEPORT PLAYER TO ROOM 2
-        // ==========================================
-
+        // Teleport player to Room 2.
         if (player != null && spawnPoint != null)
         {
             CharacterController cc =
@@ -221,129 +309,89 @@ public class RoomSwitcher : MonoBehaviour
                 cc.enabled = false;
             }
 
-            player.transform.position =
-                spawnPoint.position;
-
-            player.transform.rotation =
-                spawnPoint.rotation;
+            player.transform.SetPositionAndRotation(
+                spawnPoint.position,
+                spawnPoint.rotation
+            );
 
             if (cc != null)
             {
                 cc.enabled = true;
             }
 
-            Debug.Log(
-                "Player moved to SpawnPointRoom2."
+            Debug.Log("Player moved to SpawnPointRoom2.");
+        }
+        else
+        {
+            Debug.LogWarning(
+                "RoomSwitcher: Player or Room 2 Spawn Point " +
+                "is not assigned."
             );
         }
 
-        // ==========================================
-        // ENABLE PLAYER CONTROLS
-        // ==========================================
-
         EnablePlayerControls();
 
-        // ==========================================
-        // Hide Room 1 UI
-        // ==========================================
-
+        // Hide Room 1 UI.
         if (taskPanel != null)
         {
             taskPanel.SetActive(false);
         }
 
-        // ==========================================
-        // Hide Hallway Instruction
-        // ==========================================
-
         if (hallwayInstruction != null)
         {
             hallwayInstruction.SetActive(false);
-
-            Debug.Log(
-                "Hallway Instruction Hidden - Room 2 Test Mode."
-            );
         }
 
-        // ==========================================
-        // Hide Current Checklist
-        // ==========================================
-
+        // Update checklists.
         if (currentChecklist != null)
         {
             currentChecklist.SetActive(false);
         }
-
-        // ==========================================
-        // Show Room 2 Checklist
-        // ==========================================
 
         if (nextChecklist != null)
         {
             nextChecklist.SetActive(true);
         }
 
-        // ==========================================
-        // Show Room 2 Instruction
-        // ==========================================
+        // Show Room 2 instructions.
+        ShowRoom2Instruction();
 
-        if (room2InstructionPanel != null)
-        {
-            room2InstructionPanel.SetActive(true);
-
-            Debug.Log(
-                "Room 2 Instruction Panel Shown."
-            );
-        }
-
-        // ==========================================
-        // Enable Room 2 Manager
-        // ==========================================
-
+        // Enable Room 2 manager.
         if (nextRoomManager != null)
         {
             nextRoomManager.SetActive(true);
         }
 
-        // ==========================================
-        // IMPORTANT:
-        // Make Room 2 the CURRENT room
-        // ==========================================
-
+        // Make Room 2 the current room.
         currentRoom = nextRoom;
 
-        // ==========================================
-        // START ROOM 2 VOICE + SUBTITLE
-        // ==========================================
-
-        StartRoom2Voice();
-
-        // Prevent normal Room 1 -> Room 2 switching
         canProceed = false;
         switched = true;
 
-        Debug.Log(
-            "Room 2 Test Mode Ready!"
-        );
+        // Start Room 2 voice.
+        StartRoom2Voice();
+
+        Debug.Log("Room 2 Test Mode Ready!");
     }
+
+    // ==========================================
+    // ENABLE ROOM TRANSITION
+    // ==========================================
 
     public void EnableProceed()
     {
         canProceed = true;
 
-        Debug.Log(
-            "Room transition unlocked!"
-        );
+        Debug.Log("Room transition unlocked!");
     }
 
     // ==========================================
     // START ROOM 2 VOICE
     // ==========================================
 
-    void StartRoom2Voice()
+    private void StartRoom2Voice()
     {
-        if (nextRoom != null &&
-            nextRoom.name == "room2")
+        if (IsRoomNamed(nextRoom, "room2"))
         {
             if (room2VoiceManager != null)
             {
@@ -356,7 +404,8 @@ public class RoomSwitcher : MonoBehaviour
             else
             {
                 Debug.LogWarning(
-                    "Room 2 Voice Manager is not assigned in RoomSwitcher."
+                    "Room 2 Voice Manager is not assigned " +
+                    "in RoomSwitcher."
                 );
             }
         }
@@ -366,8 +415,7 @@ public class RoomSwitcher : MonoBehaviour
     // NORMAL ROOM SWITCHING
     // ==========================================
 
-
-    void SwitchRoom()
+    private void SwitchRoom()
     {
         if (switched)
             return;
@@ -396,23 +444,44 @@ public class RoomSwitcher : MonoBehaviour
         }
     }
 
+    // ==========================================
+    // PERFORM ROOM SWITCH
+    // ==========================================
+
     private void PerformRoomSwitch(
         bool enableControlsImmediately)
     {
+        bool enteringRoom2 =
+            IsRoomNamed(nextRoom, "room2");
+
+        // Stop Room 1 music when entering Room 2.
+        if (enteringRoom2)
+        {
+            StopRoom1Music();
+        }
+
         // Disable the current room.
         if (currentRoom != null)
+        {
             currentRoom.SetActive(false);
+        }
 
         // Enable the destination room.
         if (nextRoom != null)
+        {
             nextRoom.SetActive(true);
+        }
 
         // Switch game managers.
         if (currentGameManager != null)
+        {
             currentGameManager.SetActive(false);
+        }
 
         if (nextGameManager != null)
+        {
             nextGameManager.SetActive(true);
+        }
 
         // Teleport the player while the screen is black.
         if (player != null)
@@ -421,12 +490,16 @@ public class RoomSwitcher : MonoBehaviour
                 player.GetComponent<CharacterController>();
 
             if (cc != null)
+            {
                 cc.enabled = false;
+            }
 
             if (spawnPoint != null)
             {
-                player.transform.position = spawnPoint.position;
-                player.transform.rotation = spawnPoint.rotation;
+                player.transform.SetPositionAndRotation(
+                    spawnPoint.position,
+                    spawnPoint.rotation
+                );
             }
             else
             {
@@ -436,7 +509,9 @@ public class RoomSwitcher : MonoBehaviour
             }
 
             if (cc != null)
+            {
                 cc.enabled = true;
+            }
         }
         else
         {
@@ -447,40 +522,66 @@ public class RoomSwitcher : MonoBehaviour
 
         // The transition manager restores controls after fade-in.
         if (enableControlsImmediately)
+        {
             EnablePlayerControls();
+        }
 
-        // Hide the current task panel.
+        // ==========================================
+        // HIDE ROOM 1 TASK COMPLETED PANEL
+        // ==========================================
+
         if (taskPanel != null)
+        {
             taskPanel.SetActive(false);
 
-        // Update checklists.
-        if (currentChecklist != null)
-            currentChecklist.SetActive(false);
-
-        if (nextChecklist != null)
-            nextChecklist.SetActive(true);
-
-        // Prepare Room 2 instruction panel.
-        if (room2InstructionPanel != null &&
-            nextRoom != null &&
-            nextRoom.name == "room2")
-        {
-            room2InstructionPanel.SetActive(true);
-
             Debug.Log(
-                "Room 2 Instruction Panel Prepared."
+                "Room 1 Task Completed Panel Hidden."
             );
         }
 
-        // Activate the destination room manager.
-        if (nextRoomManager != null)
-            nextRoomManager.SetActive(true);
+        // ==========================================
+        // PREPARE ROOM 2 UI
+        // ==========================================
+
+        if (enteringRoom2)
+        {
+            // Hide hallway instruction.
+            if (hallwayInstruction != null)
+            {
+                hallwayInstruction.SetActive(false);
+            }
+
+            // Hide Room 1 checklist.
+            if (currentChecklist != null)
+            {
+                currentChecklist.SetActive(false);
+            }
+
+            // Show Room 2 checklist.
+            if (nextChecklist != null)
+            {
+                nextChecklist.SetActive(true);
+            }
+
+            // Show Room2ChallengePanel and its Canvas.
+            if (room2InstructionPanel != null)
+            {
+                ShowRoom2Instruction();
+            }
+
+            // Enable Room 2 manager.
+            if (nextRoomManager != null)
+            {
+                nextRoomManager.SetActive(true);
+            }
+        }
+
+        // Update current room so Room 2 interactions continue working.
+        currentRoom = nextRoom;
+
+        // Prevent another room-switch request.
+        canProceed = false;
 
         Debug.Log("Switched to next room!");
-
-        // Disable this RoomSwitcher after the room switch.
-        // The transition manager lives on a separate GameObject.
-        gameObject.SetActive(false);
     }
-
 }

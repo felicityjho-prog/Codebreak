@@ -68,10 +68,12 @@ public class Room1GameOverController : MonoBehaviour
             );
         }
 
-        // Stop the Room 1 timer while the player is in the hallway.
+        // Stop the Room 1 timer while in the hallway,
+        // then restart the Room 1 background music.
         if (room1Timer != null)
         {
             room1Timer.StopTimer();
+            room1Timer.PlayRoom1Music();
         }
 
         // Return the player to the hallway spawn point.

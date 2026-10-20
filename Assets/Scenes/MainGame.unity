@@ -22253,6 +22253,7 @@ MonoBehaviour:
   gameOverAudioSource: {fileID: 0}
   gameOverSound: {fileID: 0}
   gameOverPitch: 1
+  room1MusicSource: {fileID: 0}
 --- !u!4 &517265296
 Transform:
   m_ObjectHideFlags: 0
@@ -24596,7 +24597,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1cbe1ad02e481c4b8940e1191e9000a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MouseClickSound
-  clickSound: {fileID: 8300000, guid: 2bd766d97b4cd2449901cfd465b343ce, type: 3}
+  clickSound: {fileID: 0}
 --- !u!82 &556516962
 AudioSource:
   m_ObjectHideFlags: 0
@@ -26935,8 +26936,9 @@ MonoBehaviour:
   playerMove: {fileID: 1620056349}
   playerLook: {fileID: 1620056347}
   gameOverAudioSource: {fileID: 622049301}
-  gameOverSound: {fileID: 8300000, guid: 200d51bc0eac3674e951e9bb5977222e, type: 3}
+  gameOverSound: {fileID: 8300000, guid: 3f5849e7b25923042b9d7a53df5c2c13, type: 3}
   gameOverPitch: 1
+  room1MusicSource: {fileID: 1397100980}
 --- !u!4 &622049300
 Transform:
   m_ObjectHideFlags: 0
@@ -29415,6 +29417,7 @@ MonoBehaviour:
   sudokuInteractionDistance: 3
   sudokuManager: {fileID: 0}
   teleportTransitionManager: {fileID: 1415302882}
+  room1MusicSource: {fileID: 1397100980}
   canProceed: 0
   testRoom2: 0
 --- !u!4 &677955355
@@ -29975,6 +29978,7 @@ MonoBehaviour:
   gameOverAudioSource: {fileID: 0}
   gameOverSound: {fileID: 0}
   gameOverPitch: 1
+  room1MusicSource: {fileID: 0}
 --- !u!4 &690244925
 Transform:
   m_ObjectHideFlags: 0
@@ -44904,7 +44908,7 @@ MonoBehaviour:
   sudokuPanel: {fileID: 2031270140}
   crosswordPanel: {fileID: 2008009145}
   gameOverAudioSource: {fileID: 1034417945}
-  gameOverSound: {fileID: 8300000, guid: 200d51bc0eac3674e951e9bb5977222e, type: 3}
+  gameOverSound: {fileID: 8300000, guid: 3f5849e7b25923042b9d7a53df5c2c13, type: 3}
 --- !u!82 &1034417944
 AudioSource:
   m_ObjectHideFlags: 0
@@ -45013,7 +45017,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 200d51bc0eac3674e951e9bb5977222e, type: 3}
+  m_Resource: {fileID: 8300000, guid: 3f5849e7b25923042b9d7a53df5c2c13, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.4
   m_Pitch: 1
@@ -51257,7 +51261,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 691259f86841107468572a38a1685753, type: 3}
+  m_Resource: {fileID: 8300000, guid: 0b88fbf54e8c6394e9d29a0eecd07fa6, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.744
   m_Pitch: 1
@@ -60591,6 +60595,135 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1822031205}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: -90.19}
+--- !u!1 &1397100979
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1397100981}
+  - component: {fileID: 1397100980}
+  m_Layer: 0
+  m_Name: Room1Music
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &1397100980
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1397100979}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 27f45da931715d0419102b9f9497243e, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0.279
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &1397100981
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1397100979}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.58634, y: -0.49942, z: 2.94754}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1399367990
 GameObject:
   m_ObjectHideFlags: 0
@@ -80507,6 +80640,7 @@ MonoBehaviour:
   sudokuInteractionDistance: 3
   sudokuManager: {fileID: 664374332}
   teleportTransitionManager: {fileID: 1415302882}
+  room1MusicSource: {fileID: 0}
   canProceed: 0
   testRoom2: 0
 --- !u!4 &1859170311
@@ -92855,6 +92989,7 @@ SceneRoots:
   - {fileID: 1545731899}
   - {fileID: 929362564}
   - {fileID: 1789237633}
+  - {fileID: 1397100981}
   - {fileID: 422298754}
   - {fileID: 809894791}
   - {fileID: 1822031205}

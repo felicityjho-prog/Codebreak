@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
@@ -32,6 +31,9 @@ public class GameTimer : MonoBehaviour
 
     [Range(0.5f, 1.5f)]
     public float gameOverPitch = 1f;
+
+    [Header("Room 1 Background Music")]
+    public AudioSource room1MusicSource;
 
     private void Start()
     {
@@ -126,6 +128,9 @@ public class GameTimer : MonoBehaviour
 
         timerRunning = true;
 
+        // Start Room 1 background music again if stopped.
+        PlayRoom1Music();
+
         // Show timer.
         if (timerText != null)
         {
@@ -142,6 +147,42 @@ public class GameTimer : MonoBehaviour
 
         // Display timer immediately.
         UpdateTimerDisplay(timeRemaining);
+    }
+
+    // ==========================================
+    // ROOM 1 BACKGROUND MUSIC
+    // ==========================================
+
+    public void PlayRoom1Music()
+    {
+        if (room1MusicSource == null)
+        {
+            Debug.LogWarning(
+                "GameTimer: Room 1 Music Source is not assigned!"
+            );
+            return;
+        }
+
+        room1MusicSource.loop = true;
+        room1MusicSource.spatialBlend = 0f;
+
+        // Play only if it is not already playing.
+        if (!room1MusicSource.isPlaying)
+        {
+            room1MusicSource.Play();
+            Debug.Log("ROOM 1 BACKGROUND MUSIC STARTED!");
+        }
+    }
+
+    private void StopRoom1Music()
+    {
+        if (room1MusicSource != null &&
+            room1MusicSource.isPlaying)
+        {
+            room1MusicSource.Stop();
+
+            Debug.Log("ROOM 1 BACKGROUND MUSIC STOPPED!");
+        }
     }
 
     // ==========================================
@@ -180,6 +221,9 @@ public class GameTimer : MonoBehaviour
 
         // Stop timer and reset ticking pitch.
         StopTimer();
+
+        // Stop Room 1 background music.
+        StopRoom1Music();
 
         // Hide Room 1 instruction.
         if (instructionPanel != null)
@@ -282,6 +326,7 @@ public class GameTimer : MonoBehaviour
             timerText.gameObject.SetActive(false);
         }
 
+        // StartTimer also restarts Room 1 music.
         StartTimer();
 
         Debug.Log("ROOM 1 TIMER RESET AND RESTARTED!");
