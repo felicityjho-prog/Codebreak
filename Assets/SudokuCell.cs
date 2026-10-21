@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using TMPro;
 
 public class SudokuCell : MonoBehaviour
@@ -37,7 +38,8 @@ public class SudokuCell : MonoBehaviour
         if (inputField == null)
         {
             Debug.LogError(
-                "TMP_InputField NOT FOUND on SudokuCell!"
+                "TMP_InputField NOT FOUND on SudokuCell!",
+                this
             );
         }
     }
@@ -54,24 +56,41 @@ public class SudokuCell : MonoBehaviour
         inputField.contentType =
             TMP_InputField.ContentType.IntegerNumber;
 
+        // Allow only Sudoku numbers 1 to 6.
+        inputField.onValidateInput = ValidateSudokuInput;
+
+        // One number per cell.
         inputField.characterLimit = 1;
 
         if (inputField.textComponent != null)
         {
             inputField.textComponent.gameObject.SetActive(true);
-
-            inputField.textComponent.color =
-                Color.black;
-
-            inputField.textComponent.fontSize =
-                36;
-
+            inputField.textComponent.color = Color.black;
+            inputField.textComponent.fontSize = 36;
             inputField.textComponent.alignment =
                 TextAlignmentOptions.Center;
-
             inputField.textComponent.fontStyle =
                 FontStyles.Bold;
         }
+    }
+
+    // =========================================================
+    // VALIDATE INPUT: ALLOW ONLY NUMBERS 1 TO 6
+    // =========================================================
+
+    private char ValidateSudokuInput(
+        string text,
+        int charIndex,
+        char addedChar
+    )
+    {
+        if (addedChar >= '1' && addedChar <= '6')
+        {
+            return addedChar;
+        }
+
+        // Reject 0, 7, 8, 9, letters, and other characters.
+        return '\0';
     }
 
     // =========================================================
@@ -95,7 +114,8 @@ public class SudokuCell : MonoBehaviour
         if (inputField == null)
         {
             Debug.LogError(
-                "TMP_InputField NOT FOUND!"
+                "TMP_InputField NOT FOUND!",
+                this
             );
 
             return;
@@ -104,52 +124,43 @@ public class SudokuCell : MonoBehaviour
         PrepareInputField();
 
         // =====================================================
-        // GIVEN NUMBER
+        // GIVEN NUMBER: CANNOT BE EDITED
         // =====================================================
 
         if (!editable)
         {
-            inputField.text =
-                givenNumber.ToString();
+            inputField.onEndEdit.RemoveListener(CheckAnswer);
 
+            inputField.text = givenNumber.ToString();
             inputField.interactable = false;
             inputField.readOnly = true;
 
             if (inputField.image != null)
             {
-                inputField.image.color =
-                    Color.white;
+                inputField.image.color = Color.white;
             }
 
             if (inputField.textComponent != null)
             {
                 inputField.textComponent.gameObject.SetActive(true);
-
-                inputField.textComponent.color =
-                    Color.black;
-
-                inputField.textComponent.fontSize =
-                    36;
-
-                inputField.textComponent.alignment =
-                    TextAlignmentOptions.Center;
-
-                inputField.textComponent.fontStyle =
-                    FontStyles.Bold;
-
                 inputField.textComponent.text =
                     givenNumber.ToString();
+                inputField.textComponent.color = Color.black;
+                inputField.textComponent.fontSize = 36;
+                inputField.textComponent.alignment =
+                    TextAlignmentOptions.Center;
+                inputField.textComponent.fontStyle =
+                    FontStyles.Bold;
             }
         }
 
         // =====================================================
-        // PLAYER CELL
+        // PLAYER CELL: EDITABLE
         // =====================================================
 
         else
         {
             inputField.text = "";
-
             inputField.interactable = true;
             inputField.readOnly = false;
 
@@ -158,34 +169,29 @@ public class SudokuCell : MonoBehaviour
 
             inputField.characterLimit = 1;
 
+            // Reapply validation after setting contentType.
+            inputField.onValidateInput = ValidateSudokuInput;
+
             if (inputField.image != null)
             {
-                inputField.image.color =
-                    Color.white;
+                inputField.image.color = Color.white;
             }
 
             if (inputField.textComponent != null)
             {
                 inputField.textComponent.gameObject.SetActive(true);
-
-                inputField.textComponent.color =
-                    Color.black;
-
-                inputField.textComponent.fontSize =
-                    36;
-
+                inputField.textComponent.color = Color.black;
+                inputField.textComponent.fontSize = 36;
                 inputField.textComponent.alignment =
                     TextAlignmentOptions.Center;
-
                 inputField.textComponent.fontStyle =
                     FontStyles.Normal;
             }
 
-            inputField.onEndEdit.RemoveAllListeners();
-
-            inputField.onEndEdit.AddListener(
-                CheckAnswer
-            );
+            // Prevent duplicate listeners without removing
+            // unrelated listeners belonging to other systems.
+            inputField.onEndEdit.RemoveListener(CheckAnswer);
+            inputField.onEndEdit.AddListener(CheckAnswer);
         }
     }
 
@@ -198,43 +204,39 @@ public class SudokuCell : MonoBehaviour
         if (!editable)
             return;
 
-        // Empty = no penalty
+        // Empty input does not count as a wrong answer.
         if (string.IsNullOrEmpty(playerAnswer))
             return;
 
-        int playerNumber;
-
-        if (!int.TryParse(
-            playerAnswer,
-            out playerNumber))
-        {
+        if (!int.TryParse(playerAnswer, out int playerNumber))
             return;
-        }
+
+        // Extra safety check: Sudoku accepts numbers 1 to 6 only.
+        if (playerNumber < 1 || playerNumber > 6)
+            return;
 
         // =====================================================
-        // CORRECT
+        // CORRECT ANSWER
         // =====================================================
 
         if (playerNumber == correctAnswer)
         {
             Debug.Log(
-                "CORRECT Sudoku answer: " +
-                playerNumber
+                "CORRECT Sudoku answer: " + playerNumber,
+                this
             );
 
             if (inputField.image != null)
             {
-                inputField.image.color =
-                    Color.green;
+                inputField.image.color = Color.green;
             }
 
             if (inputField.textComponent != null)
             {
-                inputField.textComponent.color =
-                    Color.black;
+                inputField.textComponent.color = Color.black;
             }
 
-            // NO TIMER PENALTY
+            // No timer penalty for a correct answer.
 
             if (sudokuManager != null)
             {
@@ -243,41 +245,33 @@ public class SudokuCell : MonoBehaviour
         }
 
         // =====================================================
-        // WRONG
+        // WRONG ANSWER
         // =====================================================
 
         else
         {
             Debug.Log(
-                "WRONG Sudoku answer: " +
-                playerNumber
+                "WRONG Sudoku answer: " + playerNumber,
+                this
             );
 
             if (inputField.image != null)
             {
-                inputField.image.color =
-                    Color.red;
+                inputField.image.color = Color.red;
             }
 
             if (inputField.textComponent != null)
             {
-                inputField.textComponent.color =
-                    Color.black;
+                inputField.textComponent.color = Color.black;
             }
 
-            // =================================================
-            // PLAY WRONG ANSWER SOUND
-            // =================================================
-
+            // Play wrong-answer sound.
             if (sudokuManager != null)
             {
                 sudokuManager.PlayWrongAnswerSound();
             }
 
-            // =================================================
-            // REMOVE 10 SECONDS
-            // =================================================
-
+            // Deduct 10 seconds through the existing timer.
             if (Room2ChallengeTimer.Instance != null)
             {
                 Room2ChallengeTimer.Instance.WrongAnswer();
@@ -286,11 +280,12 @@ public class SudokuCell : MonoBehaviour
     }
 
     // =========================================================
-    // CHECK THIS CELL
+    // CHECK WHETHER THIS CELL IS CORRECT
     // =========================================================
 
     public bool IsCorrect()
     {
+        // Given numbers are fixed and already correct.
         if (!editable)
             return true;
 
@@ -300,15 +295,12 @@ public class SudokuCell : MonoBehaviour
         if (string.IsNullOrEmpty(inputField.text))
             return false;
 
-        int playerNumber;
+        if (!int.TryParse(inputField.text, out int playerNumber))
+            return false;
 
-        if (int.TryParse(
-            inputField.text,
-            out playerNumber))
-        {
-            return playerNumber == correctAnswer;
-        }
+        if (playerNumber < 1 || playerNumber > 6)
+            return false;
 
-        return false;
+        return playerNumber == correctAnswer;
     }
 }
