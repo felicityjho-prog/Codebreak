@@ -34,6 +34,7 @@ public class Room2ChallengeTimer : MonoBehaviour
     [Header("Puzzle Panels")]
     public GameObject sudokuPanel;
     public GameObject crosswordPanel;
+    public GameObject wordScrabblePanel;
 
     [Header("Game Over Sound")]
     public AudioSource gameOverAudioSource;
@@ -103,6 +104,11 @@ public class Room2ChallengeTimer : MonoBehaviour
         if (crosswordPanel != null)
         {
             crosswordPanel.SetActive(false);
+        }
+
+        if (wordScrabblePanel != null)
+        {
+            wordScrabblePanel.SetActive(false);
         }
 
         UpdateTimerDisplay();
@@ -263,6 +269,39 @@ public class Room2ChallengeTimer : MonoBehaviour
     }
 
     // ==========================================
+    // CLOSE ALL PUZZLE PANELS
+    // ==========================================
+
+    private void ClosePuzzlePanels()
+    {
+        if (sudokuPanel != null)
+        {
+            sudokuPanel.SetActive(false);
+            Debug.Log("SUDOKU PANEL CLOSED!");
+        }
+
+        if (crosswordPanel != null)
+        {
+            crosswordPanel.SetActive(false);
+            Debug.Log("CROSSWORD PANEL CLOSED!");
+        }
+
+        // Important: close Word Scrabble before Game Over.
+        if (wordScrabblePanel != null)
+        {
+            wordScrabblePanel.SetActive(false);
+            Debug.Log("WORD SCRABBLE PANEL CLOSED!");
+        }
+        else
+        {
+            Debug.LogWarning(
+                "Word Scrabble Panel is not assigned " +
+                "in Room2ChallengeTimer Inspector!"
+            );
+        }
+    }
+
+    // ==========================================
     // TIME UP / GAME OVER
     // ==========================================
 
@@ -289,19 +328,8 @@ public class Room2ChallengeTimer : MonoBehaviour
 
         Debug.Log("ROOM 2 TIME UP!");
 
-        // Close Sudoku.
-        if (sudokuPanel != null)
-        {
-            sudokuPanel.SetActive(false);
-            Debug.Log("SUDOKU PANEL CLOSED!");
-        }
-
-        // Close Crossword.
-        if (crosswordPanel != null)
-        {
-            crosswordPanel.SetActive(false);
-            Debug.Log("CROSSWORD PANEL CLOSED!");
-        }
+        // Close every puzzle before showing Game Over.
+        ClosePuzzlePanels();
 
         // Hide Pause button and Pause Menu.
         if (pauseMenuController != null)
@@ -323,10 +351,12 @@ public class Room2ChallengeTimer : MonoBehaviour
             Debug.Log("GAME OVER SOUND PLAYED!");
         }
 
-        // Show Game Over panel.
+        // Show Game Over panel on top of other UI.
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
+            gameOverPanel.transform.SetAsLastSibling();
+
             Debug.Log("ROOM 2 GAME OVER PANEL ACTIVATED!");
         }
         else
@@ -390,17 +420,8 @@ public class Room2ChallengeTimer : MonoBehaviour
             gameOverPanel.SetActive(false);
         }
 
-        // Close Sudoku.
-        if (sudokuPanel != null)
-        {
-            sudokuPanel.SetActive(false);
-        }
-
-        // Close Crossword.
-        if (crosswordPanel != null)
-        {
-            crosswordPanel.SetActive(false);
-        }
+        // Ensure all puzzle panels are closed after reset.
+        ClosePuzzlePanels();
 
         // Restore Pause button after restart.
         if (pauseMenuController != null)

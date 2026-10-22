@@ -28,6 +28,7 @@ public class Room2GameOverController : MonoBehaviour
     [Header("Puzzle Panels")]
     public GameObject sudokuPanel;
     public GameObject crosswordPanel;
+    public GameObject wordScrabblePanel;
 
     [Header("Puzzle Controllers")]
     public SudokuPanelController sudokuPanelController;
@@ -36,6 +37,7 @@ public class Room2GameOverController : MonoBehaviour
     [Header("Puzzle Managers")]
     public SudokuManager sudokuManager;
     public CrosswordManager crosswordManager;
+    public WordPuzzleManager wordPuzzleManager;
 
     [Header("Room 2 Instructions")]
     public Room2InstructionManager instructionManager;
@@ -175,6 +177,23 @@ public class Room2GameOverController : MonoBehaviour
         if (crosswordPanel != null)
             crosswordPanel.SetActive(false);
 
+        // Reset Word Scrabble interaction after Try Again.
+        WordPuzzleInteraction wordInteraction =
+            FindFirstObjectByType<WordPuzzleInteraction>();
+
+        if (wordInteraction != null)
+        {
+            wordInteraction.ResetInteractionForRoomRestart();
+        }
+        else if (wordScrabblePanel != null)
+        {
+            wordScrabblePanel.SetActive(false);
+
+            Debug.LogWarning(
+                "WordPuzzleInteraction was not found in the scene."
+            );
+        }
+
         // Hide interaction prompts.
         if (sudokuInteractPrompt != null)
             sudokuInteractPrompt.SetActive(false);
@@ -200,6 +219,23 @@ public class Room2GameOverController : MonoBehaviour
         else
         {
             Debug.LogWarning("CrosswordManager is NOT assigned!");
+        }
+
+        // Reset Word Scrabble with a new random round.
+        if (wordPuzzleManager != null)
+        {
+            wordPuzzleManager.RestartPuzzle();
+
+            Debug.Log(
+                "WORD SCRABBLE RESET: New random questions generated."
+            );
+        }
+        else
+        {
+            Debug.LogWarning(
+                "WordPuzzleManager is NOT assigned! " +
+                "Assign it in the Inspector."
+            );
         }
 
         // Return player to Room 2 spawn.
@@ -239,8 +275,8 @@ public class Room2GameOverController : MonoBehaviour
             playerLook.EnableLook();
         }
 
-        // Reset the timer, but do NOT start it yet.
-        // The GOT IT button starts it through OnGotItClicked().
+        // Reset timer but do NOT start it yet.
+        // GOT IT starts it through OnGotItClicked().
         if (room2Timer != null)
         {
             room2Timer.ResetTimer();
