@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class WordPuzzleInteraction : MonoBehaviour
 {
@@ -29,6 +30,11 @@ public class WordPuzzleInteraction : MonoBehaviour
     private bool movementStateSaved;
 
     private Coroutine fadeCoroutine;
+    private TMP_Text promptText;
+
+    // ==========================================
+    // START
+    // ==========================================
 
     private void Start()
     {
@@ -48,14 +54,25 @@ public class WordPuzzleInteraction : MonoBehaviour
                     playerObject.GetComponent<PlayerController>();
         }
 
+        if (interactPrompt != null)
+        {
+            promptText =
+                interactPrompt.GetComponentInChildren<TMP_Text>(true);
+        }
+
         if (wordScrabblePanel != null)
             wordScrabblePanel.SetActive(false);
 
         HidePromptImmediately();
     }
 
+    // ==========================================
+    // UPDATE
+    // ==========================================
+
     private void Update()
     {
+        // Hide prompt when Table 3 is completed.
         if (IsTableCompleted())
         {
             isNear = false;
@@ -73,14 +90,40 @@ public class WordPuzzleInteraction : MonoBehaviour
 
         if (distance <= interactionDistance)
         {
+            // Update the message based on unlock status.
+            if (IsTableUnlocked())
+            {
+                SetPromptText("[E] TO INTERACT");
+            }
+            else
+            {
+                SetPromptText(
+                    "PREVIOUS CHALLENGE REQUIRED — " +
+                    "COMPLETE TABLE 2 FIRST."
+                );
+            }
+
             if (!isNear)
             {
                 isNear = true;
                 ShowPrompt();
             }
 
+            // E only works when Table 3 is unlocked.
             if (Input.GetKeyDown(interactionKey))
-                OpenWordPuzzle();
+            {
+                if (IsTableUnlocked())
+                {
+                    OpenWordPuzzle();
+                }
+                else
+                {
+                    Debug.Log(
+                        "TABLE 3 LOCKED: Complete Table 1 " +
+                        "and Table 2 first."
+                    );
+                }
+            }
         }
         else
         {
@@ -92,6 +135,24 @@ public class WordPuzzleInteraction : MonoBehaviour
         }
     }
 
+    // ==========================================
+    // CHECK IF TABLE IS UNLOCKED
+    // Same progression check used by Table 2.
+    // ==========================================
+
+    private bool IsTableUnlocked()
+    {
+        if (ChallengeProgressManager.Instance == null)
+            return false;
+
+        return ChallengeProgressManager.Instance
+            .IsTableUnlocked(tableNumber);
+    }
+
+    // ==========================================
+    // CHECK IF TABLE IS COMPLETED
+    // ==========================================
+
     private bool IsTableCompleted()
     {
         if (ChallengeProgressManager.Instance == null)
@@ -99,6 +160,16 @@ public class WordPuzzleInteraction : MonoBehaviour
 
         return ChallengeProgressManager.Instance
             .IsTableCompleted(tableNumber);
+    }
+
+    // ==========================================
+    // SET PROMPT TEXT
+    // ==========================================
+
+    private void SetPromptText(string message)
+    {
+        if (promptText != null)
+            promptText.text = message;
     }
 
     // ==========================================
@@ -110,10 +181,22 @@ public class WordPuzzleInteraction : MonoBehaviour
         if (isOpen || IsTableCompleted())
             return;
 
+        // Prevent opening through another button or script
+        // while Table 3 is still locked.
+        if (!IsTableUnlocked())
+        {
+            Debug.Log(
+                "TABLE 3 LOCKED: Complete Table 1 " +
+                "and Table 2 first."
+            );
+            return;
+        }
+
         if (wordScrabblePanel == null)
         {
             Debug.LogWarning(
-                "WordPuzzleInteraction: Word Scrabble Panel is missing!"
+                "WordPuzzleInteraction: " +
+                "Word Scrabble Panel is missing!"
             );
             return;
         }
@@ -123,28 +206,24 @@ public class WordPuzzleInteraction : MonoBehaviour
 
         HidePromptImmediately();
 
-        // Hide the Room 2 instruction when opening the puzzle.
+        // Hide the Room 2 instruction.
         Room2InstructionManager instructionManager =
             FindFirstObjectByType<Room2InstructionManager>();
 
         if (instructionManager != null)
             instructionManager.HideInstruction();
 
-        // Remember the previous movement state.
+        // Remember and disable player movement.
         if (playerMovement != null)
         {
             movementWasEnabled = playerMovement.enabled;
             movementStateSaved = true;
-
-            // Freeze WASD movement.
             playerMovement.enabled = false;
         }
 
-        // Freeze camera look.
+        // Freeze camera look while solving.
         if (playerController != null)
-        {
             playerController.DisableLook();
-        }
 
         // Open Word Scrabble.
         wordScrabblePanel.SetActive(true);
@@ -174,9 +253,7 @@ public class WordPuzzleInteraction : MonoBehaviour
 
         // Restore previous movement state.
         if (playerMovement != null && movementStateSaved)
-        {
             playerMovement.enabled = movementWasEnabled;
-        }
 
         movementStateSaved = false;
 
@@ -199,8 +276,14 @@ public class WordPuzzleInteraction : MonoBehaviour
 
     private void ShowPrompt()
     {
+        if (IsTableCompleted())
+            return;
+
         if (fadeCoroutine != null)
+        {
             StopCoroutine(fadeCoroutine);
+            fadeCoroutine = null;
+        }
 
         if (interactPrompt != null)
             interactPrompt.SetActive(true);
@@ -217,7 +300,10 @@ public class WordPuzzleInteraction : MonoBehaviour
     private void HidePrompt()
     {
         if (fadeCoroutine != null)
+        {
             StopCoroutine(fadeCoroutine);
+            fadeCoroutine = null;
+        }
 
         if (promptCanvasGroup != null)
         {
@@ -283,11 +369,16 @@ public class WordPuzzleInteraction : MonoBehaviour
 
         promptCanvasGroup.alpha = targetAlpha;
 
-        if (targetAlpha <= 0f && interactPrompt != null)
-            interactPrompt.SetActive(false);
-
-        promptCanvasGroup.interactable = false;
-        promptCanvasGroup.blocksRaycasts = false;
+        if (targetAlpha <= 0f)
+        {
+            if (interactPrompt != null)
+                interactPrompt.SetActive(false);
+        }
+        else if (!IsTableCompleted())
+        {
+            promptCanvasGroup.interactable = false;
+            promptCanvasGroup.blocksRaycasts = false;
+        }
 
         fadeCoroutine = null;
     }
@@ -298,21 +389,18 @@ public class WordPuzzleInteraction : MonoBehaviour
 
     public void ResetInteractionForRoomRestart()
     {
-        // Reset the interaction state.
         isOpen = false;
         isNear = false;
+        movementStateSaved = false;
 
-        // Close the Word Scrabble panel.
         if (wordScrabblePanel != null)
-        {
             wordScrabblePanel.SetActive(false);
-        }
 
-        // Reset the interaction prompt.
         HidePromptImmediately();
 
         Debug.Log(
-            "TABLE 3 INTERACTION RESET - E PROMPT CAN APPEAR AGAIN."
+            "TABLE 3 INTERACTION RESET - " +
+            "E PROMPT CAN APPEAR AGAIN."
         );
     }
 }

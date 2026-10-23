@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -24,6 +25,10 @@ public class WordPuzzleManager : MonoBehaviour
     public TMP_Text resultText;
     public TMP_Text clueText;
 
+    [Header("Wrong Answer Audio")]
+    public AudioSource wrongAnswerAudio;
+    public AudioClip wrongAnswerSound;
+
     [Header("Room 2 Final Task Completion")]
     public GameObject room2TaskCompletePanel;
     public GameObject room2ChecklistUI;
@@ -38,7 +43,6 @@ public class WordPuzzleManager : MonoBehaviour
 
     // =========================================================
     // ICT WORD BANK
-    // All answers fit the existing six-letter wheel.
     // =========================================================
 
     private class PuzzleWord
@@ -54,25 +58,25 @@ public class WordPuzzleManager : MonoBehaviour
     }
 
     private static readonly PuzzleWord[] wordBank =
-{
-    new PuzzleWord("CPU",
-        "The main part of a computer that processes instructions."),
+    {
+        new PuzzleWord("CPU",
+            "The main part of a computer that processes instructions."),
 
-    new PuzzleWord("IDE",
-        "A tool developers use to write, run, and debug code."),
+        new PuzzleWord("IDE",
+            "A tool developers use to write, run, and debug code."),
 
-    new PuzzleWord("HTML",
-        "A language used to create the structure of web pages."),
+        new PuzzleWord("HTML",
+            "A language used to create the structure of web pages."),
 
-    new PuzzleWord("WIFI",
-        "Lets devices connect to the internet without a cable."),
+        new PuzzleWord("WIFI",
+            "Lets devices connect to the internet without a cable."),
 
-    new PuzzleWord("ARRAY",
-        "A collection of values stored under one variable name."),
+        new PuzzleWord("ARRAY",
+            "A collection of values stored under one variable name."),
 
-    new PuzzleWord("DEBUG",
-        "The process of finding and fixing errors in a program."),
-};
+        new PuzzleWord("DEBUG",
+            "The process of finding and fixing errors in a program."),
+    };
 
     // =========================================================
     // RUNTIME DATA
@@ -115,6 +119,10 @@ public class WordPuzzleManager : MonoBehaviour
         }
     }
 
+    // =========================================================
+    // RESOLVE OPTIONAL REFERENCES
+    // =========================================================
+
     private void ResolveOptionalReferences()
     {
         if (room2Timer == null)
@@ -154,6 +162,10 @@ public class WordPuzzleManager : MonoBehaviour
             }
         }
     }
+
+    // =========================================================
+    // INITIALIZE
+    // =========================================================
 
     private void InitializeIfNeeded()
     {
@@ -213,7 +225,6 @@ public class WordPuzzleManager : MonoBehaviour
 
     // =========================================================
     // RANDOM WORD SELECTION
-    // Selects unique answers for the current round.
     // =========================================================
 
     private void SelectRandomRoundWords()
@@ -680,6 +691,8 @@ public class WordPuzzleManager : MonoBehaviour
         int requiredLetters =
             roundWords[currentWordIndex].answer.Length;
 
+        // Do not deduct time if the player has not selected
+        // the required number of letters.
         if (selectedButtonIndices.Count != requiredLetters)
         {
             ShowResult(
@@ -707,6 +720,10 @@ public class WordPuzzleManager : MonoBehaviour
         string correctAnswer =
             roundWords[currentWordIndex].answer;
 
+        // ==========================================
+        // CORRECT ANSWER
+        // ==========================================
+
         if (playerAnswer == correctAnswer)
         {
             completedWords++;
@@ -724,8 +741,51 @@ public class WordPuzzleManager : MonoBehaviour
         }
         else
         {
-            // No time penalty is added here.
-            ShowResult("Incorrect! Try again.");
+            // ==========================================
+            // WRONG ANSWER FEEDBACK
+            // ==========================================
+
+            ShowResult("Incorrect! -10 seconds. Try again.");
+
+            // ==========================================
+            // PLAY WRONG ANSWER SOUND
+            // Uses the assigned audio source and clip.
+            // ==========================================
+
+            if (wrongAnswerAudio != null &&
+                wrongAnswerSound != null)
+            {
+                wrongAnswerAudio.PlayOneShot(wrongAnswerSound);
+            }
+            else
+            {
+                Debug.LogWarning(
+                    "WordPuzzleManager: Wrong-answer audio or sound " +
+                    "clip is not assigned in the Inspector."
+                );
+            }
+
+            // ==========================================
+            // DEDUCT 10 SECONDS FROM ROOM 2 TIMER
+            // Uses the same method as CrosswordManager.
+            // ==========================================
+
+            if (room2Timer == null)
+            {
+                room2Timer = Room2ChallengeTimer.Instance;
+            }
+
+            if (room2Timer != null)
+            {
+                room2Timer.WrongAnswer();
+            }
+            else
+            {
+                Debug.LogWarning(
+                    "WordPuzzleManager: Room 2 timer was not found. " +
+                    "The 10-second penalty was not applied."
+                );
+            }
         }
     }
 
@@ -746,7 +806,6 @@ public class WordPuzzleManager : MonoBehaviour
         }
         else
         {
-            // Show completed words instead of the current word index.
             progressText.text =
                 "WORD " + completedWords +
                 " / " + totalWords;
