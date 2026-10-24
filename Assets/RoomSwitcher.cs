@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 public class RoomSwitcher : MonoBehaviour
@@ -59,10 +58,6 @@ public class RoomSwitcher : MonoBehaviour
     [Header("Settings")]
     public bool canProceed = false;
 
-    // =========================================================
-    // TEST MODES
-    // =========================================================
-
     [Header("TEST MODE")]
     public bool testRoom2 = false;
     public bool testRoom3 = false;
@@ -73,6 +68,9 @@ public class RoomSwitcher : MonoBehaviour
     public GameObject room3GameManager;
     public GameObject room3Checklist;
 
+    [Header("Room 3 Instruction")]
+    public Room3InstructionManager room3InstructionManager;
+
     private bool switched = false;
 
     // =========================================================
@@ -81,7 +79,7 @@ public class RoomSwitcher : MonoBehaviour
 
     private void Start()
     {
-        // TEST MODE 3
+        // Room 3 Test Mode
         if (testRoom3)
         {
             StopRoom1VoiceForRoom3Test();
@@ -89,32 +87,28 @@ public class RoomSwitcher : MonoBehaviour
             return;
         }
 
-        // TEST MODE 2
+        // Room 2 Test Mode
         if (testRoom2)
         {
             StartRoom2Test();
             return;
         }
 
-        // NORMAL GAMEPLAY
+        // Normal gameplay: start Room 1 music only when appropriate.
         if (IsRoomNamed(currentRoom, "room1"))
         {
             PlayRoom1Music();
         }
 
-        // IMPORTANT:
-        // Do not stop Room 1 music here when this manager's
-        // currentRoom is room2. Another RoomSwitcher may use
-        // the same Room 1 AudioSource.
+        // Do not stop Room 1 music here when this manager belongs
+        // to Room 2. Another RoomSwitcher may use the same AudioSource.
     }
 
     // =========================================================
     // ROOM CHECK
     // =========================================================
 
-    private bool IsRoomNamed(
-        GameObject room,
-        string expectedName)
+    private bool IsRoomNamed(GameObject room, string expectedName)
     {
         return room != null &&
                string.Equals(
@@ -165,7 +159,7 @@ public class RoomSwitcher : MonoBehaviour
     }
 
     // =========================================================
-    // SHOW ROOM 2 CHALLENGE PANEL
+    // SHOW ROOM 2 INSTRUCTION
     // =========================================================
 
     private void ShowRoom2Instruction()
@@ -195,16 +189,72 @@ public class RoomSwitcher : MonoBehaviour
     }
 
     // =========================================================
+    // SHOW ROOM 3 INSTRUCTION
+    // =========================================================
+
+    private void ShowRoom3Instructions()
+    {
+        if (room3InstructionManager != null)
+        {
+            // Ensure the Room 3 Canvas is active.
+            Canvas room3Canvas =
+                room3InstructionManager.GetComponentInParent<Canvas>(true);
+
+            if (room3Canvas != null &&
+                !room3Canvas.gameObject.activeSelf)
+            {
+                room3Canvas.gameObject.SetActive(true);
+            }
+
+            // Ensure the instruction manager's GameObject is active.
+            if (!room3InstructionManager.gameObject.activeSelf)
+            {
+                room3InstructionManager.gameObject.SetActive(true);
+            }
+
+            // This method shows the panel, disables player controls,
+            // and unlocks the cursor for the OKAY button.
+            room3InstructionManager.ShowInstructions();
+
+            return;
+        }
+
+        // Fail safely if the Inspector reference is missing.
+        Debug.LogError(
+            "RoomSwitcher: Room 3 Instruction Manager is not assigned. " +
+            "Assign Room3InstructionManager from Room3Canvas.",
+            this
+        );
+
+        if (playerMovement != null)
+        {
+            playerMovement.enabled = false;
+        }
+
+        if (playerController != null)
+        {
+            playerController.enabled = false;
+        }
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    // =========================================================
     // UPDATE
     // =========================================================
 
     private void Update()
     {
         if (!Input.GetKeyDown(KeyCode.E))
+        {
             return;
+        }
 
         Debug.Log("E Pressed");
 
+        // Do not process room interactions while Room 2 instructions
+        // are visible.
         if (room2InstructionPanel != null &&
             room2InstructionPanel.activeInHierarchy)
         {
@@ -410,7 +460,7 @@ public class RoomSwitcher : MonoBehaviour
             return;
         }
 
-        // Stop the Room 2 global timer if it was running.
+        // Stop the Room 2 global timer if it is running.
         if (Room2ChallengeTimer.Instance != null)
         {
             Room2ChallengeTimer.Instance.StopTimer();
@@ -452,19 +502,19 @@ public class RoomSwitcher : MonoBehaviour
         {
             Debug.LogWarning(
                 "Room 3 Game Manager is not assigned. " +
-                "Assign GameManagerRoom3 if Room 3 requires it."
+                "Assign GameManagerRoom3 if Room 3 requires it.",
+                this
             );
         }
 
-        // Disable the Room 2 -> Room 3 transition manager
-        // while entering Room 3 directly for testing.
+        // Disable the Room 2 -> Room 3 manager while testing directly.
         if (nextRoomManager != null &&
             nextRoomManager != gameObject)
         {
             nextRoomManager.SetActive(false);
         }
 
-        // Teleport player to the Room 3 spawn point.
+        // Teleport player to Room 3.
         CharacterController cc =
             player.GetComponent<CharacterController>();
 
@@ -483,7 +533,10 @@ public class RoomSwitcher : MonoBehaviour
             cc.enabled = true;
         }
 
-        EnablePlayerControls();
+        // IMPORTANT:
+        // Do not enable movement/camera here.
+        // Room 3 instructions must open and freeze controls until OKAY.
+        ShowRoom3Instructions();
 
         // Hide Room 1 task UI and hallway instructions.
         if (taskPanel != null)
@@ -496,8 +549,7 @@ public class RoomSwitcher : MonoBehaviour
             hallwayInstruction.SetActive(false);
         }
 
-        // Hide Room 2 instruction panel.
-        // Also hide its parent Canvas so Room 2 UI is not visible.
+        // Hide Room 2 instruction panel and its Canvas.
         Canvas room2Canvas = null;
 
         if (room2InstructionPanel != null)
@@ -572,7 +624,8 @@ public class RoomSwitcher : MonoBehaviour
             {
                 Debug.LogWarning(
                     "Room 2 Voice Manager is not assigned " +
-                    "in RoomSwitcher."
+                    "in RoomSwitcher.",
+                    this
                 );
             }
         }
@@ -585,7 +638,9 @@ public class RoomSwitcher : MonoBehaviour
     private void SwitchRoom()
     {
         if (switched)
+        {
             return;
+        }
 
         Debug.Log("Switching Room...");
 
@@ -609,7 +664,8 @@ public class RoomSwitcher : MonoBehaviour
         {
             Debug.LogWarning(
                 "Teleport Transition Manager is not assigned. " +
-                "Switching without fade."
+                "Switching without fade.",
+                this
             );
 
             PerformRoomSwitch(false);
@@ -621,14 +677,10 @@ public class RoomSwitcher : MonoBehaviour
     // PERFORM ROOM SWITCH
     // =========================================================
 
-    private void PerformRoomSwitch(
-        bool enableControlsImmediately)
+    private void PerformRoomSwitch(bool enableControlsImmediately)
     {
-        bool enteringRoom2 =
-            IsRoomNamed(nextRoom, "room2");
-
-        bool enteringRoom3 =
-        IsRoomNamed(nextRoom, "room3");
+        bool enteringRoom2 = IsRoomNamed(nextRoom, "room2");
+        bool enteringRoom3 = IsRoomNamed(nextRoom, "room3");
 
         if (enteringRoom2)
         {
@@ -641,7 +693,7 @@ public class RoomSwitcher : MonoBehaviour
             currentRoom.SetActive(false);
         }
 
-        // Hide Room 2 Task Completion panel after entering Room 3.
+        // Hide Room 2 completion panel when entering Room 3.
         if (enteringRoom3 && room2TaskCompletePanel != null)
         {
             room2TaskCompletePanel.SetActive(false);
@@ -689,7 +741,8 @@ public class RoomSwitcher : MonoBehaviour
             else
             {
                 Debug.LogWarning(
-                    "RoomSwitcher: Spawn Point is not assigned."
+                    "RoomSwitcher: Spawn Point is not assigned.",
+                    this
                 );
             }
 
@@ -701,7 +754,8 @@ public class RoomSwitcher : MonoBehaviour
         else
         {
             Debug.LogError(
-                "RoomSwitcher: Player reference is missing."
+                "RoomSwitcher: Player reference is missing.",
+                this
             );
         }
 
@@ -710,7 +764,7 @@ public class RoomSwitcher : MonoBehaviour
             EnablePlayerControls();
         }
 
-        // Hide Room 1 Task Completed panel.
+        // Hide Room 1 task completion panel.
         if (taskPanel != null)
         {
             taskPanel.SetActive(false);
@@ -755,12 +809,17 @@ public class RoomSwitcher : MonoBehaviour
         Debug.Log("Switched to next room!");
     }
 
+    // =========================================================
+    // STOP ROOM 1 VOICE FOR ROOM 3 TEST
+    // =========================================================
+
     private void StopRoom1VoiceForRoom3Test()
     {
         if (room1VoiceSource == null)
         {
             Debug.LogWarning(
-                "Room 1 Voice Source is not assigned."
+                "Room 1 Voice Source is not assigned.",
+                this
             );
             return;
         }
@@ -773,42 +832,58 @@ public class RoomSwitcher : MonoBehaviour
         );
     }
 
+    // =========================================================
+    // TRANSITION COMPLETE
+    // =========================================================
+
     private void OnRoomTransitionComplete()
     {
-        // Restore WASD movement.
-        if (playerMovement != null)
+        // Room 3: show instructions and keep controls disabled.
+        // The OKAY button restores them through HideInstructions().
+        if (IsRoomNamed(currentRoom, "room3"))
         {
-            playerMovement.enabled = true;
+            ShowRoom3Instructions();
         }
         else
         {
-            Debug.LogWarning(
-                "PlayerMovement is not assigned in RoomSwitcher."
-            );
-        }
+            // Preserve the existing Room 1 -> Room 2 behavior.
+            if (playerMovement != null)
+            {
+                playerMovement.enabled = true;
+            }
+            else
+            {
+                Debug.LogWarning(
+                    "PlayerMovement is not assigned in RoomSwitcher.",
+                    this
+                );
+            }
 
-        // Restore camera movement.
-        if (playerController != null)
-        {
-            playerController.enabled = true;
-            playerController.EnableLook();
-        }
-        else
-        {
-            Debug.LogWarning(
-                "PlayerController is not assigned in RoomSwitcher."
-            );
-        }
+            if (playerController != null)
+            {
+                playerController.enabled = true;
+                playerController.EnableLook();
+            }
+            else
+            {
+                Debug.LogWarning(
+                    "PlayerController is not assigned in RoomSwitcher.",
+                    this
+                );
+            }
 
-        // Restore normal FPS cursor.
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+            // Restore the normal first-person cursor.
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
 
         // Start Room 2 voice only when the destination is Room 2.
         StartRoom2Voice();
 
         Debug.Log(
-            "ROOM TRANSITION COMPLETE: Player controls restored."
+            IsRoomNamed(currentRoom, "room3")
+                ? "ROOM 3 TRANSITION COMPLETE: Instructions shown; controls frozen."
+                : "ROOM TRANSITION COMPLETE: Player controls restored."
         );
     }
 }

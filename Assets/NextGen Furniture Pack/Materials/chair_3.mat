@@ -58,7 +58,7 @@ Material:
     - _Mode: 1
     - _OcclusionStrength: 0.5
     - _Parallax: 0.08
-    - _Smoothness: 0
+    - _Smoothness: 0.25
     - _WorkflowMode: 0
     m_Colors:
     - _SpecColor: {r: 0.60294116, g: 0.60294116, b: 0.60294116, a: 1}

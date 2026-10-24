@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -24,6 +23,10 @@ public class PauseMenuController : MonoBehaviour
     [SerializeField] private GameObject room2Root;
     [SerializeField] private Room2GameOverController room2GameOverController;
 
+    [Header("Room 3 Restart")]
+    [SerializeField] private GameObject room3Root;
+    [SerializeField] private Room3GameOverController room3GameOverController;
+
     private bool isPaused;
     private bool isOpeningOptions;
     private bool isClosingOptions;
@@ -41,6 +44,10 @@ public class PauseMenuController : MonoBehaviour
 
     private const float OptionsButtonSoundDelay = 0.15f;
     private const float MainMenuButtonSoundDelay = 0.4f;
+
+    // =====================================================
+    // AWAKE
+    // =====================================================
 
     private void Awake()
     {
@@ -64,9 +71,9 @@ public class PauseMenuController : MonoBehaviour
         isPaused = false;
     }
 
-    // ==========================================
+    // =====================================================
     // PAUSE GAME
-    // ==========================================
+    // =====================================================
 
     public void PauseGame()
     {
@@ -116,9 +123,9 @@ public class PauseMenuController : MonoBehaviour
         Debug.Log("GAME PAUSED");
     }
 
-    // ==========================================
+    // =====================================================
     // OPEN OPTIONS
-    // ==========================================
+    // =====================================================
 
     public void OpenOptions()
     {
@@ -162,9 +169,9 @@ public class PauseMenuController : MonoBehaviour
         Debug.Log("PAUSE MENU OPTIONS OPENED");
     }
 
-    // ==========================================
-    // CLOSE OPTIONS - RETURN TO PAUSE MENU
-    // ==========================================
+    // =====================================================
+    // CLOSE OPTIONS
+    // =====================================================
 
     public void CloseOptions()
     {
@@ -204,16 +211,14 @@ public class PauseMenuController : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(null);
 
         // Keep the game and timer paused.
-        // Do not modify Time.timeScale or AudioListener.pause.
-
         isClosingOptions = false;
 
         Debug.Log("RETURNED TO PAUSE MENU");
     }
 
-    // ==========================================
+    // =====================================================
     // RESUME GAME
-    // ==========================================
+    // =====================================================
 
     public void ResumeGame()
     {
@@ -258,29 +263,59 @@ public class PauseMenuController : MonoBehaviour
         Debug.Log("GAME RESUMED");
     }
 
-    // ==========================================
+    // =====================================================
     // RESTART CURRENT CHALLENGE
-    // ==========================================
+    // =====================================================
 
     public void RestartChallenge()
     {
         Debug.Log("RESTARTING CURRENT CHALLENGE...");
 
+        // Restore time and audio before resetting a room.
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+
+        // Hide the pause overlay.
         if (pauseOverlay != null)
             pauseOverlay.SetActive(false);
 
         isPaused = false;
+        isOpeningOptions = false;
+        isClosingOptions = false;
 
-        Time.timeScale = 1f;
-        AudioListener.pause = false;
+        // -------------------------------------------------
+        // ROOM 3
+        // -------------------------------------------------
 
-        // ROOM 2: reuse its existing TryAgain logic.
+        if (room3Root != null && room3Root.activeInHierarchy)
+        {
+            if (room3GameOverController == null)
+            {
+                Debug.LogError(
+                    "Room3GameOverController is not assigned " +
+                    "in PauseMenuController Inspector!",
+                    this
+                );
+                return;
+            }
+
+            room3GameOverController.RestartRoom3();
+
+            Debug.Log("ROOM 3 RESTART REQUESTED!");
+            return;
+        }
+
+        // -------------------------------------------------
+        // ROOM 2
+        // -------------------------------------------------
+
         if (room2Root != null && room2Root.activeInHierarchy)
         {
             if (room2GameOverController == null)
             {
                 Debug.LogError(
-                    "Room2GameOverController is not assigned!"
+                    "Room2GameOverController is not assigned!",
+                    this
                 );
                 return;
             }
@@ -291,13 +326,17 @@ public class PauseMenuController : MonoBehaviour
             return;
         }
 
-        // ROOM 1: return to the hallway and reset the challenge.
+        // -------------------------------------------------
+        // ROOM 1
+        // -------------------------------------------------
+
         if (room1Root != null && room1Root.activeInHierarchy)
         {
             if (room1GameOverController == null)
             {
                 Debug.LogError(
-                    "Room1GameOverController is not assigned!"
+                    "Room1GameOverController is not assigned!",
+                    this
                 );
                 return;
             }
@@ -310,13 +349,15 @@ public class PauseMenuController : MonoBehaviour
 
         Debug.LogError(
             "Cannot determine the current room. " +
-            "Check the Room 1 Root and Room 2 Root assignments."
+            "Check the Room 1 Root, Room 2 Root, " +
+            "and Room 3 Root assignments.",
+            this
         );
     }
 
-    // ==========================================
+    // =====================================================
     // HIDE PAUSE UI WHEN GAME OVER
-    // ==========================================
+    // =====================================================
 
     public void HidePauseMenuForGameOver()
     {
@@ -339,9 +380,9 @@ public class PauseMenuController : MonoBehaviour
         Debug.Log("Pause UI hidden for Game Over");
     }
 
-    // ==========================================
+    // =====================================================
     // RESTORE PAUSE BUTTON
-    // ==========================================
+    // =====================================================
 
     public void ShowPauseButton()
     {
@@ -349,9 +390,9 @@ public class PauseMenuController : MonoBehaviour
             pauseButton.SetActive(true);
     }
 
-    // ==========================================
+    // =====================================================
     // RETURN TO MAIN MENU
-    // ==========================================
+    // =====================================================
 
     public void ReturnToMainMenu()
     {
@@ -365,12 +406,10 @@ public class PauseMenuController : MonoBehaviour
 
     private IEnumerator ReturnToMainMenuAfterClickSound()
     {
-        // Give the click sound time to start playing.
         yield return new WaitForSecondsRealtime(
             MainMenuButtonSoundDelay
         );
 
-        // Restore normal game state before changing scenes.
         isPaused = false;
         Time.timeScale = 1f;
         AudioListener.pause = false;
@@ -381,9 +420,9 @@ public class PauseMenuController : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
-    // ==========================================
+    // =====================================================
     // PAUSE STATE
-    // ==========================================
+    // =====================================================
 
     public bool IsPaused()
     {
