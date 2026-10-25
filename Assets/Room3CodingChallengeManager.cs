@@ -97,9 +97,9 @@ public class Room3CodingChallengeManager : MonoBehaviour
     public Button box2HintButton;
     public Button box2CloseButton;
 
-    [Header("Box 2 — Correct Answer Field Color")]
-    public Color box2CorrectFieldColor =
-        new Color(0.65f, 1f, 0.70f, 1f);
+    [Header("Box 2 — Correct Answer Field Color (Editable)")]
+    public Color box2CorrectInputColor =
+        new Color32(0, 168, 59, 255);
 
     [Header("Box 3 — For Loop Text")]
     public TMP_Text box3ChallengeTitle;
@@ -163,7 +163,8 @@ public class Room3CodingChallengeManager : MonoBehaviour
     private string box2CurrentHint = "Hints will appear here.";
     private string box3CurrentHint = "Hints will appear here.";
 
-    private readonly Color hintCyan = Color.cyan;
+    [Header("Hint Message Color")]
+    public Color hintMessageColor = new Color(1f, 0.78f, 0.35f, 1f);
 
     private Color box2Input1OriginalColor = Color.white;
     private Color box2Input2OriginalColor = Color.white;
@@ -624,6 +625,9 @@ public class Room3CodingChallengeManager : MonoBehaviour
 
         UpdateHintsRemainingUI();
 
+        // Hide the center dot while any Box 1, Box 2, or Box 3 panel is open.
+        SetPanelActive(centerDot, false);
+
         SetPlayerControls(false);
 
         Cursor.lockState = CursorLockMode.None;
@@ -660,8 +664,9 @@ public class Room3CodingChallengeManager : MonoBehaviour
 
     private void SetBox1Content()
     {
-        if (challengeTitle != null)
-            challengeTitle.text = "BOX 1 — IF-ELSE STATEMENT";
+        // Keep these editable in the Unity Inspector:
+        // challengeTitle, codeText, and expectedOutputText.
+        // Their custom rich-text colors must remain unchanged.
 
         if (questionText != null)
         {
@@ -671,24 +676,10 @@ public class Room3CodingChallengeManager : MonoBehaviour
                 "displays \"Passed\".";
         }
 
-        if (codeText != null)
-        {
-            codeText.text =
-                "int score = 85;\n\n" +
-                "if (__________) {\n" +
-                "    System.out.println(\"Passed\");\n" +
-                "} else {\n" +
-                "    System.out.println(\"Failed\");\n" +
-                "}";
-        }
-
-        if (expectedOutputText != null)
-            expectedOutputText.text = "EXPECTED OUTPUT:\nPassed";
-
         if (hintMessageText != null)
         {
             hintMessageText.text = box1CurrentHint;
-            hintMessageText.color = hintCyan;
+            hintMessageText.color = hintMessageColor;
         }
     }
 
@@ -698,8 +689,9 @@ public class Room3CodingChallengeManager : MonoBehaviour
 
     private void SetBox2Content()
     {
-        if (box2ChallengeTitle != null)
-            box2ChallengeTitle.text = "BOX 2 — WHILE LOOP";
+        // Keep the title, code, and expected output
+        // editable in the Unity Inspector.
+        // Do not overwrite their custom rich-text colors.
 
         if (box2QuestionText != null)
         {
@@ -708,27 +700,21 @@ public class Room3CodingChallengeManager : MonoBehaviour
                 "all even numbers from 2 to 6.";
         }
 
-        if (box2CodeText != null)
-        {
-            box2CodeText.text =
-                "int number = 2;\n\n" +
-                "while (__________) {\n" +
-                "    System.out.println(number);\n" +
-                "    __________;\n" +
-                "}";
-        }
-
-        if (box2ExpectedOutputText != null)
-            box2ExpectedOutputText.text = "EXPECTED OUTPUT:\n2\n4\n6";
-
         if (box2HintMessageText != null)
         {
             box2HintMessageText.text = box2CurrentHint;
-            box2HintMessageText.color = hintCyan;
+            box2HintMessageText.color = hintMessageColor;
         }
 
-        SetPlaceholder(box2AnswerInput1, "Enter the loop condition...");
-        SetPlaceholder(box2AnswerInput2, "Enter the update statement...");
+        SetPlaceholder(
+            box2AnswerInput1,
+            "Enter the loop condition..."
+        );
+
+        SetPlaceholder(
+            box2AnswerInput2,
+            "Enter the update statement..."
+        );
     }
 
     // =====================================================
@@ -763,7 +749,7 @@ public class Room3CodingChallengeManager : MonoBehaviour
         if (box3HintMessageText != null)
         {
             box3HintMessageText.text = box3CurrentHint;
-            box3HintMessageText.color = hintCyan;
+            box3HintMessageText.color = hintMessageColor;
         }
 
         SetPlaceholder(box3AnswerInput1, "Enter the loop condition...");
@@ -839,14 +825,33 @@ public class Room3CodingChallengeManager : MonoBehaviour
 
         bool correct =
             answer == "score>=75" ||
-            answer == "75<=score";
+            answer == "75<=score" ||
+            answer == "score>75" ||
+            answer == "75<score";
 
         if (!correct)
         {
-            ShowFeedback(
-                "Incorrect. Try again, or use a hint.",
-                Color.red
-            );
+            // Check kung ang sagot ay para sa FAILED condition
+            bool isFailedAnswer =
+                answer == "score<75" ||
+                answer == "75>score" ||
+                answer == "score<=75" ||
+                answer == "75>=score";
+
+            if (isFailedAnswer)
+            {
+                ShowFeedback(
+                    "Incorrect! That condition would display \"Failed\".",
+                    Color.red
+                );
+            }
+            else
+            {
+                ShowFeedback(
+                    "Incorrect. Try again, or use a hint.",
+                    Color.red
+                );
+            }
 
             return;
         }
@@ -1132,7 +1137,7 @@ public class Room3CodingChallengeManager : MonoBehaviour
             box2Input1OriginalColor,
             box2Input1OriginalColors,
             box2Input1ColorsCached,
-            box2CorrectFieldColor
+            box2CorrectInputColor
         );
 
         ApplyAnswerInputState(
@@ -1141,7 +1146,7 @@ public class Room3CodingChallengeManager : MonoBehaviour
             box2Input2OriginalColor,
             box2Input2OriginalColors,
             box2Input2ColorsCached,
-            box2CorrectFieldColor
+            box2CorrectInputColor
         );
     }
 
@@ -1169,22 +1174,29 @@ public class Room3CodingChallengeManager : MonoBehaviour
     }
 
     private void ApplyAnswerInputState(
-        TMP_InputField input,
-        bool correct,
-        Color originalColor,
-        ColorBlock originalColors,
-        bool colorsCached,
-        Color correctColor)
+    TMP_InputField input,
+    bool correct,
+    Color originalColor,
+    ColorBlock originalColors,
+    bool colorsCached,
+    Color correctColor)
     {
         if (input == null)
             return;
 
         if (correct)
         {
+            // Apply the selected green to every UI input state.
             ColorBlock colors = input.colors;
+            colors.normalColor = correctColor;
+            colors.highlightedColor = correctColor;
+            colors.pressedColor = correctColor;
+            colors.selectedColor = correctColor;
             colors.disabledColor = correctColor;
+
             input.colors = colors;
 
+            // Lock the field after the correct answer.
             input.interactable = false;
 
             if (input.targetGraphic != null)
@@ -1273,7 +1285,7 @@ public class Room3CodingChallengeManager : MonoBehaviour
         if (hintMessageText != null)
         {
             hintMessageText.text = box1CurrentHint;
-            hintMessageText.color = hintCyan;
+            hintMessageText.color = hintMessageColor;
         }
 
         UpdateHintsRemainingUI();
@@ -1324,7 +1336,7 @@ public class Room3CodingChallengeManager : MonoBehaviour
         if (box2HintMessageText != null)
         {
             box2HintMessageText.text = box2CurrentHint;
-            box2HintMessageText.color = hintCyan;
+            box2HintMessageText.color = hintMessageColor;
         }
 
         UpdateHintsRemainingUI();
@@ -1372,7 +1384,7 @@ public class Room3CodingChallengeManager : MonoBehaviour
         if (box3HintMessageText != null)
         {
             box3HintMessageText.text = box3CurrentHint;
-            box3HintMessageText.color = hintCyan;
+            box3HintMessageText.color = hintMessageColor;
         }
 
         UpdateHintsRemainingUI();
@@ -1817,6 +1829,9 @@ public class Room3CodingChallengeManager : MonoBehaviour
 
         HideCodingPanelsForGameOver();
         SetPanelActive(hintHistoryPanel, false);
+
+        // Restore the center dot after closing the coding panel.
+        SetPanelActive(centerDot, true);
 
         SetPlayerControls(true);
 

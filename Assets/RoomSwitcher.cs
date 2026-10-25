@@ -212,8 +212,7 @@ public class RoomSwitcher : MonoBehaviour
                 room3InstructionManager.gameObject.SetActive(true);
             }
 
-            // This method shows the panel, disables player controls,
-            // and unlocks the cursor for the OKAY button.
+            // Show the panel and freeze the player until GOT IT is clicked.
             room3InstructionManager.ShowInstructions();
 
             return;
@@ -682,6 +681,29 @@ public class RoomSwitcher : MonoBehaviour
         bool enteringRoom2 = IsRoomNamed(nextRoom, "room2");
         bool enteringRoom3 = IsRoomNamed(nextRoom, "room3");
 
+        // Manage Room 2 Canvas so its timer does not overlap
+        // the Room 3 timer.
+        if (enteringRoom2 || enteringRoom3)
+        {
+            if (room2InstructionPanel != null)
+            {
+                Canvas room2Canvas =
+                    room2InstructionPanel.GetComponentInParent<Canvas>(true);
+
+                if (room2Canvas != null)
+                {
+                    room2Canvas.gameObject.SetActive(enteringRoom2);
+                }
+                else
+                {
+                    Debug.LogWarning(
+                        "Room 2 Canvas could not be found.",
+                        this
+                    );
+                }
+            }
+        }
+
         if (enteringRoom2)
         {
             StopRoom1Music();
@@ -806,6 +828,14 @@ public class RoomSwitcher : MonoBehaviour
         currentRoom = nextRoom;
         canProceed = false;
 
+        // IMPORTANT FIX:
+        // Show Room 3 instructions while the transition overlay
+        // is still black, before the fade-in begins.
+        if (IsRoomNamed(currentRoom, "room3"))
+        {
+            ShowRoom3Instructions();
+        }
+
         Debug.Log("Switched to next room!");
     }
 
@@ -838,11 +868,38 @@ public class RoomSwitcher : MonoBehaviour
 
     private void OnRoomTransitionComplete()
     {
-        // Room 3: show instructions and keep controls disabled.
-        // The OKAY button restores them through HideInstructions().
+        // Room 3 instructions were already shown while the screen
+        // was black in PerformRoomSwitch(). Keep controls disabled
+        // until the player clicks GOT IT in the instruction panel.
         if (IsRoomNamed(currentRoom, "room3"))
         {
-            ShowRoom3Instructions();
+            if (playerMovement != null)
+            {
+                playerMovement.enabled = false;
+            }
+            else
+            {
+                Debug.LogWarning(
+                    "PlayerMovement is not assigned in RoomSwitcher.",
+                    this
+                );
+            }
+
+            if (playerController != null)
+            {
+                playerController.DisableLook();
+                playerController.enabled = false;
+            }
+            else
+            {
+                Debug.LogWarning(
+                    "PlayerController is not assigned in RoomSwitcher.",
+                    this
+                );
+            }
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
         else
         {
@@ -882,7 +939,7 @@ public class RoomSwitcher : MonoBehaviour
 
         Debug.Log(
             IsRoomNamed(currentRoom, "room3")
-                ? "ROOM 3 TRANSITION COMPLETE: Instructions shown; controls frozen."
+                ? "ROOM 3 TRANSITION COMPLETE: Instructions already shown; controls frozen."
                 : "ROOM TRANSITION COMPLETE: Player controls restored."
         );
     }

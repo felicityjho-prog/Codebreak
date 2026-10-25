@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class Room3InstructionManager : MonoBehaviour
@@ -11,6 +12,12 @@ public class Room3InstructionManager : MonoBehaviour
 
     [Header("Room 3 Timer")]
     public Room3ChallengeTimer room3Timer;
+
+    [Header("Gameplay UI Hidden During Instructions")]
+    public GameObject centerDot;
+    public GameObject controlsPanel;
+    public GameObject pauseButton;
+    public GameObject pauseOverlay;
 
     private void Awake()
     {
@@ -30,9 +37,16 @@ public class Room3InstructionManager : MonoBehaviour
             return;
         }
 
-        // The timer must not run while instructions are open.
+        // Stop the timer while instructions are open.
         if (room3Timer != null)
             room3Timer.StopTimer();
+
+        // Hide the gameplay UI.
+        SetGameplayUIVisible(false);
+
+        // Keep the actual pause menu closed.
+        if (pauseOverlay != null)
+            pauseOverlay.SetActive(false);
 
         instructionPanel.SetActive(true);
 
@@ -62,6 +76,13 @@ public class Room3InstructionManager : MonoBehaviour
         if (instructionPanel != null)
             instructionPanel.SetActive(false);
 
+        // Restore the gameplay UI after GOT IT is clicked.
+        SetGameplayUIVisible(true);
+
+        // Do not open the pause menu automatically.
+        if (pauseOverlay != null)
+            pauseOverlay.SetActive(false);
+
         if (playerMovement != null)
             playerMovement.enabled = true;
 
@@ -74,7 +95,7 @@ public class Room3InstructionManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        // Start the 3-minute timer only after OKAY.
+        // Start the timer only after instructions are closed.
         if (room3Timer != null)
             room3Timer.StartTimer();
         else
@@ -84,5 +105,17 @@ public class Room3InstructionManager : MonoBehaviour
             );
 
         Debug.Log("ROOM 3 INSTRUCTIONS CLOSED.");
+    }
+
+    private void SetGameplayUIVisible(bool visible)
+    {
+        if (centerDot != null)
+            centerDot.SetActive(visible);
+
+        if (controlsPanel != null)
+            controlsPanel.SetActive(visible);
+
+        if (pauseButton != null)
+            pauseButton.SetActive(visible);
     }
 }

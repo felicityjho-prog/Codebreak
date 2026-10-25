@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: e1098290ca4cee3419f07e9b46a7ef9f
+guid: 71c93c606e3b9b04cb8dc3bb4cfa6171
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6544722835835905579
-    second: BGROOM3_0
+      213: -397414931648323096
+    second: BOX2_0
+  - first:
+      213: 5661147895146654024
+    second: BOX2_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +116,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BGROOM3_0
+      name: BOX2_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1672
-        height: 941
+        x: 32
+        y: 19
+        width: 1609
+        height: 908
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +131,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5d91d9891497c25a0800000000000000
-      internalID: -6544722835835905579
+      spriteID: 8e16aaaa9391c7af0800000000000000
+      internalID: -397414931648323096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BOX2_1
+      rect:
+        serializedVersion: 2
+        x: 434
+        y: 25
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 849aa2f3400709e40800000000000000
+      internalID: 5661147895146654024
       vertices: []
       indices: 
       edges: []
@@ -148,7 +173,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      BGROOM3_0: -6544722835835905579
+      BOX2_0: -397414931648323096
+      BOX2_1: 5661147895146654024
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
