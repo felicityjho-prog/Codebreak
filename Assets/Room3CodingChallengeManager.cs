@@ -10,11 +10,7 @@ public class Room3CodingChallengeManager : MonoBehaviour
 
     private enum ChallengeType { None, Box1, Box2, Box3 }
 
-    // Currently open coding panel.
     private ChallengeType activeChallenge = ChallengeType.None;
-
-    // The player's one chosen box for the current attempt.
-    // This remains selected even after the coding panel is closed.
     private ChallengeType selectedChallenge = ChallengeType.None;
 
     [Header("Box 1 — If-Else Panel")]
@@ -121,6 +117,22 @@ public class Room3CodingChallengeManager : MonoBehaviour
     public Button box3HintButton;
     public Button box3CloseButton;
 
+    [Header("Box 3 — Editable Hint Text")]
+    [TextArea(1, 2)]
+    public string box3InitialHintText = "Hints will appear here.";
+
+    [TextArea(1, 3)]
+    public string box3Hint1Text =
+        "HINT 1: The loop variable is i, and it starts at 1.";
+
+    [TextArea(1, 3)]
+    public string box3Hint2Text =
+        "HINT 2: The loop must include every value from 1 through 5.";
+
+    [TextArea(1, 3)]
+    public string box3Hint3Text =
+        "HINT 3: After each pass, i should advance to the next integer.";
+
     [Header("Box 3 — Correct Answer Field Color")]
     public Color box3CorrectFieldColor =
         new Color(0.65f, 1f, 0.70f, 1f);
@@ -199,7 +211,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
         SetPanelActive(gameCompletionPanel, false);
         SetPanelActive(hintHistoryPanel, false);
 
-        // Start Room 3 with all three mystery boxes visible.
         ApplySelectedBoxVisibility();
     }
 
@@ -217,25 +228,11 @@ public class Room3CodingChallengeManager : MonoBehaviour
         RegisterButton(box3HintButton, UseHint);
         RegisterButton(box3CloseButton, ClosePanel);
 
-        RegisterButton(
-            box1ViewHintsButton,
-            ShowBox1HintHistory
-        );
+        RegisterButton(box1ViewHintsButton, ShowBox1HintHistory);
+        RegisterButton(box2ViewHintsButton, ShowBox2HintHistory);
+        RegisterButton(box3ViewHintsButton, ShowBox3HintHistory);
 
-        RegisterButton(
-            box2ViewHintsButton,
-            ShowBox2HintHistory
-        );
-
-        RegisterButton(
-            box3ViewHintsButton,
-            ShowBox3HintHistory
-        );
-
-        RegisterButton(
-            closeHistoryButton,
-            CloseHintHistory
-        );
+        RegisterButton(closeHistoryButton, CloseHintHistory);
 
         RegisterButton(playAgainButton, PlayAgain);
         RegisterButton(mainMenuButton, GoToMainMenu);
@@ -263,25 +260,11 @@ public class Room3CodingChallengeManager : MonoBehaviour
         UnregisterButton(box3HintButton, UseHint);
         UnregisterButton(box3CloseButton, ClosePanel);
 
-        UnregisterButton(
-            box1ViewHintsButton,
-            ShowBox1HintHistory
-        );
+        UnregisterButton(box1ViewHintsButton, ShowBox1HintHistory);
+        UnregisterButton(box2ViewHintsButton, ShowBox2HintHistory);
+        UnregisterButton(box3ViewHintsButton, ShowBox3HintHistory);
 
-        UnregisterButton(
-            box2ViewHintsButton,
-            ShowBox2HintHistory
-        );
-
-        UnregisterButton(
-            box3ViewHintsButton,
-            ShowBox3HintHistory
-        );
-
-        UnregisterButton(
-            closeHistoryButton,
-            CloseHintHistory
-        );
+        UnregisterButton(closeHistoryButton, CloseHintHistory);
 
         UnregisterButton(playAgainButton, PlayAgain);
         UnregisterButton(mainMenuButton, GoToMainMenu);
@@ -331,6 +314,9 @@ public class Room3CodingChallengeManager : MonoBehaviour
 
     private void Start()
     {
+        // Get the editable initial hint from the Inspector.
+        box3CurrentHint = box3InitialHintText;
+
         SetBox1Content();
         SetBox2Content();
         SetBox3Content();
@@ -470,8 +456,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
                hitTransform.IsChildOf(target.transform);
     }
 
-    // Shows only the box selected for this attempt. If no box has been
-    // selected yet, all three boxes are visible.
     private void ApplySelectedBoxVisibility()
     {
         switch (selectedChallenge)
@@ -511,8 +495,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
         if (gameCompleted)
             return;
 
-        // Once the player chooses one box, the other two are locked.
-        // This selection remains even after closing the coding panel.
         if (selectedChallenge != ChallengeType.None &&
             selectedChallenge != challenge)
         {
@@ -548,8 +530,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
             return;
         }
 
-        // Save the player's first valid choice.
-        // Do not reset this when ClosePanel() is called.
         if (selectedChallenge == ChallengeType.None)
         {
             selectedChallenge = challenge;
@@ -561,7 +541,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
             );
         }
 
-        // Hide the two unselected boxes for the rest of this attempt.
         ApplySelectedBoxVisibility();
 
         activeChallenge = challenge;
@@ -589,15 +568,12 @@ public class Room3CodingChallengeManager : MonoBehaviour
                 SetBox1Content();
 
                 if (answerInput != null)
-                {
                     answerInput.interactable = !box1Completed;
-                }
 
                 ShowFeedback(
                     "Enter your answer above. Try your best!",
                     Color.white
                 );
-
                 break;
 
             case ChallengeType.Box2:
@@ -608,7 +584,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
                     "Complete both blanks, then click SUBMIT.",
                     Color.white
                 );
-
                 break;
 
             case ChallengeType.Box3:
@@ -619,13 +594,11 @@ public class Room3CodingChallengeManager : MonoBehaviour
                     "Complete both blanks, then click SUBMIT.",
                     Color.white
                 );
-
                 break;
         }
 
         UpdateHintsRemainingUI();
 
-        // Hide the center dot while any Box 1, Box 2, or Box 3 panel is open.
         SetPanelActive(centerDot, false);
 
         SetPlayerControls(false);
@@ -634,8 +607,7 @@ public class Room3CodingChallengeManager : MonoBehaviour
         Cursor.visible = true;
 
         Debug.Log(
-            "BOX " + (int)challenge +
-            " CODING PANEL OPENED.",
+            "BOX " + (int)challenge + " CODING PANEL OPENED.",
             this
         );
     }
@@ -664,9 +636,8 @@ public class Room3CodingChallengeManager : MonoBehaviour
 
     private void SetBox1Content()
     {
-        // Keep these editable in the Unity Inspector:
-        // challengeTitle, codeText, and expectedOutputText.
-        // Their custom rich-text colors must remain unchanged.
+        // Title, code, and expected output remain editable in the Inspector.
+        // Do not overwrite their rich-text formatting.
 
         if (questionText != null)
         {
@@ -689,9 +660,8 @@ public class Room3CodingChallengeManager : MonoBehaviour
 
     private void SetBox2Content()
     {
-        // Keep the title, code, and expected output
-        // editable in the Unity Inspector.
-        // Do not overwrite their custom rich-text colors.
+        // Title, code, and expected output remain editable in the Inspector.
+        // Do not overwrite their rich-text formatting.
 
         if (box2QuestionText != null)
         {
@@ -723,28 +693,12 @@ public class Room3CodingChallengeManager : MonoBehaviour
 
     private void SetBox3Content()
     {
-        if (box3ChallengeTitle != null)
-            box3ChallengeTitle.text = "BOX 3 — FOR LOOP";
-
-        if (box3QuestionText != null)
-        {
-            box3QuestionText.text =
-                "Complete both missing parts so the program " +
-                "calculates the sum of numbers from 1 to 5.";
-        }
-
-        if (box3CodeText != null)
-        {
-            box3CodeText.text =
-                "int total = 0;\n\n" +
-                "for (int i = 1; __________; __________) {\n" +
-                "    total += i;\n" +
-                "}\n\n" +
-                "System.out.println(total);";
-        }
-
-        if (box3ExpectedOutputText != null)
-            box3ExpectedOutputText.text = "EXPECTED OUTPUT:\n15";
+        // IMPORTANT:
+        // Do not assign text to box3ChallengeTitle, box3QuestionText,
+        // box3CodeText, or box3ExpectedOutputText here.
+        //
+        // Those TMP objects are configured in the Unity Inspector.
+        // This preserves your rich-text syntax colors when the game plays.
 
         if (box3HintMessageText != null)
         {
@@ -752,8 +706,15 @@ public class Room3CodingChallengeManager : MonoBehaviour
             box3HintMessageText.color = hintMessageColor;
         }
 
-        SetPlaceholder(box3AnswerInput1, "Enter the loop condition...");
-        SetPlaceholder(box3AnswerInput2, "Enter the increment statement...");
+        SetPlaceholder(
+            box3AnswerInput1,
+            "Enter the loop condition..."
+        );
+
+        SetPlaceholder(
+            box3AnswerInput2,
+            "Enter the increment statement..."
+        );
     }
 
     private void SetPlaceholder(
@@ -797,7 +758,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
                     "SubmitAnswer called without an active challenge.",
                     this
                 );
-
                 break;
         }
     }
@@ -817,7 +777,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
                 "Box 1 AnswerInput is not assigned.",
                 this
             );
-
             return;
         }
 
@@ -831,7 +790,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
 
         if (!correct)
         {
-            // Check kung ang sagot ay para sa FAILED condition
             bool isFailedAnswer =
                 answer == "score<75" ||
                 answer == "75>score" ||
@@ -862,10 +820,7 @@ public class Room3CodingChallengeManager : MonoBehaviour
         if (hintMessageText != null)
             hintMessageText.text = string.Empty;
 
-        ShowFeedback(
-            "Correct! Box 1 completed.",
-            Color.green
-        );
+        ShowFeedback("Correct! Box 1 completed.", Color.green);
 
         answerInput.interactable = false;
 
@@ -895,7 +850,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
                 "Both Box 2 answer input fields must be assigned.",
                 this
             );
-
             return;
         }
 
@@ -933,10 +887,7 @@ public class Room3CodingChallengeManager : MonoBehaviour
             if (box2HintMessageText != null)
                 box2HintMessageText.text = string.Empty;
 
-            ShowFeedback(
-                "Correct! Box 2 completed.",
-                Color.green
-            );
+            ShowFeedback("Correct! Box 2 completed.", Color.green);
 
             if (box2SubmitButton != null)
                 box2SubmitButton.interactable = false;
@@ -988,7 +939,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
                 "Both Box 3 answer input fields must be assigned.",
                 this
             );
-
             return;
         }
 
@@ -1028,10 +978,7 @@ public class Room3CodingChallengeManager : MonoBehaviour
             if (box3HintMessageText != null)
                 box3HintMessageText.text = string.Empty;
 
-            ShowFeedback(
-                "Correct! Box 3 completed.",
-                Color.green
-            );
+            ShowFeedback("Correct! Box 3 completed.", Color.green);
 
             if (box3SubmitButton != null)
                 box3SubmitButton.interactable = false;
@@ -1068,7 +1015,7 @@ public class Room3CodingChallengeManager : MonoBehaviour
     }
 
     // =====================================================
-    // BOX 2 INPUT COLOR AND LOCKING
+    // INPUT COLOR AND LOCKING
     // =====================================================
 
     private void CacheBox2InputColors()
@@ -1087,10 +1034,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
             ref box2Input2ColorsCached
         );
     }
-
-    // =====================================================
-    // BOX 3 INPUT COLOR AND LOCKING
-    // =====================================================
 
     private void CacheBox3InputColors()
     {
@@ -1174,19 +1117,18 @@ public class Room3CodingChallengeManager : MonoBehaviour
     }
 
     private void ApplyAnswerInputState(
-    TMP_InputField input,
-    bool correct,
-    Color originalColor,
-    ColorBlock originalColors,
-    bool colorsCached,
-    Color correctColor)
+        TMP_InputField input,
+        bool correct,
+        Color originalColor,
+        ColorBlock originalColors,
+        bool colorsCached,
+        Color correctColor)
     {
         if (input == null)
             return;
 
         if (correct)
         {
-            // Apply the selected green to every UI input state.
             ColorBlock colors = input.colors;
             colors.normalColor = correctColor;
             colors.highlightedColor = correctColor;
@@ -1195,8 +1137,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
             colors.disabledColor = correctColor;
 
             input.colors = colors;
-
-            // Lock the field after the correct answer.
             input.interactable = false;
 
             if (input.targetGraphic != null)
@@ -1252,7 +1192,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
                 "No hints remaining. Think about the clues!",
                 Color.red
             );
-
             return;
         }
 
@@ -1304,7 +1243,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
                 "No hints remaining. Think about the clues!",
                 Color.red
             );
-
             return;
         }
 
@@ -1355,27 +1293,24 @@ public class Room3CodingChallengeManager : MonoBehaviour
                 "No hints remaining. Think about the clues!",
                 Color.red
             );
-
             return;
         }
 
         box3HintsUsed++;
 
+        // These strings can now be edited in the Unity Inspector.
         switch (box3HintsUsed)
         {
             case 1:
-                box3CurrentHint =
-                    "HINT 1: The loop variable is i, and it starts at 1.";
+                box3CurrentHint = box3Hint1Text;
                 break;
 
             case 2:
-                box3CurrentHint =
-                    "HINT 2: The loop must include every value from 1 through 5.";
+                box3CurrentHint = box3Hint2Text;
                 break;
 
             case 3:
-                box3CurrentHint =
-                    "HINT 3: After each pass, i should advance to the next integer.";
+                box3CurrentHint = box3Hint3Text;
                 break;
         }
 
@@ -1436,7 +1371,7 @@ public class Room3CodingChallengeManager : MonoBehaviour
     }
 
     // =====================================================
-    // HINT HISTORY — SEPARATE HISTORY FOR EACH BOX
+    // HINT HISTORY
     // =====================================================
 
     private void ShowBox1HintHistory()
@@ -1462,7 +1397,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
                 "HintHistoryPanel is not assigned.",
                 this
             );
-
             return;
         }
 
@@ -1472,7 +1406,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
                 "HintHistoryListText is not assigned.",
                 this
             );
-
             return;
         }
 
@@ -1527,7 +1460,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
         if (hintHistoryPanel != null)
             hintHistoryPanel.SetActive(false);
 
-        // Keep coding panel open and player controls disabled.
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
@@ -1620,7 +1552,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
                 "The final ending screen cannot be displayed.",
                 this
             );
-
             return;
         }
 
@@ -1662,7 +1593,7 @@ public class Room3CodingChallengeManager : MonoBehaviour
     {
         activeChallenge = ChallengeType.None;
 
-        // IMPORTANT: allow the player to choose a new box.
+        // Allow the player to choose a new box.
         selectedChallenge = ChallengeType.None;
         ApplySelectedBoxVisibility();
 
@@ -1684,7 +1615,7 @@ public class Room3CodingChallengeManager : MonoBehaviour
 
         box1CurrentHint = "Hints will appear here.";
         box2CurrentHint = "Hints will appear here.";
-        box3CurrentHint = "Hints will appear here.";
+        box3CurrentHint = box3InitialHintText;
 
         box1HintHistory.Clear();
         box2HintHistory.Clear();
@@ -1789,8 +1720,7 @@ public class Room3CodingChallengeManager : MonoBehaviour
         SetPanelActive(codingPanelBox3, false);
         SetPanelActive(hintHistoryPanel, false);
 
-        // Clear only the currently open panel.
-        // Keep selectedChallenge locked until TRY AGAIN.
+        // Keep the selected box locked until TRY AGAIN.
         activeChallenge = ChallengeType.None;
     }
 
@@ -1830,7 +1760,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
         HideCodingPanelsForGameOver();
         SetPanelActive(hintHistoryPanel, false);
 
-        // Restore the center dot after closing the coding panel.
         SetPanelActive(centerDot, true);
 
         SetPlayerControls(true);
@@ -1868,7 +1797,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
                 "Main Menu scene name is empty.",
                 this
             );
-
             return;
         }
 
@@ -1883,7 +1811,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
                 "Feedback Form URL is empty. Add your published Google Forms URL.",
                 this
             );
-
             return;
         }
 
