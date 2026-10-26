@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using TMPro;
 
@@ -40,9 +39,15 @@ public class Room2ChallengeTimer : MonoBehaviour
     public AudioSource gameOverAudioSource;
     public AudioClip gameOverSound;
 
+    [Header("Room 2 Completion Sound")]
+    public GameObject taskCompletePanel;
+    public AudioSource completionAudioSource;
+    public AudioClip completionSound;
+
     private float timeRemaining;
     private bool timerRunning = false;
     private bool timerFinished = false;
+    private bool completionSoundPlayed = false;
 
     private Color normalTimerColor;
 
@@ -91,6 +96,11 @@ public class Room2ChallengeTimer : MonoBehaviour
             gameOverAudioSource.playOnAwake = false;
         }
 
+        if (completionAudioSource != null)
+        {
+            completionAudioSource.playOnAwake = false;
+        }
+
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(false);
@@ -120,6 +130,9 @@ public class Room2ChallengeTimer : MonoBehaviour
 
     private void Update()
     {
+        // Check the completion panel even if the timer has stopped.
+        CheckCompletionPanelSound();
+
         if (!timerRunning || timerFinished)
             return;
 
@@ -135,6 +148,51 @@ public class Room2ChallengeTimer : MonoBehaviour
 
         UpdateTimerDisplay();
         UpdateTimerWarning();
+    }
+
+    // ==========================================
+    // ROOM 2 COMPLETION SOUND
+    // ==========================================
+
+    private void CheckCompletionPanelSound()
+    {
+        if (taskCompletePanel == null)
+            return;
+
+        bool panelIsVisible = taskCompletePanel.activeInHierarchy;
+
+        // Play once when the completion panel becomes visible.
+        if (panelIsVisible && !completionSoundPlayed)
+        {
+            completionSoundPlayed = true;
+
+            // Use the dedicated AudioSource if assigned.
+            // Otherwise, use the Game Over AudioSource.
+            AudioSource soundSource = completionAudioSource != null
+                ? completionAudioSource
+                : gameOverAudioSource;
+
+            if (soundSource != null && completionSound != null)
+            {
+                soundSource.PlayOneShot(completionSound);
+
+                Debug.Log("ROOM 2 COMPLETION SOUND PLAYED!");
+            }
+            else
+            {
+                Debug.LogWarning(
+                    "Room 2 completion sound is not fully assigned. " +
+                    "Assign Task Complete Panel and Completion Sound " +
+                    "in the Room2ChallengeTimer Inspector. " +
+                    "Assign Completion Audio Source or Game Over Audio Source."
+                );
+            }
+        }
+        else if (!panelIsVisible)
+        {
+            // Allow the sound to play again on a later attempt.
+            completionSoundPlayed = false;
+        }
     }
 
     // ==========================================
@@ -286,7 +344,7 @@ public class Room2ChallengeTimer : MonoBehaviour
             Debug.Log("CROSSWORD PANEL CLOSED!");
         }
 
-        // Important: close Word Scrabble before Game Over.
+        // Close Word Scrabble before Game Over.
         if (wordScrabblePanel != null)
         {
             wordScrabblePanel.SetActive(false);

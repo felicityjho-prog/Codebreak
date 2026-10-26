@@ -9,6 +9,19 @@ public class Room3ChallengeTimer : MonoBehaviour
     [Header("Timer UI")]
     public TMP_Text timerText;
 
+    [Header("Timer Warning Settings")]
+    public float redTimeThreshold = 30f;
+    public Color warningTimerColor = Color.red;
+
+    [Header("Timer Sound")]
+    public AudioSource timerAudioSource;
+    public AudioClip tickingSound;
+
+    [Header("Timer Sound Speed")]
+    public float fastTickThreshold = 10f;
+    public float normalTickPitch = 1f;
+    public float fastTickPitch = 1.8f;
+
     [Header("Game Over")]
     public Room3GameOverController gameOverController;
 
@@ -26,6 +39,14 @@ public class Room3ChallengeTimer : MonoBehaviour
             normalTimerColor = timerText.color;
             timerText.text = FormatTime(timeRemaining);
             timerText.gameObject.SetActive(false);
+        }
+
+        if (timerAudioSource != null)
+        {
+            timerAudioSource.Stop();
+            timerAudioSource.loop = true;
+            timerAudioSource.playOnAwake = false;
+            timerAudioSource.pitch = normalTickPitch;
         }
     }
 
@@ -45,8 +66,10 @@ public class Room3ChallengeTimer : MonoBehaviour
         }
 
         UpdateTimerDisplay();
+        UpdateTimerSoundSpeed();
     }
 
+    // START TIMER
     public void StartTimer()
     {
         if (timerFinished)
@@ -57,7 +80,20 @@ public class Room3ChallengeTimer : MonoBehaviour
         if (timerText != null)
         {
             timerText.gameObject.SetActive(true);
-            timerText.color = normalTimerColor;
+        }
+
+        if (timerAudioSource != null && tickingSound != null)
+        {
+            timerAudioSource.clip = tickingSound;
+            timerAudioSource.loop = true;
+            timerAudioSource.pitch = normalTickPitch;
+
+            if (!timerAudioSource.isPlaying)
+            {
+                timerAudioSource.Play();
+            }
+
+            Debug.Log("ROOM 3 TICKING SOUND STARTED.");
         }
 
         UpdateTimerDisplay();
@@ -65,17 +101,32 @@ public class Room3ChallengeTimer : MonoBehaviour
         Debug.Log("ROOM 3 TIMER STARTED.");
     }
 
+    // STOP TIMER
     public void StopTimer()
     {
         timerRunning = false;
+
+        if (timerAudioSource != null)
+        {
+            timerAudioSource.Stop();
+            timerAudioSource.pitch = normalTickPitch;
+        }
+
         Debug.Log("ROOM 3 TIMER STOPPED.");
     }
 
+    // RESET TIMER
     public void ResetTimer()
     {
         timeRemaining = startingTime;
         timerRunning = false;
         timerFinished = false;
+
+        if (timerAudioSource != null)
+        {
+            timerAudioSource.Stop();
+            timerAudioSource.pitch = normalTickPitch;
+        }
 
         if (timerText != null)
         {
@@ -87,22 +138,44 @@ public class Room3ChallengeTimer : MonoBehaviour
         Debug.Log("ROOM 3 TIMER RESET.");
     }
 
+    // TIMER SOUND SPEED
+    private void UpdateTimerSoundSpeed()
+    {
+        if (timerAudioSource == null || tickingSound == null)
+            return;
+
+        if (timeRemaining <= fastTickThreshold)
+        {
+            timerAudioSource.pitch = fastTickPitch;
+        }
+        else
+        {
+            timerAudioSource.pitch = normalTickPitch;
+        }
+    }
+
+    // HIDE TIMER DISPLAY
     public void HideTimerDisplay()
     {
         if (timerText != null)
+        {
             timerText.gameObject.SetActive(false);
+        }
     }
 
+    // GET REMAINING TIME
     public float GetRemainingTime()
     {
         return timeRemaining;
     }
 
+    // CHECK TIMER RUNNING
     public bool IsTimerRunning()
     {
         return timerRunning;
     }
 
+    // TIME UP / GAME OVER
     private void TimeUp()
     {
         if (timerFinished)
@@ -110,6 +183,12 @@ public class Room3ChallengeTimer : MonoBehaviour
 
         timerFinished = true;
         timerRunning = false;
+
+        if (timerAudioSource != null)
+        {
+            timerAudioSource.Stop();
+            timerAudioSource.pitch = normalTickPitch;
+        }
 
         HideTimerDisplay();
 
@@ -129,14 +208,26 @@ public class Room3ChallengeTimer : MonoBehaviour
         }
     }
 
+    // UPDATE TIMER DISPLAY AND COLOR
     private void UpdateTimerDisplay()
     {
         if (timerText == null)
             return;
 
         timerText.text = FormatTime(timeRemaining);
+
+        // Turn red when 30 seconds or less remain.
+        if (timeRemaining <= redTimeThreshold)
+        {
+            timerText.color = warningTimerColor;
+        }
+        else
+        {
+            timerText.color = normalTimerColor;
+        }
     }
 
+    // FORMAT TIME
     private string FormatTime(float time)
     {
         int minutes = Mathf.FloorToInt(time / 60f);
