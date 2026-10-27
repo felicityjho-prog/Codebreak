@@ -68,7 +68,7 @@ public class AutoDoor : MonoBehaviour
                     interactionPrompt.GetComponentInChildren<TMP_Text>(true);
 
                 if (interactionPromptText != null)
-                    interactionPromptText.text = "[E] TO OPEN";
+                    interactionPromptText.text = "OPEN";
 
                 interactionPrompt.SetActive(false);
             }

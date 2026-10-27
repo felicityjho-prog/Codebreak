@@ -24,87 +24,243 @@ public class RoomEntryTrigger : MonoBehaviour
     [Header("Test Mode")]
     public RoomSwitcher roomSwitcher;
 
+    [Header("Opening Cinematic")]
+    public OpeningCinematicController openingCinematic;
+
+    [Header("Hallway Instruction Animation")]
+    public HallwayInstructionController hallwayInstructionController;
+
+    [Header("HUD Hidden During Cinematic / Hallway Instruction")]
+    public GameObject playerControlsUI;
+    public GameObject centerDotUI;
+    public PauseMenuController pauseMenuController;
+
     private bool triggered = false;
+
+    private bool hallwayUIHidden;
+    private bool hudStatesCached;
+
+    private bool controlsOriginalState;
+    private bool centerDotOriginalState;
+
+    // =====================================================
+    // START
+    // =====================================================
 
     private void Start()
     {
-        // =========================================
-        // TEST ROOM 2 CHECK
-        // =========================================
+        // Do not affect Room 1 HUD during Room 2 Test Mode.
         if (roomSwitcher != null && roomSwitcher.testRoom2)
         {
-            // Make sure Room 1 voice/UI does not start
             if (voiceOver != null)
-            {
                 voiceOver.Stop();
-            }
 
             if (hallwayInstruction != null)
-            {
                 hallwayInstruction.SetActive(false);
-            }
 
             if (challengeUI != null)
-            {
                 challengeUI.SetActive(false);
-            }
 
             if (instructionPanel != null)
-            {
                 instructionPanel.SetActive(false);
-            }
 
+            SetHallwayUIHidden(false);
             return;
         }
 
-        // =========================================
-        // SHOW HALLWAY INSTRUCTION
-        // =========================================
-        if (hallwayInstruction != null)
+        // The opening cinematic will start the hallway sequence later.
+        if (openingCinematic != null &&
+            openingCinematic.ShouldDelayHallwaySequence)
         {
-            hallwayInstruction.SetActive(true);
+            if (voiceOver != null)
+                voiceOver.Stop();
+
+            if (hallwayInstruction != null)
+                hallwayInstruction.SetActive(false);
+
+            if (challengeUI != null)
+                challengeUI.SetActive(false);
+
+            if (instructionPanel != null)
+                instructionPanel.SetActive(false);
+
+            // Hide the HUD immediately during the cinematic.
+            SetHallwayUIHidden(true);
+            return;
         }
 
-        // =========================================
-        // HIDE ROOM 1 CHALLENGE UI
-        // =========================================
-        if (challengeUI != null)
+        BeginHallwaySequence();
+    }
+
+    // =====================================================
+    // UPDATE
+    // Detect when the opening cinematic or hallway sequence
+    // requires the HUD and pause menu to stay hidden.
+    // =====================================================
+
+    private void Update()
+    {
+        // Room 2 Test Mode must not use Room 1 HUD locking.
+        if (roomSwitcher != null && roomSwitcher.testRoom2)
         {
-            challengeUI.SetActive(false);
+            SetHallwayUIHidden(false);
+            return;
         }
 
-        // =========================================
-        // HIDE ROOM 1 INSTRUCTION UI
-        // =========================================
-        if (instructionPanel != null)
-        {
-            instructionPanel.SetActive(false);
-        }
+        bool openingCinematicRunning =
+            openingCinematic != null &&
+            openingCinematic.ShouldDelayHallwaySequence;
 
-        // =========================================
-        // PLAY VOICE OVER
-        // =========================================
-        if (voiceOver != null && voiceOver.clip != null)
+        bool hallwayVoicePlaying =
+            voiceOver != null &&
+            voiceOver.isPlaying;
+
+        bool hallwayInstructionVisible =
+            hallwayInstruction != null &&
+            hallwayInstruction.activeInHierarchy;
+
+        bool animatedInstructionVisible =
+            hallwayInstructionController != null &&
+            hallwayInstructionController.instructionPanel != null &&
+            hallwayInstructionController.instructionPanel.activeInHierarchy;
+
+        bool shouldHideHUD =
+            !triggered &&
+            (
+                openingCinematicRunning ||
+                hallwayVoicePlaying ||
+                hallwayInstructionVisible ||
+                animatedInstructionVisible
+            );
+
+        SetHallwayUIHidden(shouldHideHUD);
+    }
+
+    // =====================================================
+    // HIDE / RESTORE HUD
+    // =====================================================
+
+    private void SetHallwayUIHidden(bool hide)
+    {
+        if (hallwayUIHidden == hide)
+            return;
+
+        hallwayUIHidden = hide;
+
+        if (hide)
         {
-            voiceOver.Play();
-            StartCoroutine(WaitForVoiceToFinish());
+            // Cache the original HUD visibility only once.
+            if (!hudStatesCached)
+            {
+                controlsOriginalState =
+                    playerControlsUI != null &&
+                    playerControlsUI.activeSelf;
+
+                centerDotOriginalState =
+                    centerDotUI != null &&
+                    centerDotUI.activeSelf;
+
+                hudStatesCached = true;
+            }
+
+            // Hide the keyboard and mouse control labels.
+            if (playerControlsUI != null)
+                playerControlsUI.SetActive(false);
+
+            // Hide the center dot / crosshair.
+            if (centerDotUI != null)
+                centerDotUI.SetActive(false);
+
+            // Hide and lock the pause menu.
+            if (pauseMenuController != null)
+                pauseMenuController.SetCinematicLock(true);
+
+            Debug.Log(
+                "Hallway cinematic active: HUD and pause menu hidden."
+            );
+        }
+        else
+        {
+            // Restore the same visibility states as before.
+            if (hudStatesCached)
+            {
+                if (playerControlsUI != null)
+                    playerControlsUI.SetActive(controlsOriginalState);
+
+                if (centerDotUI != null)
+                    centerDotUI.SetActive(centerDotOriginalState);
+
+                hudStatesCached = false;
+            }
+
+            // Allow the pause menu to work again.
+            if (pauseMenuController != null)
+                pauseMenuController.SetCinematicLock(false);
+
+            Debug.Log(
+                "Hallway sequence finished: HUD visibility restored."
+            );
         }
     }
+
+    // =====================================================
+    // BEGIN HALLWAY SEQUENCE
+    // =====================================================
+
+    public void BeginHallwaySequence()
+    {
+        if (roomSwitcher != null && roomSwitcher.testRoom2)
+            return;
+
+        if (triggered)
+            return;
+
+        // Avoid multiple welcome voice coroutines.
+        StopAllCoroutines();
+
+        if (hallwayInstruction != null)
+            hallwayInstruction.SetActive(true);
+
+        if (challengeUI != null)
+            challengeUI.SetActive(false);
+
+        if (instructionPanel != null)
+            instructionPanel.SetActive(false);
+
+        // Hide the HUD before the voice begins.
+        SetHallwayUIHidden(true);
+
+        if (voiceOver != null)
+        {
+            voiceOver.Stop();
+
+            if (voiceOver.clip != null)
+            {
+                voiceOver.Play();
+                StartCoroutine(WaitForVoiceToFinish());
+            }
+        }
+    }
+
+    // =====================================================
+    // WAIT FOR WELCOME VOICE
+    // =====================================================
 
     private IEnumerator WaitForVoiceToFinish()
     {
         while (voiceOver != null && voiceOver.isPlaying)
-        {
             yield return null;
-        }
 
-        // Only hide hallway instruction if the player
-        // has NOT entered Room 1 yet.
         if (!triggered && hallwayInstruction != null)
-        {
             hallwayInstruction.SetActive(false);
-        }
+
+        // Update() will restore the HUD when the cinematic
+        // and any active hallway instruction visuals are done.
     }
+
+    // =====================================================
+    // ENTER ROOM 1
+    // =====================================================
 
     private void OnTriggerEnter(Collider other)
     {
@@ -114,88 +270,61 @@ public class RoomEntryTrigger : MonoBehaviour
         if (!other.CompareTag("Player"))
             return;
 
-        // =========================================
-        // DO NOT ALLOW ROOM 1 IN TEST ROOM 2
-        // =========================================
-        if (roomSwitcher != null && roomSwitcher.testRoom2)
+        // Prevent entry during the opening cinematic.
+        if (openingCinematic != null &&
+            openingCinematic.ShouldDelayHallwaySequence)
         {
             return;
         }
+
+        if (roomSwitcher != null && roomSwitcher.testRoom2)
+            return;
 
         triggered = true;
 
         Debug.Log("PLAYER ENTERED ROOM 1!");
 
-        // =========================================
-        // HIDE HALLWAY INSTRUCTION
-        // =========================================
         if (hallwayInstruction != null)
-        {
             hallwayInstruction.SetActive(false);
-        }
 
-        // =========================================
-        // STOP VOICE OVER
-        // =========================================
         if (voiceOver != null && voiceOver.isPlaying)
-        {
             voiceOver.Stop();
-        }
 
-        // =========================================
-        // SHOW ROOM 1 CHALLENGE UI
-        // =========================================
+        // Restore HUD and unlock pause functionality.
+        SetHallwayUIHidden(false);
+
         if (challengeUI != null)
-        {
             challengeUI.SetActive(true);
-        }
 
-        // =========================================
-        // SHOW ROOM 1 INSTRUCTION
-        // =========================================
         if (instructionPanel != null)
-        {
             instructionPanel.SetActive(true);
-        }
 
-        // =========================================
-        // START TIMER
-        // =========================================
         if (gameTimer != null)
-        {
             gameTimer.StartTimer();
-        }
 
-        // =========================================
-        // ENABLE ROOM 1 INTERACTIONS
-        // =========================================
         if (room1Interaction != null)
-        {
             room1Interaction.EnableRoom1Interactions();
-        }
     }
+
+    // =====================================================
+    // RESET HALLWAY SEQUENCE
+    // =====================================================
 
     public void ResetForHallwayRestart()
     {
-        // Ignore Room 1 reset in Room 2 test mode.
         if (roomSwitcher != null && roomSwitcher.testRoom2)
             return;
 
-        // Stop any previous welcome-voice coroutine.
         StopAllCoroutines();
 
-        // Allow the player to enter Room 1 again.
         triggered = false;
 
-        // Reset Room 1 interactions.
         if (room1Interaction != null)
             room1Interaction.ResetRoom1Interactions();
 
-        // Keep the timer stopped in the hallway.
         if (gameTimer != null)
             gameTimer.StopTimer();
 
-        // Restore hallway UI and hide Room 1 challenge UI.
         if (hallwayInstruction != null)
             hallwayInstruction.SetActive(true);
 
@@ -205,7 +334,9 @@ public class RoomEntryTrigger : MonoBehaviour
         if (instructionPanel != null)
             instructionPanel.SetActive(false);
 
-        // Replay the existing welcome voice.
+        // Hide HUD again during the restarted sequence.
+        SetHallwayUIHidden(true);
+
         if (voiceOver != null)
         {
             voiceOver.Stop();

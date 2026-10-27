@@ -42,6 +42,10 @@ public class Room3CodingChallengeManager : MonoBehaviour
     [Header("Room 3 Timer")]
     public Room3ChallengeTimer room3Timer;
 
+    [Header("Background Music")]
+    [Tooltip("Assign the AudioSource that plays the background music across the rooms (for example, Room1Music).")]
+    public AudioSource roomBackgroundMusic;
+
     [Header("Global Gameplay UI")]
     public GameObject centerDot;
     public GameObject controlsPanel;
@@ -1556,6 +1560,21 @@ public class Room3CodingChallengeManager : MonoBehaviour
         }
 
         gameCompleted = true;
+
+        // Stop the shared background music only after the final correct answer.
+        // This runs once because CompleteGame returns early when gameCompleted is true.
+        if (roomBackgroundMusic != null)
+        {
+            roomBackgroundMusic.Stop();
+            Debug.Log("Background music stopped because CODEBREAK COMPLETE was triggered.", this);
+        }
+        else
+        {
+            Debug.LogWarning(
+                "Background Music AudioSource is not assigned. Drag Room1Music's AudioSource into Room Background Music.",
+                this
+            );
+        }
 
         if (room3Timer != null)
         {

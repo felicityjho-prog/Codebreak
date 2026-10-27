@@ -68,6 +68,9 @@ public class RoomSwitcher : MonoBehaviour
     public GameObject room3GameManager;
     public GameObject room3Checklist;
 
+    [Header("Room 3 Test Mode UI")]
+    public GameObject systemAlertPanel;
+
     [Header("Room 3 Instruction")]
     public Room3InstructionManager room3InstructionManager;
 
@@ -331,6 +334,86 @@ public class RoomSwitcher : MonoBehaviour
     }
 
     // =========================================================
+    // ROOM 2 INSTRUCTION INPUT LOCK
+    // =========================================================
+
+    private void DisablePlayerControlsForRoom2Instruction()
+    {
+        if (playerMovement != null)
+        {
+            playerMovement.enabled = false;
+        }
+        else
+        {
+            Debug.LogWarning(
+                "PlayerMovement is not assigned in RoomSwitcher.",
+                this
+            );
+        }
+
+        if (playerController != null)
+        {
+            playerController.DisableLook();
+            playerController.enabled = false;
+        }
+        else
+        {
+            Debug.LogWarning(
+                "PlayerController is not assigned in RoomSwitcher.",
+                this
+            );
+        }
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        Debug.Log(
+            "ROOM 2 INSTRUCTION OPEN: Player movement and camera locked.",
+            this
+        );
+    }
+
+    // =========================================================
+    // RESTORE ROOM 2 CONTROLS AFTER GOT IT
+    // =========================================================
+
+    public void EnableRoom2PlayerControlsAfterInstruction()
+    {
+        if (playerMovement != null)
+        {
+            playerMovement.enabled = true;
+        }
+        else
+        {
+            Debug.LogWarning(
+                "PlayerMovement is not assigned in RoomSwitcher.",
+                this
+            );
+        }
+
+        if (playerController != null)
+        {
+            playerController.enabled = true;
+            playerController.EnableLook();
+        }
+        else
+        {
+            Debug.LogWarning(
+                "PlayerController is not assigned in RoomSwitcher.",
+                this
+            );
+        }
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        Debug.Log(
+            "ROOM 2 GOT IT CLICKED: Player movement and camera restored.",
+            this
+        );
+    }
+
+    // =========================================================
     // ROOM 2 TEST MODE
     // =========================================================
 
@@ -416,6 +499,7 @@ public class RoomSwitcher : MonoBehaviour
         }
 
         ShowRoom2Instruction();
+        DisablePlayerControlsForRoom2Instruction();
 
         if (nextRoomManager != null)
         {
@@ -444,6 +528,23 @@ public class RoomSwitcher : MonoBehaviour
         Debug.Log("==========================================");
 
         StopRoom1Music();
+
+        // Hide the global System Alert during Room 3 Test Mode.
+        // This allows the Room 3 instruction panel to appear first.
+        if (systemAlertPanel != null)
+        {
+            systemAlertPanel.SetActive(false);
+            Debug.Log("System Alert hidden for Room 3 Test Mode.", this);
+        }
+        else
+        {
+            Debug.LogWarning(
+                "RoomSwitcher: System Alert Panel is not assigned. " +
+                "Assign SystemAlertPanel in the Inspector to hide it " +
+                "during Room 3 Test Mode.",
+                this
+            );
+        }
 
         // Verify essential Room 3 references before switching.
         if (player == null ||
@@ -823,6 +924,10 @@ public class RoomSwitcher : MonoBehaviour
             {
                 nextRoomManager.SetActive(true);
             }
+
+            // Freeze Room 2 movement and camera before the fade-in ends.
+            // The GOT IT button will restore them afterward.
+            DisablePlayerControlsForRoom2Instruction();
         }
 
         currentRoom = nextRoom;
@@ -901,9 +1006,15 @@ public class RoomSwitcher : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
+        else if (IsRoomNamed(currentRoom, "room2"))
+        {
+            // Room 2 must remain frozen while its GOT IT panel is visible.
+            // Do not restore movement or camera here.
+            DisablePlayerControlsForRoom2Instruction();
+        }
         else
         {
-            // Preserve the existing Room 1 -> Room 2 behavior.
+            // Restore normal controls for other destinations (for example Room 1).
             if (playerMovement != null)
             {
                 playerMovement.enabled = true;
@@ -940,7 +1051,9 @@ public class RoomSwitcher : MonoBehaviour
         Debug.Log(
             IsRoomNamed(currentRoom, "room3")
                 ? "ROOM 3 TRANSITION COMPLETE: Instructions already shown; controls frozen."
-                : "ROOM TRANSITION COMPLETE: Player controls restored."
+                : IsRoomNamed(currentRoom, "room2")
+                    ? "ROOM 2 TRANSITION COMPLETE: Controls frozen until GOT IT."
+                    : "ROOM TRANSITION COMPLETE: Player controls restored."
         );
     }
 }

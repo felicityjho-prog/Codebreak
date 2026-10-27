@@ -1,3 +1,4 @@
+
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,12 +6,21 @@ using UnityEngine;
 public class GlobalCameraCollision : MonoBehaviour
 {
     [Header("Camera obstruction")]
-    [SerializeField, Min(0.01f)] private float cameraRadius = 0.18f;
-    [SerializeField, Min(0f)] private float wallMargin = 0.12f;
-    [SerializeField, Min(0.01f)] private float returnSmoothTime = 0.16f;
-    [SerializeField, Min(0.05f)] private float wallRescanInterval = 0.25f;
+    [SerializeField, Min(0.01f)]
+    private float cameraRadius = 0.18f;
 
-    private readonly HashSet<Collider> structuralWalls = new HashSet<Collider>();
+    [SerializeField, Min(0f)]
+    private float wallMargin = 0.12f;
+
+    [SerializeField, Min(0.01f)]
+    private float returnSmoothTime = 0.16f;
+
+    [SerializeField, Min(0.05f)]
+    private float wallRescanInterval = 0.25f;
+
+    private readonly HashSet<Collider> structuralWalls =
+        new HashSet<Collider>();
+
     private Transform cameraParent;
     private Vector3 normalLocalPosition;
     private Vector3 returnVelocity;
@@ -28,7 +38,26 @@ public class GlobalCameraCollision : MonoBehaviour
         }
 
         RefreshStructuralWalls();
-        nextWallRescanTime = Time.unscaledTime + wallRescanInterval;
+
+        nextWallRescanTime =
+            Time.unscaledTime + wallRescanInterval;
+    }
+
+    // =====================================================
+    // UPDATE NORMAL CAMERA POSITION
+    // Used by OpeningCinematicController after the transition.
+    // =====================================================
+
+    public void SetNormalLocalPosition(Vector3 position)
+    {
+        normalLocalPosition = position;
+        returnVelocity = Vector3.zero;
+
+        // Apply the intended camera position immediately.
+        transform.localPosition = position;
+
+        nextWallRescanTime =
+            Time.unscaledTime + wallRescanInterval;
     }
 
     private void LateUpdate()
@@ -39,34 +68,51 @@ public class GlobalCameraCollision : MonoBehaviour
         if (Time.unscaledTime >= nextWallRescanTime)
         {
             RefreshStructuralWalls();
-            nextWallRescanTime = Time.unscaledTime + wallRescanInterval;
+
+            nextWallRescanTime =
+                Time.unscaledTime + wallRescanInterval;
         }
 
-        Vector3 desiredWorldPosition = cameraParent.TransformPoint(normalLocalPosition);
+        Vector3 desiredWorldPosition =
+            cameraParent.TransformPoint(normalLocalPosition);
+
         Vector3 castOrigin = cameraParent.TransformPoint(
-            new Vector3(normalLocalPosition.x, normalLocalPosition.y, 0f));
-        Vector3 castVector = desiredWorldPosition - castOrigin;
+            new Vector3(
+                normalLocalPosition.x,
+                normalLocalPosition.y,
+                0f
+            )
+        );
+
+        Vector3 castVector =
+            desiredWorldPosition - castOrigin;
+
         float castDistance = castVector.magnitude;
 
         if (castDistance <= Mathf.Epsilon)
             return;
 
         Vector3 castDirection = castVector / castDistance;
+
         RaycastHit[] hits = Physics.SphereCastAll(
             castOrigin,
             cameraRadius,
             castDirection,
             castDistance,
             Physics.AllLayers,
-            QueryTriggerInteraction.Ignore);
+            QueryTriggerInteraction.Ignore
+        );
 
         float nearestWallDistance = castDistance;
         bool wallBlocked = false;
 
         foreach (RaycastHit hit in hits)
         {
-            if (hit.collider == null || !structuralWalls.Contains(hit.collider))
+            if (hit.collider == null ||
+                !structuralWalls.Contains(hit.collider))
+            {
                 continue;
+            }
 
             if (hit.distance < nearestWallDistance)
             {
@@ -77,9 +123,19 @@ public class GlobalCameraCollision : MonoBehaviour
 
         if (wallBlocked)
         {
-            float safeDistance = Mathf.Max(0f, nearestWallDistance - wallMargin);
-            Vector3 safeWorldPosition = castOrigin + castDirection * safeDistance;
-            transform.localPosition = cameraParent.InverseTransformPoint(safeWorldPosition);
+            float safeDistance = Mathf.Max(
+                0f,
+                nearestWallDistance - wallMargin
+            );
+
+            Vector3 safeWorldPosition =
+                castOrigin + castDirection * safeDistance;
+
+            transform.localPosition =
+                cameraParent.InverseTransformPoint(
+                    safeWorldPosition
+                );
+
             returnVelocity = Vector3.zero;
         }
         else
@@ -88,7 +144,8 @@ public class GlobalCameraCollision : MonoBehaviour
                 transform.localPosition,
                 normalLocalPosition,
                 ref returnVelocity,
-                returnSmoothTime);
+                returnSmoothTime
+            );
         }
     }
 
@@ -98,7 +155,8 @@ public class GlobalCameraCollision : MonoBehaviour
 
         Collider[] colliders = FindObjectsByType<Collider>(
             FindObjectsInactive.Include,
-            FindObjectsSortMode.None);
+            FindObjectsSortMode.None
+        );
 
         foreach (Collider candidate in colliders)
         {
@@ -120,29 +178,58 @@ public class GlobalCameraCollision : MonoBehaviour
     {
         return candidate != null &&
                candidate.gameObject.activeInHierarchy &&
-               candidate.name.Equals("Door", System.StringComparison.Ordinal) &&
+               candidate.name.Equals(
+                   "Door",
+                   System.StringComparison.Ordinal
+               ) &&
                candidate.parent != null &&
-               candidate.parent.name.Equals("Door_1", System.StringComparison.Ordinal) &&
+               candidate.parent.name.Equals(
+                   "Door_1",
+                   System.StringComparison.Ordinal
+               ) &&
                candidate.parent.parent != null &&
-               candidate.parent.parent.name.Equals("DoorPivot", System.StringComparison.Ordinal) &&
+               candidate.parent.parent.name.Equals(
+                   "DoorPivot",
+                   System.StringComparison.Ordinal
+               ) &&
                candidate.parent.parent.parent != null &&
-               candidate.parent.parent.parent.name.Equals("room1", System.StringComparison.Ordinal) &&
+               candidate.parent.parent.parent.name.Equals(
+                   "room1",
+                   System.StringComparison.Ordinal
+               ) &&
                candidate.parent.parent.parent.parent == null;
     }
 
-
-    private static bool IsInGameRoomHierarchy(Transform candidate)
+    private static bool IsInGameRoomHierarchy(
+        Transform candidate)
     {
         Transform current = candidate;
 
         while (current != null)
         {
             if (current.parent == null &&
-                (current.name.Equals("room1", System.StringComparison.OrdinalIgnoreCase) ||
-                 current.name.Equals("room2", System.StringComparison.OrdinalIgnoreCase) ||
-                 current.name.Equals("room3", System.StringComparison.OrdinalIgnoreCase) ||
-                 current.name.Equals("hallway", System.StringComparison.OrdinalIgnoreCase) ||
-                 current.name.Equals("corridor", System.StringComparison.OrdinalIgnoreCase)))
+                (
+                    current.name.Equals(
+                        "room1",
+                        System.StringComparison.OrdinalIgnoreCase
+                    ) ||
+                    current.name.Equals(
+                        "room2",
+                        System.StringComparison.OrdinalIgnoreCase
+                    ) ||
+                    current.name.Equals(
+                        "room3",
+                        System.StringComparison.OrdinalIgnoreCase
+                    ) ||
+                    current.name.Equals(
+                        "hallway",
+                        System.StringComparison.OrdinalIgnoreCase
+                    ) ||
+                    current.name.Equals(
+                        "corridor",
+                        System.StringComparison.OrdinalIgnoreCase
+                    )
+                ))
             {
                 return true;
             }
@@ -153,22 +240,40 @@ public class GlobalCameraCollision : MonoBehaviour
         return false;
     }
 
-    private static bool HasStructuralWallName(string objectName)
+    private static bool HasStructuralWallName(
+        string objectName)
     {
         string name = objectName.Trim();
 
-        if (name.Equals("wall", System.StringComparison.OrdinalIgnoreCase))
+        if (name.Equals(
+            "wall",
+            System.StringComparison.OrdinalIgnoreCase))
+        {
             return true;
+        }
 
-        if (name.StartsWith("wall_", System.StringComparison.OrdinalIgnoreCase))
+        if (name.StartsWith(
+            "wall_",
+            System.StringComparison.OrdinalIgnoreCase))
+        {
             return ContainsOnlyDigits(name.Substring(5));
+        }
 
-        if (name.StartsWith("wall ", System.StringComparison.OrdinalIgnoreCase))
+        if (name.StartsWith(
+            "wall ",
+            System.StringComparison.OrdinalIgnoreCase))
         {
             string suffix = name.Substring(5).Trim();
 
-            if (suffix.Length >= 2 && suffix[0] == '(' && suffix[suffix.Length - 1] == ')')
-                suffix = suffix.Substring(1, suffix.Length - 2).Trim();
+            if (suffix.Length >= 2 &&
+                suffix[0] == '(' &&
+                suffix[suffix.Length - 1] == ')')
+            {
+                suffix = suffix.Substring(
+                    1,
+                    suffix.Length - 2
+                ).Trim();
+            }
 
             return ContainsOnlyDigits(suffix);
         }

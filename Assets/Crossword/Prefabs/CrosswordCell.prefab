@@ -280,8 +280,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CrosswordCell
   letterInput: {fileID: 2876425362377055078}
   correctLetter: 
-  normalColor: {r: 1, g: 1, b: 1, a: 1}
-  givenLetterTextColor: {r: 0.21568628, g: 0.21568628, b: 0.21568628, a: 1}
+  normalColor: {r: 0.9098039, g: 0.8784314, b: 0.8235294, a: 1}
+  givenLetterTextColor: {r: 0.2, g: 0.16470589, b: 0.13725491, a: 1}
   correctColor: {r: 0.3, g: 1, b: 0.3, a: 1}
   wrongColor: {r: 0.990566, g: 0.107467085, b: 0.107467085, a: 1}
 --- !u!1 &6706655872147860561

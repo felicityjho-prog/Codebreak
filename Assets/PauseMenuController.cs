@@ -27,6 +27,11 @@ public class PauseMenuController : MonoBehaviour
     [SerializeField] private GameObject room3Root;
     [SerializeField] private Room3GameOverController room3GameOverController;
 
+    [Header("Current Room Detection")]
+    [SerializeField] private GameObject room1GameManager;
+    [SerializeField] private GameObject room2GameManager;
+    [SerializeField] private GameObject room3GameManager;
+
     private bool isPaused;
     private bool isOpeningOptions;
     private bool isClosingOptions;
@@ -42,6 +47,12 @@ public class PauseMenuController : MonoBehaviour
     private CursorLockMode previousCursorLockState;
     private bool previousCursorVisible;
 
+    [Header("Cinematic Lock")]
+    private bool pauseLockedByCinematic;
+    private bool pauseButtonOriginalState;
+    private bool pauseButtonStateCached;
+    private bool cinematicLockClosedPause;
+
     private const float OptionsButtonSoundDelay = 0.15f;
     private const float MainMenuButtonSoundDelay = 0.4f;
 
@@ -54,6 +65,10 @@ public class PauseMenuController : MonoBehaviour
         Time.timeScale = 1f;
         AudioListener.pause = false;
     }
+
+    // =====================================================
+    // START
+    // =====================================================
 
     private void Start()
     {
@@ -72,29 +87,120 @@ public class PauseMenuController : MonoBehaviour
     }
 
     // =====================================================
+    // CINEMATIC LOCK
+    // =====================================================
+
+    public void SetCinematicLock(bool locked)
+    {
+        if (pauseLockedByCinematic == locked)
+            return;
+
+        pauseLockedByCinematic = locked;
+
+        if (locked)
+        {
+            // Remember the pause button's current visibility.
+            if (pauseButton != null)
+            {
+                pauseButtonOriginalState = pauseButton.activeSelf;
+                pauseButtonStateCached = true;
+
+                pauseButton.SetActive(false);
+            }
+
+            // Hide the complete pause overlay.
+            if (pauseOverlay != null)
+                pauseOverlay.SetActive(false);
+
+            // If paused, restore time/audio so the sequence can run.
+            if (isPaused)
+            {
+                cinematicLockClosedPause = true;
+
+                Time.timeScale =
+                    previousTimeScale > 0f ? previousTimeScale : 1f;
+
+                AudioListener.pause = audioWasPaused;
+
+                isPaused = false;
+                isOpeningOptions = false;
+                isClosingOptions = false;
+
+                if (EventSystem.current != null)
+                    EventSystem.current.SetSelectedGameObject(null);
+            }
+
+            Debug.Log("Cinematic lock enabled. Pause menu hidden.");
+        }
+        else
+        {
+            // Restore pause-button visibility.
+            if (pauseButton != null && pauseButtonStateCached)
+                pauseButton.SetActive(pauseButtonOriginalState);
+
+            pauseButtonStateCached = false;
+
+            // Restore state saved by PauseGame if needed.
+            if (cinematicLockClosedPause)
+            {
+                if (playerMovement != null)
+                    playerMovement.enabled = movementWasEnabled;
+
+                if (playerController != null)
+                {
+                    playerController.enabled = controllerWasEnabled;
+
+                    if (controllerWasEnabled)
+                    {
+                        if (lookWasEnabled)
+                            playerController.EnableLook();
+                        else
+                            playerController.DisableLook();
+                    }
+                }
+
+                Cursor.lockState = previousCursorLockState;
+                Cursor.visible = previousCursorVisible;
+
+                cinematicLockClosedPause = false;
+            }
+
+            Debug.Log("Cinematic lock disabled. Pause menu available.");
+        }
+    }
+
+    // =====================================================
     // PAUSE GAME
     // =====================================================
 
     public void PauseGame()
     {
-        if (isPaused || pauseOverlay == null)
+        if (pauseLockedByCinematic ||
+            isPaused ||
+            pauseOverlay == null)
+        {
             return;
+        }
 
         previousTimeScale =
             Time.timeScale > 0f ? Time.timeScale : 1f;
 
         audioWasPaused = AudioListener.pause;
+
         previousCursorLockState = Cursor.lockState;
         previousCursorVisible = Cursor.visible;
 
         movementWasEnabled =
-            playerMovement != null && playerMovement.enabled;
+            playerMovement != null &&
+            playerMovement.enabled;
 
         controllerWasEnabled =
-            playerController != null && playerController.enabled;
+            playerController != null &&
+            playerController.enabled;
 
         lookWasEnabled =
-            playerController != null && playerController.IsLookEnabled;
+            playerController != null &&
+            playerController.IsLookEnabled;
 
         if (playerMovement != null)
             playerMovement.enabled = false;
@@ -129,8 +235,12 @@ public class PauseMenuController : MonoBehaviour
 
     public void OpenOptions()
     {
-        if (!isPaused || isOpeningOptions)
+        if (pauseLockedByCinematic ||
+            !isPaused ||
+            isOpeningOptions)
+        {
             return;
+        }
 
         if (pauseMenuCard == null || pauseSettingsPanel == null)
         {
@@ -139,6 +249,7 @@ public class PauseMenuController : MonoBehaviour
                 "in the PauseMenuController Inspector.",
                 this
             );
+
             return;
         }
 
@@ -152,7 +263,7 @@ public class PauseMenuController : MonoBehaviour
             OptionsButtonSoundDelay
         );
 
-        if (!isPaused)
+        if (!isPaused || pauseLockedByCinematic)
         {
             isOpeningOptions = false;
             yield break;
@@ -175,8 +286,12 @@ public class PauseMenuController : MonoBehaviour
 
     public void CloseOptions()
     {
-        if (!isPaused || isClosingOptions)
+        if (pauseLockedByCinematic ||
+            !isPaused ||
+            isClosingOptions)
+        {
             return;
+        }
 
         if (pauseSettingsPanel == null || pauseMenuCard == null)
         {
@@ -185,6 +300,7 @@ public class PauseMenuController : MonoBehaviour
                 "in the PauseMenuController Inspector.",
                 this
             );
+
             return;
         }
 
@@ -198,7 +314,7 @@ public class PauseMenuController : MonoBehaviour
             OptionsButtonSoundDelay
         );
 
-        if (!isPaused)
+        if (!isPaused || pauseLockedByCinematic)
         {
             isClosingOptions = false;
             yield break;
@@ -222,7 +338,7 @@ public class PauseMenuController : MonoBehaviour
 
     public void ResumeGame()
     {
-        if (!isPaused)
+        if (pauseLockedByCinematic || !isPaused)
             return;
 
         if (pauseOverlay != null)
@@ -269,13 +385,59 @@ public class PauseMenuController : MonoBehaviour
 
     public void RestartChallenge()
     {
-        Debug.Log("RESTARTING CURRENT CHALLENGE...");
+        if (pauseLockedByCinematic)
+            return;
 
-        // Restore time and audio before resetting a room.
+        // =============================================
+        // DETERMINE CURRENT ROOM USING GAME MANAGERS
+        // =============================================
+
+        bool isRoom1Active =
+            room1GameManager != null &&
+            room1GameManager.activeInHierarchy;
+
+        bool isRoom2Active =
+            room2GameManager != null &&
+            room2GameManager.activeInHierarchy;
+
+        bool isRoom3Active =
+            room3GameManager != null &&
+            room3GameManager.activeInHierarchy;
+
+        Debug.Log(
+            $"RESTART MANAGER CHECK | " +
+            $"Room1: {isRoom1Active} | " +
+            $"Room2: {isRoom2Active} | " +
+            $"Room3: {isRoom3Active}",
+            this
+        );
+
+        int activeManagerCount = 0;
+
+        if (isRoom1Active) activeManagerCount++;
+        if (isRoom2Active) activeManagerCount++;
+        if (isRoom3Active) activeManagerCount++;
+
+        // Do not restart the wrong room if the state is ambiguous.
+        if (activeManagerCount != 1)
+        {
+            Debug.LogError(
+                "RESTART CANCELLED: Exactly one Room Game Manager " +
+                "must be active. Check the Game Manager assignments " +
+                "and active states in the Inspector.",
+                this
+            );
+
+            return;
+        }
+
+        // =============================================
+        // RESTORE TIME AND AUDIO
+        // =============================================
+
         Time.timeScale = 1f;
         AudioListener.pause = false;
 
-        // Hide the pause overlay.
         if (pauseOverlay != null)
             pauseOverlay.SetActive(false);
 
@@ -283,54 +445,11 @@ public class PauseMenuController : MonoBehaviour
         isOpeningOptions = false;
         isClosingOptions = false;
 
-        // -------------------------------------------------
-        // ROOM 3
-        // -------------------------------------------------
+        // =============================================
+        // ROOM 1 RESTART
+        // =============================================
 
-        if (room3Root != null && room3Root.activeInHierarchy)
-        {
-            if (room3GameOverController == null)
-            {
-                Debug.LogError(
-                    "Room3GameOverController is not assigned " +
-                    "in PauseMenuController Inspector!",
-                    this
-                );
-                return;
-            }
-
-            room3GameOverController.RestartRoom3();
-
-            Debug.Log("ROOM 3 RESTART REQUESTED!");
-            return;
-        }
-
-        // -------------------------------------------------
-        // ROOM 2
-        // -------------------------------------------------
-
-        if (room2Root != null && room2Root.activeInHierarchy)
-        {
-            if (room2GameOverController == null)
-            {
-                Debug.LogError(
-                    "Room2GameOverController is not assigned!",
-                    this
-                );
-                return;
-            }
-
-            room2GameOverController.TryAgain();
-
-            Debug.Log("ROOM 2 RESTART COMPLETE!");
-            return;
-        }
-
-        // -------------------------------------------------
-        // ROOM 1
-        // -------------------------------------------------
-
-        if (room1Root != null && room1Root.activeInHierarchy)
+        if (isRoom1Active)
         {
             if (room1GameOverController == null)
             {
@@ -341,18 +460,53 @@ public class PauseMenuController : MonoBehaviour
                 return;
             }
 
-            room1GameOverController.RestartFromHallway();
+            Debug.Log("RESTART ROUTED TO ROOM 1.", this);
 
-            Debug.Log("ROOM 1 RESTART COMPLETE!");
+            room1GameOverController.RestartFromHallway();
             return;
         }
 
-        Debug.LogError(
-            "Cannot determine the current room. " +
-            "Check the Room 1 Root, Room 2 Root, " +
-            "and Room 3 Root assignments.",
-            this
-        );
+        // =============================================
+        // ROOM 2 RESTART
+        // =============================================
+
+        if (isRoom2Active)
+        {
+            if (room2GameOverController == null)
+            {
+                Debug.LogError(
+                    "Room2GameOverController is not assigned!",
+                    this
+                );
+                return;
+            }
+
+            Debug.Log("RESTART ROUTED TO ROOM 2.", this);
+
+            room2GameOverController.TryAgain();
+            return;
+        }
+
+        // =============================================
+        // ROOM 3 RESTART
+        // =============================================
+
+        if (isRoom3Active)
+        {
+            if (room3GameOverController == null)
+            {
+                Debug.LogError(
+                    "Room3GameOverController is not assigned!",
+                    this
+                );
+                return;
+            }
+
+            Debug.Log("RESTART ROUTED TO ROOM 3.", this);
+
+            room3GameOverController.RestartRoom3();
+            return;
+        }
     }
 
     // =====================================================
@@ -386,7 +540,7 @@ public class PauseMenuController : MonoBehaviour
 
     public void ShowPauseButton()
     {
-        if (pauseButton != null)
+        if (pauseButton != null && !pauseLockedByCinematic)
             pauseButton.SetActive(true);
     }
 
@@ -396,7 +550,7 @@ public class PauseMenuController : MonoBehaviour
 
     public void ReturnToMainMenu()
     {
-        if (isReturningToMainMenu)
+        if (pauseLockedByCinematic || isReturningToMainMenu)
             return;
 
         isReturningToMainMenu = true;
@@ -427,5 +581,11 @@ public class PauseMenuController : MonoBehaviour
     public bool IsPaused()
     {
         return isPaused;
+    }
+
+    // Optional: lets other scripts check if pause is locked.
+    public bool IsCinematicLocked()
+    {
+        return pauseLockedByCinematic;
     }
 }

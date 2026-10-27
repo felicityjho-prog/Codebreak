@@ -1,5 +1,4 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 
 public class SudokuCell : MonoBehaviour
@@ -31,16 +30,12 @@ public class SudokuCell : MonoBehaviour
     {
         if (inputField == null)
         {
-            inputField =
-                GetComponentInChildren<TMP_InputField>(true);
+            inputField = GetComponentInChildren<TMP_InputField>(true);
         }
 
         if (inputField == null)
         {
-            Debug.LogError(
-                "TMP_InputField NOT FOUND on SudokuCell!",
-                this
-            );
+            Debug.LogError("TMP_InputField NOT FOUND on SudokuCell!", this);
         }
     }
 
@@ -53,13 +48,8 @@ public class SudokuCell : MonoBehaviour
         if (inputField == null)
             return;
 
-        inputField.contentType =
-            TMP_InputField.ContentType.IntegerNumber;
-
-        // Allow only Sudoku numbers 1 to 6.
+        inputField.contentType = TMP_InputField.ContentType.IntegerNumber;
         inputField.onValidateInput = ValidateSudokuInput;
-
-        // One number per cell.
         inputField.characterLimit = 1;
 
         if (inputField.textComponent != null)
@@ -67,10 +57,8 @@ public class SudokuCell : MonoBehaviour
             inputField.textComponent.gameObject.SetActive(true);
             inputField.textComponent.color = Color.black;
             inputField.textComponent.fontSize = 36;
-            inputField.textComponent.alignment =
-                TextAlignmentOptions.Center;
-            inputField.textComponent.fontStyle =
-                FontStyles.Bold;
+            inputField.textComponent.alignment = TextAlignmentOptions.Center;
+            inputField.textComponent.fontStyle = FontStyles.Bold;
         }
     }
 
@@ -78,18 +66,11 @@ public class SudokuCell : MonoBehaviour
     // VALIDATE INPUT: ALLOW ONLY NUMBERS 1 TO 6
     // =========================================================
 
-    private char ValidateSudokuInput(
-        string text,
-        int charIndex,
-        char addedChar
-    )
+    private char ValidateSudokuInput(string text, int charIndex, char addedChar)
     {
         if (addedChar >= '1' && addedChar <= '6')
-        {
             return addedChar;
-        }
 
-        // Reject 0, 7, 8, 9, letters, and other characters.
         return '\0';
     }
 
@@ -97,12 +78,7 @@ public class SudokuCell : MonoBehaviour
     // SETUP CELL
     // =========================================================
 
-    public void Setup(
-        int given,
-        int answer,
-        bool canEdit,
-        SudokuManager manager
-    )
+    public void Setup(int given, int answer, bool canEdit, SudokuManager manager)
     {
         givenNumber = given;
         correctAnswer = answer;
@@ -113,84 +89,56 @@ public class SudokuCell : MonoBehaviour
 
         if (inputField == null)
         {
-            Debug.LogError(
-                "TMP_InputField NOT FOUND!",
-                this
-            );
-
+            Debug.LogError("TMP_InputField NOT FOUND!", this);
             return;
         }
 
         PrepareInputField();
 
-        // =====================================================
         // GIVEN NUMBER: CANNOT BE EDITED
-        // =====================================================
-
         if (!editable)
         {
             inputField.onEndEdit.RemoveListener(CheckAnswer);
-
-            inputField.text = givenNumber.ToString();
+            inputField.SetTextWithoutNotify(givenNumber.ToString());
             inputField.interactable = false;
             inputField.readOnly = true;
 
             if (inputField.image != null)
-            {
                 inputField.image.color = Color.white;
-            }
 
             if (inputField.textComponent != null)
             {
                 inputField.textComponent.gameObject.SetActive(true);
-                inputField.textComponent.text =
-                    givenNumber.ToString();
+                inputField.textComponent.text = givenNumber.ToString();
                 inputField.textComponent.color = Color.black;
                 inputField.textComponent.fontSize = 36;
-                inputField.textComponent.alignment =
-                    TextAlignmentOptions.Center;
-                inputField.textComponent.fontStyle =
-                    FontStyles.Bold;
+                inputField.textComponent.alignment = TextAlignmentOptions.Center;
+                inputField.textComponent.fontStyle = FontStyles.Bold;
             }
         }
-
-        // =====================================================
         // PLAYER CELL: EDITABLE
-        // =====================================================
-
         else
         {
-            inputField.text = "";
+            inputField.onEndEdit.RemoveListener(CheckAnswer);
+            inputField.SetTextWithoutNotify(string.Empty);
             inputField.interactable = true;
             inputField.readOnly = false;
-
-            inputField.contentType =
-                TMP_InputField.ContentType.IntegerNumber;
-
+            inputField.contentType = TMP_InputField.ContentType.IntegerNumber;
             inputField.characterLimit = 1;
-
-            // Reapply validation after setting contentType.
             inputField.onValidateInput = ValidateSudokuInput;
 
             if (inputField.image != null)
-            {
                 inputField.image.color = Color.white;
-            }
 
             if (inputField.textComponent != null)
             {
                 inputField.textComponent.gameObject.SetActive(true);
                 inputField.textComponent.color = Color.black;
                 inputField.textComponent.fontSize = 36;
-                inputField.textComponent.alignment =
-                    TextAlignmentOptions.Center;
-                inputField.textComponent.fontStyle =
-                    FontStyles.Normal;
+                inputField.textComponent.alignment = TextAlignmentOptions.Center;
+                inputField.textComponent.fontStyle = FontStyles.Normal;
             }
 
-            // Prevent duplicate listeners without removing
-            // unrelated listeners belonging to other systems.
-            inputField.onEndEdit.RemoveListener(CheckAnswer);
             inputField.onEndEdit.AddListener(CheckAnswer);
         }
     }
@@ -204,79 +152,90 @@ public class SudokuCell : MonoBehaviour
         if (!editable)
             return;
 
-        // Empty input does not count as a wrong answer.
         if (string.IsNullOrEmpty(playerAnswer))
             return;
 
         if (!int.TryParse(playerAnswer, out int playerNumber))
             return;
 
-        // Extra safety check: Sudoku accepts numbers 1 to 6 only.
         if (playerNumber < 1 || playerNumber > 6)
             return;
 
-        // =====================================================
-        // CORRECT ANSWER
-        // =====================================================
-
         if (playerNumber == correctAnswer)
         {
-            Debug.Log(
-                "CORRECT Sudoku answer: " + playerNumber,
-                this
-            );
+            Debug.Log("CORRECT Sudoku answer: " + playerNumber, this);
 
             if (inputField.image != null)
-            {
                 inputField.image.color = Color.green;
-            }
 
             if (inputField.textComponent != null)
-            {
                 inputField.textComponent.color = Color.black;
-            }
-
-            // No timer penalty for a correct answer.
 
             if (sudokuManager != null)
-            {
                 sudokuManager.CheckSudokuComplete();
-            }
         }
-
-        // =====================================================
-        // WRONG ANSWER
-        // =====================================================
-
         else
         {
-            Debug.Log(
-                "WRONG Sudoku answer: " + playerNumber,
-                this
-            );
+            Debug.Log("WRONG Sudoku answer: " + playerNumber, this);
 
             if (inputField.image != null)
-            {
                 inputField.image.color = Color.red;
-            }
 
             if (inputField.textComponent != null)
-            {
                 inputField.textComponent.color = Color.black;
-            }
 
-            // Play wrong-answer sound.
             if (sudokuManager != null)
-            {
                 sudokuManager.PlayWrongAnswerSound();
-            }
 
-            // Deduct 10 seconds through the existing timer.
             if (Room2ChallengeTimer.Instance != null)
-            {
                 Room2ChallengeTimer.Instance.WrongAnswer();
-            }
         }
+    }
+
+    // =========================================================
+    // HINT HELPERS
+    // =========================================================
+
+    // Used by SudokuManager to prefer empty cells for hints.
+    public bool IsEditableAndEmpty()
+    {
+        return editable && inputField != null && string.IsNullOrWhiteSpace(inputField.text);
+    }
+
+    // Returns true when this editable cell is blank or incorrect.
+    public bool NeedsHint()
+    {
+        return editable && !IsCorrect();
+    }
+
+    // Fills this cell with its correct answer and locks it.
+    // This deliberately does not invoke CheckAnswer, so a hint
+    // cannot trigger wrong-answer audio or timer penalties.
+    public bool ApplyHint()
+    {
+        if (!editable || inputField == null || IsCorrect())
+            return false;
+
+        inputField.onEndEdit.RemoveListener(CheckAnswer);
+        inputField.SetTextWithoutNotify(correctAnswer.ToString());
+        inputField.interactable = false;
+        inputField.readOnly = true;
+        editable = false;
+
+        if (inputField.image != null)
+            inputField.image.color = new Color32(199, 185, 149, 255); // Muted beige-gold
+
+        if (inputField.textComponent != null)
+        {
+            inputField.textComponent.gameObject.SetActive(true);
+            inputField.textComponent.text = correctAnswer.ToString();
+            inputField.textComponent.color = Color.black;
+            inputField.textComponent.fontSize = 36;
+            inputField.textComponent.alignment = TextAlignmentOptions.Center;
+            inputField.textComponent.fontStyle = FontStyles.Bold;
+        }
+
+        return true;
     }
 
     // =========================================================
@@ -285,7 +244,6 @@ public class SudokuCell : MonoBehaviour
 
     public bool IsCorrect()
     {
-        // Given numbers are fixed and already correct.
         if (!editable)
             return true;
 

@@ -1,7 +1,9 @@
 ﻿
 using System.Collections;
 using System.Text;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SudokuManager : MonoBehaviour
 {
@@ -29,6 +31,13 @@ public class SudokuManager : MonoBehaviour
 
     [Header("Room 2 Instruction")]
     public Room2InstructionManager instructionManager;
+
+    [Header("Sudoku Hints")]
+    [Min(0)] public int maxHints = 2;
+    public TMP_Text hintButtonText;
+    public Button hintButton;
+
+    private int hintsRemaining;
 
     // =========================================================
     // ORIGINAL PUZZLE
@@ -85,6 +94,10 @@ public class SudokuManager : MonoBehaviour
     {
         puzzleCompleted = false;
 
+        FindHintUI();
+        hintsRemaining = Mathf.Max(0, maxHints);
+        UpdateHintUI();
+
         if (completionBanner != null)
         {
             completionBanner.SetActive(false);
@@ -93,6 +106,112 @@ public class SudokuManager : MonoBehaviour
         // Generate a randomized puzzle on initial play.
         GenerateRandomPuzzle();
         GenerateBoard();
+    }
+
+    // =========================================================
+    // HINT UI SETUP
+    // Automatically finds the HintButton if it is a child
+    // of the assigned Sudoku Panel. Inspector references can
+    // also be assigned manually.
+    // =========================================================
+
+    private void FindHintUI()
+    {
+        if (sudokuPanel == null)
+            return;
+
+        Transform hintTransform = sudokuPanel.transform.Find("HintButton");
+        if (hintTransform == null)
+            return;
+
+        if (hintButton == null)
+            hintButton = hintTransform.GetComponent<Button>();
+
+        if (hintButtonText == null)
+            hintButtonText = hintTransform.GetComponentInChildren<TMP_Text>(true);
+    }
+
+    private void UpdateHintUI()
+    {
+        if (hintButtonText != null)
+        {
+            hintButtonText.text = "HINT (" + hintsRemaining + " LEFT)";
+        }
+
+        if (hintButton == null && hintButtonText != null)
+        {
+            hintButton = hintButtonText.GetComponentInParent<Button>();
+        }
+
+        if (hintButton != null)
+        {
+            hintButton.interactable = hintsRemaining > 0 && !puzzleCompleted;
+        }
+    }
+
+    // =========================================================
+    // USE HINT
+    // Reveals one correct answer without triggering a wrong-
+    // answer sound or timer penalty. Empty cells are preferred.
+    // =========================================================
+
+    public void UseHint()
+    {
+        if (puzzleCompleted)
+            return;
+
+        if (hintsRemaining <= 0)
+        {
+            UpdateHintUI();
+            return;
+        }
+
+        if (sudokuGrid == null)
+        {
+            Debug.LogWarning("SudokuManager: Sudoku Grid is not assigned.", this);
+            return;
+        }
+
+        SudokuCell[] cells = sudokuGrid.GetComponentsInChildren<SudokuCell>(true);
+        SudokuCell targetCell = null;
+
+        // First prefer an empty editable cell.
+        foreach (SudokuCell cell in cells)
+        {
+            if (cell != null && cell.IsEditableAndEmpty())
+            {
+                targetCell = cell;
+                break;
+            }
+        }
+
+        // If no empty cells remain, replace an incorrect entry.
+        if (targetCell == null)
+        {
+            foreach (SudokuCell cell in cells)
+            {
+                if (cell != null && cell.NeedsHint())
+                {
+                    targetCell = cell;
+                    break;
+                }
+            }
+        }
+
+        if (targetCell == null)
+        {
+            Debug.Log("Sudoku hint not needed: all editable entries are already correct.", this);
+            return;
+        }
+
+        if (targetCell.ApplyHint())
+        {
+            hintsRemaining--;
+            UpdateHintUI();
+
+            Debug.Log("Sudoku hint used. Remaining hints: " + hintsRemaining, this);
+            CheckSudokuComplete();
+        }
     }
 
     // =========================================================
@@ -413,6 +532,7 @@ public class SudokuManager : MonoBehaviour
         }
 
         puzzleCompleted = true;
+        UpdateHintUI();
         ShowCompletion();
     }
 
@@ -512,8 +632,11 @@ public class SudokuManager : MonoBehaviour
         // Stop the old completion coroutine.
         StopAllCoroutines();
 
-        // Reset completion state.
+        // Reset completion and hint states.
         puzzleCompleted = false;
+        hintsRemaining = Mathf.Max(0, maxHints);
+        FindHintUI();
+        UpdateHintUI();
 
         // Hide completion banner.
         if (completionBanner != null)
