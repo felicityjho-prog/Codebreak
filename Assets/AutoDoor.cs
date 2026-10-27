@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
@@ -12,7 +13,6 @@ public class AutoDoor : MonoBehaviour
     public Collider doorCollider;
 
     // Enable only for doors whose trigger reports player occupancy separately.
-    // This keeps existing AutoDoor instances on other doors on their legacy behavior.
     public bool occupancyControlled = false;
     public float openSpeedDegreesPerSecond = 60f;
     public float closeSpeedDegreesPerSecond = 60f;
@@ -23,19 +23,24 @@ public class AutoDoor : MonoBehaviour
     public float interactionDistance = 3.8f;
     public GameObject interactionPrompt;
 
+    [Header("Door Opening Sound")]
+    public AudioSource doorAudioSource;
+    public AudioClip doorOpenSound;
+    [Range(0f, 1f)]
+    public float doorSoundVolume = 1f;
+
     private Transform playerTransform;
     private TMP_Text interactionPromptText;
     private bool hasOpenedManually = false;
 
-    
-private Quaternion closedRotation;
+    private Quaternion closedRotation;
     private Quaternion openRotation;
 
     private bool isOpen = false;
     private bool playerInside = false;
     private float closeTimer = 0f;
 
-void Start()
+    void Start()
     {
         if (doorPivot == null)
         {
@@ -46,25 +51,31 @@ void Start()
         closedRotation = doorPivot.localRotation;
 
         float direction = openRight ? 1f : -1f;
-        openRotation = closedRotation * Quaternion.Euler(0, openAngle * direction, 0);
+        openRotation = closedRotation *
+            Quaternion.Euler(0, openAngle * direction, 0);
 
         if (manualOneTime)
         {
-            GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+            GameObject playerObject =
+                GameObject.FindGameObjectWithTag("Player");
+
             if (playerObject != null)
                 playerTransform = playerObject.transform;
 
             if (interactionPrompt != null)
             {
-                interactionPromptText = interactionPrompt.GetComponentInChildren<TMP_Text>(true);
+                interactionPromptText =
+                    interactionPrompt.GetComponentInChildren<TMP_Text>(true);
+
                 if (interactionPromptText != null)
                     interactionPromptText.text = "[E] TO OPEN";
+
                 interactionPrompt.SetActive(false);
             }
         }
     }
 
-void Update()
+    void Update()
     {
         if (manualOneTime)
         {
@@ -96,7 +107,7 @@ void Update()
         }
     }
 
-private void UpdateManualOneTimeDoor()
+    private void UpdateManualOneTimeDoor()
     {
         if (doorPivot == null)
             return;
@@ -105,25 +116,44 @@ private void UpdateManualOneTimeDoor()
         {
             if (playerTransform == null)
             {
-                GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+                GameObject playerObject =
+                    GameObject.FindGameObjectWithTag("Player");
+
                 if (playerObject != null)
                     playerTransform = playerObject.transform;
             }
 
             bool playerInRange = playerTransform != null &&
-                Vector3.Distance(playerTransform.position, doorPivot.position) <= Mathf.Max(0f, interactionDistance);
+                Vector3.Distance(
+                    playerTransform.position,
+                    doorPivot.position
+                ) <= Mathf.Max(0f, interactionDistance);
 
             if (interactionPrompt != null)
                 interactionPrompt.SetActive(playerInRange);
 
-            if (playerInRange && Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
+            if (playerInRange &&
+                Keyboard.current != null &&
+                Keyboard.current.eKey.wasPressedThisFrame)
             {
+                // Lock the interaction so the door can only open once.
                 hasOpenedManually = true;
+
+                // Play the opening sound only when E successfully opens it.
+                if (doorAudioSource != null && doorOpenSound != null)
+                {
+                    doorAudioSource.PlayOneShot(
+                        doorOpenSound,
+                        doorSoundVolume
+                    );
+                }
+
                 if (interactionPrompt != null)
                     interactionPrompt.SetActive(false);
             }
         }
-        else if (interactionPrompt != null && interactionPrompt.activeSelf)
+        else if (interactionPrompt != null &&
+                 interactionPrompt.activeSelf)
         {
             interactionPrompt.SetActive(false);
         }
@@ -133,11 +163,11 @@ private void UpdateManualOneTimeDoor()
             doorPivot.localRotation = Quaternion.RotateTowards(
                 doorPivot.localRotation,
                 openRotation,
-                Mathf.Max(0f, openSpeedDegreesPerSecond) * Time.deltaTime
+                Mathf.Max(0f, openSpeedDegreesPerSecond) *
+                Time.deltaTime
             );
         }
     }
-
 
     private void UpdateOccupancyControlledDoor()
     {
@@ -145,14 +175,20 @@ private void UpdateManualOneTimeDoor()
             return;
 
         bool shouldBeOpen = playerInside;
+
         if (!playerInside && closeTimer > 0f)
         {
             closeTimer = Mathf.Max(0f, closeTimer - Time.deltaTime);
             shouldBeOpen = closeTimer > 0f;
         }
 
-        Quaternion targetRotation = shouldBeOpen ? openRotation : closedRotation;
-        float rotationSpeed = shouldBeOpen ? openSpeedDegreesPerSecond : closeSpeedDegreesPerSecond;
+        Quaternion targetRotation =
+            shouldBeOpen ? openRotation : closedRotation;
+
+        float rotationSpeed = shouldBeOpen
+            ? openSpeedDegreesPerSecond
+            : closeSpeedDegreesPerSecond;
+
         doorPivot.localRotation = Quaternion.RotateTowards(
             doorPivot.localRotation,
             targetRotation,
@@ -160,27 +196,31 @@ private void UpdateManualOneTimeDoor()
         );
     }
 
-public void SetPlayerOccupied(bool occupied)
+    public void SetPlayerOccupied(bool occupied)
     {
-        if (manualOneTime || !occupancyControlled || playerInside == occupied)
+        if (manualOneTime || !occupancyControlled ||
+            playerInside == occupied)
             return;
 
         playerInside = occupied;
+
         if (occupied)
         {
             closeTimer = 0f;
+
             if (doorCollider != null)
                 doorCollider.enabled = false;
         }
         else
         {
             closeTimer = Mathf.Max(0f, closeGracePeriod);
+
             if (doorCollider != null)
                 doorCollider.enabled = true;
         }
     }
 
-void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (manualOneTime || occupancyControlled)
             return;
@@ -188,12 +228,13 @@ void OnTriggerEnter(Collider other)
         if (other.CompareTag("Player"))
         {
             isOpen = true;
+
             if (doorCollider != null)
                 doorCollider.enabled = false;
         }
     }
 
-void OnTriggerExit(Collider other)
+    void OnTriggerExit(Collider other)
     {
         if (manualOneTime || occupancyControlled)
             return;
@@ -201,42 +242,35 @@ void OnTriggerExit(Collider other)
         if (other.CompareTag("Player"))
         {
             isOpen = false;
+
             if (doorCollider != null)
                 doorCollider.enabled = true;
         }
     }
 
-
     public void ResetDoorToClosed()
     {
         if (doorPivot == null)
         {
-            Debug.LogWarning("Cannot reset door: Door Pivot is missing!");
+            Debug.LogWarning(
+                "Cannot reset door: Door Pivot is missing!"
+            );
             return;
         }
 
-        // Reset every door state.
         isOpen = false;
         playerInside = false;
         closeTimer = 0f;
         hasOpenedManually = false;
 
-        // Immediately restore the original closed rotation.
         doorPivot.localRotation = closedRotation;
 
-        // Restore the door collider.
         if (doorCollider != null)
-        {
             doorCollider.enabled = true;
-        }
 
-        // Hide the interaction prompt until the next update.
         if (interactionPrompt != null)
-        {
             interactionPrompt.SetActive(false);
-        }
 
         Debug.Log("ROOM 1 DOOR RESET TO CLOSED!");
     }
-
 }
