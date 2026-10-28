@@ -402,33 +402,59 @@ public class OpeningCinematicController : MonoBehaviour
         {
             PrepareOneShotAudio(alertSound);
             alertSound.Play();
+
             yield return WaitForAudioToFinish(alertSound);
         }
         else
         {
-            Debug.LogWarning("OpeningCinematicController: Warning sound AudioSource/clip is not assigned.", this);
+            Debug.LogWarning(
+                "OpeningCinematicController: Warning sound AudioSource/clip is not assigned.",
+                this
+            );
         }
 
         if (!cinematicActive || transitionStarted)
             yield break;
 
-        // 2. Play SystemMaleAlertAIVoice after the warning sound finishes.
-        if (systemMaleAlertAIVoice != null && systemMaleAlertAIVoice.clip != null)
+        // 2. Start the System Alert AI voice.
+        if (systemMaleAlertAIVoice != null &&
+            systemMaleAlertAIVoice.clip != null)
         {
             PrepareOneShotAudio(systemMaleAlertAIVoice);
             systemMaleAlertAIVoice.Play();
+
+            // IMPORTANT:
+            // Enable BEGIN MISSION as soon as the AI voice starts.
+            // The player no longer needs to wait for the voice to finish.
+            if (cinematicActive &&
+                !transitionStarted &&
+                beginMissionButton != null)
+            {
+                beginMissionButton.interactable = true;
+
+                Debug.Log(
+                    "BEGIN MISSION is available while the System Alert AI voice is playing."
+                );
+            }
+
+            // The AI voice continues playing unless the player clicks
+            // BEGIN MISSION, which stops the audio and starts the transition.
             yield return WaitForAudioToFinish(systemMaleAlertAIVoice);
         }
         else
         {
-            Debug.LogWarning("OpeningCinematicController: SystemMaleAlertAIVoice AudioSource/clip is not assigned.", this);
-        }
+            Debug.LogWarning(
+                "OpeningCinematicController: SystemMaleAlertAIVoice AudioSource/clip is not assigned.",
+                this
+            );
 
-        // 3. Only now may the player click BEGIN MISSION.
-        if (cinematicActive && !transitionStarted && beginMissionButton != null)
-        {
-            beginMissionButton.interactable = true;
-            Debug.Log("System alert audio finished. BEGIN MISSION is now available.");
+            // Still allow the player to proceed if no AI voice is assigned.
+            if (cinematicActive &&
+                !transitionStarted &&
+                beginMissionButton != null)
+            {
+                beginMissionButton.interactable = true;
+            }
         }
     }
 
