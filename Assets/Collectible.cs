@@ -6,6 +6,10 @@ public class Collectible : MonoBehaviour
 
     private void OnMouseDown()
     {
+        // ClickableObject handles items that use pickup animations.
+        if (GetComponent<ClickableObject>() != null)
+            return;
+
         if (collected)
             return;
 
@@ -29,6 +33,15 @@ public class Collectible : MonoBehaviour
     public void ResetCollectible()
     {
         collected = false;
+
+        ClickableObject clickable =
+            GetComponent<ClickableObject>();
+
+        if (clickable != null)
+        {
+            clickable.ResetInteractionState();
+        }
+
         gameObject.SetActive(true);
     }
 }

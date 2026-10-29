@@ -1,11 +1,18 @@
-
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Collections;
 
 public class ClickableObject : MonoBehaviour
 {
+    [Header("Room 1 Item")]
     public string itemName;
     public ChecklistManager checklistManager;
+
+    [Header("Pickup Animation")]
+    public Animator pickupAnimator;
+    public bool playPickupAnimation = true;
+    public string pickupTriggerName = "Pickup";
+    public float pickupAnimationDuration = 3.43f;
 
     [Header("Sound")]
     public AudioClip collectSound;
@@ -13,15 +20,17 @@ public class ClickableObject : MonoBehaviour
     [Range(0f, 1f)]
     public float collectVolume = 1f;
 
+    private bool interactionInProgress;
+
     private void OnMouseDown()
     {
-        // Don't suppress normal clicks when the pointer is over UI.
-        bool pointerOverUI =
-            EventSystem.current != null &&
-            EventSystem.current.IsPointerOverGameObject();
+        if (EventSystem.current != null &&
+            EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
 
-        // Let a valid item with its own sound take priority.
-        if (!pointerOverUI && WillPlayCollectSound())
+        if (WillPlayCollectSound())
         {
             MouseClickSound.SuppressClickSoundForCurrentFrame();
         }
@@ -36,44 +45,163 @@ public class ClickableObject : MonoBehaviour
                checklistManager.CanCollectItem(itemName);
     }
 
-    // Can also be called by the Center Dot interaction system.
     public void Interact()
     {
-        bool shouldPlayCollectSound = WillPlayCollectSound();
+        Debug.Log(
+            $"[PICKUP DEBUG] Interact: {itemName}"
+        );
 
-        // Preserve the existing checklist behavior.
-        if (checklistManager != null)
+        if (interactionInProgress)
+            return;
+
+        if (checklistManager == null)
         {
-            checklistManager.CollectItem(itemName);
+            Debug.LogWarning(
+                $"ChecklistManager missing on {name}!", this
+            );
+            return;
         }
 
-        // Play the item's sound only when it is valid.
-        if (shouldPlayCollectSound)
+        if (!checklistManager.CanCollectItem(itemName))
+        {
+            Debug.LogWarning(
+                $"Item cannot be collected: {itemName}", this
+            );
+            return;
+        }
+
+        StartCoroutine(CollectAfterPickup());
+    }
+
+    private IEnumerator CollectAfterPickup()
+    {
+        interactionInProgress = true;
+
+        bool hasCollectible =
+            GetComponent<Collectible>() != null;
+
+        bool canAnimate =
+            playPickupAnimation &&
+            pickupAnimator != null &&
+            HasPickupTrigger();
+
+        if (playPickupAnimation && !canAnimate)
+        {
+            Debug.LogWarning(
+                $"Pickup animation unavailable on {name}. " +
+                "Check the Animator and Pickup trigger.",
+                this
+            );
+        }
+
+        // Play animation before collecting the item.
+        if (canAnimate)
+        {
+            pickupAnimator.ResetTrigger(pickupTriggerName);
+            pickupAnimator.SetTrigger(pickupTriggerName);
+
+            Debug.Log(
+                $"[PICKUP DEBUG] Animation triggered: {itemName}"
+            );
+
+            yield return new WaitForSeconds(
+                Mathf.Max(0f, pickupAnimationDuration)
+            );
+        }
+
+        // Revalidate before completing collection.
+        if (checklistManager == null ||
+            !checklistManager.CanCollectItem(itemName))
+        {
+            Debug.LogWarning(
+                $"[PICKUP DEBUG] Collection cancelled: {itemName}"
+            );
+
+            interactionInProgress = false;
+            yield break;
+        }
+
+        // Preserve checklist behavior.
+        checklistManager.CollectItem(itemName);
+
+        // Preserve TaskManager counting for objects that
+        // originally had a Collectible component.
+        if (hasCollectible)
+        {
+            TaskManager taskManager =
+                FindFirstObjectByType<TaskManager>();
+
+            if (taskManager != null)
+            {
+                taskManager.CollectObject();
+            }
+            else
+            {
+                Debug.LogWarning("TaskManager not found!");
+            }
+        }
+
+        // Play collection sound once, after successful collection.
+        if (collectSound != null)
         {
             PlayCollectSound();
         }
 
-        // Preserve the existing object hiding behavior.
+        Debug.Log(
+            $"[PICKUP DEBUG] Collection completed: {itemName}"
+        );
+
         gameObject.SetActive(false);
+    }
+
+    private bool HasPickupTrigger()
+    {
+        if (pickupAnimator == null ||
+            pickupAnimator.runtimeAnimatorController == null)
+        {
+            return false;
+        }
+
+        foreach (AnimatorControllerParameter parameter
+                 in pickupAnimator.parameters)
+        {
+            if (parameter.name == pickupTriggerName &&
+                parameter.type ==
+                AnimatorControllerParameterType.Trigger)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void ResetInteractionState()
+    {
+        StopAllCoroutines();
+        interactionInProgress = false;
     }
 
     private void PlayCollectSound()
     {
-        GameObject soundObject = new GameObject("CollectSound2D");
+        GameObject soundObject =
+            new GameObject("CollectSound2D");
 
-        AudioSource source = soundObject.AddComponent<AudioSource>();
+        AudioSource source =
+            soundObject.AddComponent<AudioSource>();
 
         source.clip = collectSound;
         source.volume = collectVolume;
         source.pitch = 1f;
         source.loop = false;
         source.playOnAwake = false;
-
-        // 2D audio avoids distance-based volume reduction.
         source.spatialBlend = 0f;
 
         source.Play();
 
-        Destroy(soundObject, collectSound.length + 0.1f);
+        Destroy(
+            soundObject,
+            collectSound.length + 0.1f
+        );
     }
 }

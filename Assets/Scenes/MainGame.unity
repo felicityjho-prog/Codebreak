@@ -2124,7 +2124,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6048870051439391698, guid: 835fc35b1beed9140a43e923578603cc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.158
+      value: -1.582
       objectReference: {fileID: 0}
     - target: {fileID: 6048870051439391698, guid: 835fc35b1beed9140a43e923578603cc, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4069,6 +4069,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ClickableObject
   itemName: Green Vase
   checklistManager: {fileID: 1789237632}
+  pickupAnimator: {fileID: 1961550154}
+  playPickupAnimation: 1
+  pickupTriggerName: Pickup
+  pickupAnimationDuration: 0.8
   collectSound: {fileID: 8300000, guid: 1c43b2b5d6dd86b439cd499ba44844b7, type: 3}
   collectVolume: 1
 --- !u!65 &94631177
@@ -19414,11 +19418,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6004872233512053965, guid: 647691fdcf3b5b749abe7c57cfd99f20, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.008
+      value: -1.657
       objectReference: {fileID: 0}
     - target: {fileID: 6004872233512053965, guid: 647691fdcf3b5b749abe7c57cfd99f20, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.3231
+      value: 0.922
       objectReference: {fileID: 0}
     - target: {fileID: 6004872233512053965, guid: 647691fdcf3b5b749abe7c57cfd99f20, type: 3}
       propertyPath: m_LocalRotation.w
@@ -21496,7 +21500,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -45.393494, y: 0}
+  m_AnchoredPosition: {x: -45.393616, y: 0}
   m_SizeDelta: {x: -90.791, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &397352395
@@ -29809,15 +29813,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 704580570535150958, guid: 75087ca99ecc4264ab937b89c140d230, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.9441
+      value: -5.604
       objectReference: {fileID: 0}
     - target: {fileID: 704580570535150958, guid: 75087ca99ecc4264ab937b89c140d230, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.36
+      value: -0.454
       objectReference: {fileID: 0}
     - target: {fileID: 704580570535150958, guid: 75087ca99ecc4264ab937b89c140d230, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.0047
+      value: 0.008
       objectReference: {fileID: 0}
     - target: {fileID: 704580570535150958, guid: 75087ca99ecc4264ab937b89c140d230, type: 3}
       propertyPath: m_LocalRotation.w
@@ -30479,7 +30483,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4315302312925223385, guid: a15c4b10370dd354a8d5d0fb6d99e482, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.3470991
+      value: 0.97287494
       objectReference: {fileID: 0}
     - target: {fileID: 4315302312925223385, guid: a15c4b10370dd354a8d5d0fb6d99e482, type: 3}
       propertyPath: m_LocalPosition.x
@@ -30487,7 +30491,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4315302312925223385, guid: a15c4b10370dd354a8d5d0fb6d99e482, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.9102455
+      value: -2.1191
       objectReference: {fileID: 0}
     - target: {fileID: 4315302312925223385, guid: a15c4b10370dd354a8d5d0fb6d99e482, type: 3}
       propertyPath: m_LocalPosition.z
@@ -43608,6 +43612,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ClickableObject
   itemName: Cctv
   checklistManager: {fileID: 1789237632}
+  pickupAnimator: {fileID: 1961550154}
+  playPickupAnimation: 1
+  pickupTriggerName: Pickup
+  pickupAnimationDuration: 0.8
   collectSound: {fileID: 8300000, guid: 1c43b2b5d6dd86b439cd499ba44844b7, type: 3}
   collectVolume: 1
 --- !u!114 &773417014
@@ -51632,15 +51640,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8810104051542949492, guid: 0a77eef02d8d3634f83144e2c9415849, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.629
+      value: -0.525
       objectReference: {fileID: 0}
     - target: {fileID: 8810104051542949492, guid: 0a77eef02d8d3634f83144e2c9415849, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.445
+      value: -0.827
       objectReference: {fileID: 0}
     - target: {fileID: 8810104051542949492, guid: 0a77eef02d8d3634f83144e2c9415849, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.819
+      value: 0.372
       objectReference: {fileID: 0}
     - target: {fileID: 8810104051542949492, guid: 0a77eef02d8d3634f83144e2c9415849, type: 3}
       propertyPath: m_LocalRotation.w
@@ -67314,6 +67322,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1189626682}
   m_CullTransparentMesh: 1
+--- !u!1 &1192031800 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: cc6d082d040388f4b9a3d7f39dec0d59, type: 3}
+  m_PrefabInstance: {fileID: 1961550153}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1192562976
 GameObject:
   m_ObjectHideFlags: 0
@@ -71525,6 +71538,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ClickableObject
   itemName: Tablet
   checklistManager: {fileID: 1789237632}
+  pickupAnimator: {fileID: 1961550154}
+  playPickupAnimation: 1
+  pickupTriggerName: Pickup
+  pickupAnimationDuration: 0.8
   collectSound: {fileID: 8300000, guid: 1c43b2b5d6dd86b439cd499ba44844b7, type: 3}
   collectVolume: 1
 --- !u!114 &1274130928
@@ -76107,6 +76124,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ClickableObject
   itemName: Laptop
   checklistManager: {fileID: 1789237632}
+  pickupAnimator: {fileID: 1961550154}
+  playPickupAnimation: 1
+  pickupTriggerName: Pickup
+  pickupAnimationDuration: 0.8
   collectSound: {fileID: 8300000, guid: 1c43b2b5d6dd86b439cd499ba44844b7, type: 3}
   collectVolume: 1
 --- !u!114 &1382598706
@@ -80928,6 +80949,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ClickableObject
   itemName: Mouse
   checklistManager: {fileID: 1789237632}
+  pickupAnimator: {fileID: 1961550154}
+  playPickupAnimation: 1
+  pickupTriggerName: Pickup
+  pickupAnimationDuration: 0.8
   collectSound: {fileID: 8300000, guid: 1c43b2b5d6dd86b439cd499ba44844b7, type: 3}
   collectVolume: 1
 --- !u!114 &1455747411
@@ -81034,6 +81059,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ClickableObject
   itemName: Pencil
   checklistManager: {fileID: 1789237632}
+  pickupAnimator: {fileID: 1961550154}
+  playPickupAnimation: 1
+  pickupTriggerName: Pickup
+  pickupAnimationDuration: 0.8
   collectSound: {fileID: 8300000, guid: 1c43b2b5d6dd86b439cd499ba44844b7, type: 3}
   collectVolume: 1
 --- !u!114 &1458995366
@@ -85922,6 +85951,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ClickableObject
   itemName: Desk Clock
   checklistManager: {fileID: 1789237632}
+  pickupAnimator: {fileID: 1961550154}
+  playPickupAnimation: 1
+  pickupTriggerName: Pickup
+  pickupAnimationDuration: 0.8
   collectSound: {fileID: 8300000, guid: 1c43b2b5d6dd86b439cd499ba44844b7, type: 3}
   collectVolume: 1
 --- !u!65 &1543543815
@@ -86505,6 +86538,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ClickableObject
   itemName: Password Panel
   checklistManager: {fileID: 1789237632}
+  pickupAnimator: {fileID: 1961550154}
+  playPickupAnimation: 1
+  pickupTriggerName: Pickup
+  pickupAnimationDuration: 0.8
   collectSound: {fileID: 8300000, guid: 1c43b2b5d6dd86b439cd499ba44844b7, type: 3}
   collectVolume: 1
 --- !u!114 &1563126056
@@ -87053,6 +87090,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ClickableObject
   itemName: Fire Extinguisher
   checklistManager: {fileID: 1789237632}
+  pickupAnimator: {fileID: 1961550154}
+  playPickupAnimation: 1
+  pickupTriggerName: Pickup
+  pickupAnimationDuration: 0.8
   collectSound: {fileID: 8300000, guid: 1c43b2b5d6dd86b439cd499ba44844b7, type: 3}
   collectVolume: 1
 --- !u!114 &1571335324
@@ -101377,11 +101418,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8890510753198132191, guid: 747b2662eba846d43953b3eef63a53c6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.6552899
+      value: -0.005
       objectReference: {fileID: 0}
     - target: {fileID: 8890510753198132191, guid: 747b2662eba846d43953b3eef63a53c6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.9014702
+      value: 0.381
       objectReference: {fileID: 0}
     - target: {fileID: 8890510753198132191, guid: 747b2662eba846d43953b3eef63a53c6, type: 3}
       propertyPath: m_LocalRotation.w
@@ -102696,11 +102737,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3262773810817596328, guid: 5ea36f3d277aec04e91627000369e5b4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.8282763
+      value: 0.42
       objectReference: {fileID: 0}
     - target: {fileID: 3262773810817596328, guid: 5ea36f3d277aec04e91627000369e5b4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.341671
+      value: 0.81
       objectReference: {fileID: 0}
     - target: {fileID: 3262773810817596328, guid: 5ea36f3d277aec04e91627000369e5b4, type: 3}
       propertyPath: m_LocalRotation.w
@@ -110548,13 +110589,49 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cc6d082d040388f4b9a3d7f39dec0d59, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1961550155}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cc6d082d040388f4b9a3d7f39dec0d59, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1961550156}
   m_SourcePrefab: {fileID: 100100000, guid: cc6d082d040388f4b9a3d7f39dec0d59, type: 3}
 --- !u!95 &1961550154 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: cc6d082d040388f4b9a3d7f39dec0d59, type: 3}
   m_PrefabInstance: {fileID: 1961550153}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1961550155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1192031800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fff0960ef4ea6e04eac66b4a7fd2189d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Animation.Rigging::UnityEngine.Animations.Rigging.RigBuilder
+  m_RigLayers:
+  - m_Rig: {fileID: 0}
+    m_Active: 1
+  m_Effectors: []
+--- !u!114 &1961550156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1192031800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5f07ad50e6148048a7de12493ecf811, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupIKController
+  rightArmIK: {fileID: 0}
+  blendDuration: 0.12
 --- !u!1 &1963619527 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4400545033943908415, guid: 80cbb9df11318004a95e198e69e78a10, type: 3}
@@ -116870,6 +116947,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ClickableObject
   itemName: Electric Cable
   checklistManager: {fileID: 1789237632}
+  pickupAnimator: {fileID: 1961550154}
+  playPickupAnimation: 1
+  pickupTriggerName: Pickup
+  pickupAnimationDuration: 0.8
   collectSound: {fileID: 8300000, guid: 1c43b2b5d6dd86b439cd499ba44844b7, type: 3}
   collectVolume: 1
 --- !u!114 &2078227959
@@ -117201,6 +117282,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ClickableObject
   itemName: Mousepad
   checklistManager: {fileID: 1789237632}
+  pickupAnimator: {fileID: 1961550154}
+  playPickupAnimation: 1
+  pickupTriggerName: Pickup
+  pickupAnimationDuration: 0.8
   collectSound: {fileID: 8300000, guid: 1c43b2b5d6dd86b439cd499ba44844b7, type: 3}
   collectVolume: 1
 --- !u!114 &2082682645
@@ -120001,6 +120086,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ClickableObject
   itemName: TV Retro
   checklistManager: {fileID: 1789237632}
+  pickupAnimator: {fileID: 1961550154}
+  playPickupAnimation: 1
+  pickupTriggerName: Pickup
+  pickupAnimationDuration: 0.8
   collectSound: {fileID: 8300000, guid: 1c43b2b5d6dd86b439cd499ba44844b7, type: 3}
   collectVolume: 1
 --- !u!65 &2140828770
