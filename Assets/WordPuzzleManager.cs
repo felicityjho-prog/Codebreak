@@ -19,7 +19,7 @@ public class WordPuzzleManager : MonoBehaviour
 
     [Header("Puzzle Settings")]
     [Min(1)]
-    public int totalWords = 3;
+    public int totalWords = 5; // Set to 5 in the Inspector as well.
 
     public TMP_Text progressText;
     public TMP_Text resultText;
@@ -36,6 +36,7 @@ public class WordPuzzleManager : MonoBehaviour
     public Room2ChallengeTimer room2Timer;
     public Room2InstructionManager room2InstructionManager;
     public WordPuzzleInteraction wordPuzzleInteraction;
+    public Room2CompletionHudController room2CompletionHudController;
 
     [Header("Player Controls During Completion")]
     public PlayerMovement playerMovement;
@@ -76,6 +77,12 @@ public class WordPuzzleManager : MonoBehaviour
 
         new PuzzleWord("DEBUG",
             "The process of finding and fixing errors in a program."),
+
+        new PuzzleWord("CACHE",
+            "Temporary storage that helps data load faster."),
+
+        new PuzzleWord("INPUT",
+            "Data entered into a computer or program."),
     };
 
     // =========================================================
@@ -231,84 +238,90 @@ public class WordPuzzleManager : MonoBehaviour
     {
         roundWords.Clear();
 
-        List<PuzzleWord> shuffledBank =
-            new List<PuzzleWord>(wordBank);
-
-        ShuffleList(shuffledBank);
-
         int requestedWords = Mathf.Clamp(
             totalWords,
             1,
             wordBank.Length
         );
 
-        List<PuzzleWord> chosenWords =
-            shuffledBank.GetRange(0, requestedWords);
+        List<PuzzleWord> chosenWords = new List<PuzzleWord>();
+        string signature = "";
 
-        string signature = BuildSignature(chosenWords);
-
-        // Try not to use the exact same ordered round twice.
-        for (int attempt = 0;
-             signature == previousRoundSignature && attempt < 10;
-             attempt++)
+        // Choose a random set. The signature ignores order, so the same
+        // five questions will not count as a new round just because they
+        // appeared in a different sequence.
+        for (int attempt = 0; attempt < 20; attempt++)
         {
-            shuffledBank = new List<PuzzleWord>(wordBank);
+            List<PuzzleWord> shuffledBank =
+                new List<PuzzleWord>(wordBank);
+
             ShuffleList(shuffledBank);
 
-            chosenWords =
-                shuffledBank.GetRange(0, requestedWords);
-
+            chosenWords = shuffledBank.GetRange(0, requestedWords);
             signature = BuildSignature(chosenWords);
+
+            if (signature != previousRoundSignature)
+                break;
         }
 
-        // If the same sequence still occurs, change its order.
+        // Extra fallback: if random selection repeated the previous set,
+        // replace one selected word with a word that was not in that set.
+        // This is possible because the current bank has 8 words and each
+        // round selects 5.
         if (signature == previousRoundSignature &&
-            chosenWords.Count > 1)
+            chosenWords.Count > 0 &&
+            chosenWords.Count < wordBank.Length)
         {
-            int lastIndex = chosenWords.Count - 1;
-
-            PuzzleWord temp = chosenWords[0];
-            chosenWords[0] = chosenWords[lastIndex];
-            chosenWords[lastIndex] = temp;
-        }
-        else if (signature == previousRoundSignature &&
-                 chosenWords.Count == 1)
-        {
-            // If there is only one question, select a different one.
             foreach (PuzzleWord candidate in wordBank)
             {
-                if (candidate.answer != chosenWords[0].answer)
+                bool alreadySelected = false;
+
+                foreach (PuzzleWord selected in chosenWords)
+                {
+                    if (selected.answer == candidate.answer)
+                    {
+                        alreadySelected = true;
+                        break;
+                    }
+                }
+
+                if (!alreadySelected)
                 {
                     chosenWords[0] = candidate;
                     break;
                 }
             }
+
+            ShuffleList(chosenWords);
+            signature = BuildSignature(chosenWords);
         }
 
         roundWords.AddRange(chosenWords);
-
         previousRoundSignature = BuildSignature(roundWords);
 
         Debug.Log(
             "Word Scrabble selected " +
             roundWords.Count +
-            " random words for this round."
+            " random words from an " +
+            wordBank.Length +
+            "-word bank for this round: " +
+            string.Join(", ", roundWords.ConvertAll(word => word.answer))
         );
     }
 
+    // Creates a signature from the selected answers in sorted order.
+    // This detects a repeated combination even when its question order changes.
     private string BuildSignature(List<PuzzleWord> words)
     {
-        string signature = "";
+        List<string> answers = new List<string>();
 
         for (int i = 0; i < words.Count; i++)
         {
-            if (i > 0)
-                signature += "|";
-
-            signature += words[i].answer;
+            answers.Add(words[i].answer);
         }
 
-        return signature;
+        answers.Sort();
+        return string.Join("|", answers);
     }
 
     private void ShuffleList<T>(IList<T> list)
@@ -982,6 +995,32 @@ public class WordPuzzleManager : MonoBehaviour
             Debug.LogWarning(
                 "Room 2 Task Complete Panel is not assigned in the " +
                 "WordPuzzleManager Inspector."
+            );
+        }
+
+        // Hide the shared GlobalCanvas HUD while the Room 2 completion panel is shown.
+        // Room2CompletionHudController restores the previous HUD states automatically
+        // when the existing RoomSwitcher changes its current room to Room 3.
+        // This does not modify the Room 3 instruction panel or voice sequence.
+        if (room2CompletionHudController == null)
+        {
+            room2CompletionHudController =
+                FindFirstObjectByType<Room2CompletionHudController>(
+                    FindObjectsInactive.Include
+                );
+        }
+
+        if (room2CompletionHudController != null)
+        {
+            room2CompletionHudController.HideForRoom2Completion(
+                room2RoomSwitcher
+            );
+        }
+        else
+        {
+            Debug.LogWarning(
+                "Room2CompletionHudController was not found. " +
+                "The GlobalCanvas HUD will remain visible."
             );
         }
 
