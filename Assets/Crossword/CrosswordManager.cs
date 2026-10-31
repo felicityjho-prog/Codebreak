@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -9,7 +10,14 @@ public class CrosswordManager : MonoBehaviour
 {
     [Header("Grid")]
     public GameObject crosswordCellPrefab;
+
+    // Keep gridSize for compatibility with the existing Inspector value.
+    // gridSize = columns, gridRows = horizontal answer rows.
+    [Tooltip("Number of columns. Keep this at 6 to match the Grid Layout Group.")]
     public int gridSize = 6;
+
+    [Tooltip("Number of horizontal answer rows.")]
+    public int gridRows = 10;
 
     [Header("Colors")]
     public Color whiteCellColor = Color.white;
@@ -34,25 +42,52 @@ public class CrosswordManager : MonoBehaviour
 
     private bool challengeCompleted = false;
 
+    // =========================================================
+    // CROSSWORD PATTERN
+    // 10 ROWS x 6 COLUMNS
+    // 0 = PLAYABLE
+    // 1 = BLOCKED
+    // =========================================================
+
     private int[,] crosswordPattern =
     {
-        { 0, 0, 0, 1, 1, 1 },
-        { 0, 0, 0, 1, 1, 1 },
-        { 0, 0, 0, 0, 0, 1 },
-        { 1, 0, 0, 0, 0, 0 },
-        { 1, 1, 1, 0, 0, 0 },
-        { 1, 1, 1, 0, 0, 0 }
+        { 0, 0, 0, 1, 1, 1 }, // API
+        { 0, 0, 0, 1, 1, 1 }, // RAM
+        { 0, 0, 0, 0, 0, 1 }, // CLOUD
+        { 1, 0, 0, 0, 0, 0 }, // QUERY
+        { 0, 0, 0, 0, 0, 0 }, // BINARY
+        { 1, 1, 1, 0, 0, 0 }, // WEB
+        { 0, 0, 0, 0, 0, 1 }, // LOGIN
+        { 1, 0, 0, 0, 0, 0 }, // VIRUS
+        { 0, 0, 0, 0, 0, 1 }, // PIXEL
+        { 0, 0, 0, 0, 0, 0 }  // SERVER
     };
+
+    // =========================================================
+    // ANSWER GRID
+    // Each answer occupies one horizontal row.
+    // Empty strings represent blocked cells.
+    // =========================================================
 
     private string[,] answerGrid =
     {
-        { "A", "P", "I", "",  "",  "" },
-        { "R", "A", "M", "",  "",  "" },
-        { "C", "L", "O", "U", "D", "" },
+        { "A", "P", "I", "",  "",  ""  },
+        { "R", "A", "M", "",  "",  ""  },
+        { "C", "L", "O", "U", "D", ""  },
         { "",  "Q", "U", "E", "R", "Y" },
-        { "",  "",  "",  "C", "P", "U" },
-        { "",  "",  "",  "W", "E", "B" }
+        { "B", "I", "N", "A", "R", "Y" },
+        { "",  "",  "",  "W", "E", "B" },
+        { "L", "O", "G", "I", "N", ""  },
+        { "",  "V", "I", "R", "U", "S" },
+        { "P", "I", "X", "E", "L", ""  },
+        { "S", "E", "R", "V", "E", "R" }
     };
+
+    // =========================================================
+    // GIVEN LETTERS
+    // TRUE = PRE-FILLED AND LOCKED
+    // FALSE = PLAYER MUST ANSWER
+    // =========================================================
 
     private bool[,] givenLetters =
     {
@@ -60,20 +95,24 @@ public class CrosswordManager : MonoBehaviour
         { false, true,  false, false, false, false },
         { true,  false, false, false, true,  false },
         { false, true,  false, false, false, true  },
-        { false, false, false, false, true,  true  },
-        { false, false, false, true,  false, false }
+        { true,  false, false, true,  false, false },
+        { false, false, false, true,  false, false },
+        { true,  false, false, false, true,  false },
+        { false, true,  false, false, false, true  },
+        { true,  false, true,  false, false, false },
+        { true,  false, false, true,  false, false }
     };
 
     // =========================================================
     // START
     // =========================================================
 
-    void Start()
+    private void Start()
     {
         GenerateGrid();
 
-        // Disable Unity automatic UI navigation.
-        // TAB will be handled here manually.
+        // Disable automatic UI navigation.
+        // TAB navigation is handled manually by this script.
         if (EventSystem.current != null)
         {
             EventSystem.current.sendNavigationEvents = false;
@@ -89,7 +128,7 @@ public class CrosswordManager : MonoBehaviour
     // UPDATE - HANDLE TAB
     // =========================================================
 
-    void Update()
+    private void Update()
     {
         if (Keyboard.current == null)
             return;
@@ -108,7 +147,6 @@ public class CrosswordManager : MonoBehaviour
 
         CrosswordCell currentCell = null;
 
-        // Find which crossword cell is currently selected
         foreach (CrosswordCell cell in editableCells)
         {
             if (cell != null &&
@@ -149,8 +187,7 @@ public class CrosswordManager : MonoBehaviour
         if (currentIndex < 0)
             return;
 
-        int nextIndex =
-            currentIndex + 1;
+        int nextIndex = currentIndex + 1;
 
         if (nextIndex >= editableCells.Count)
         {
@@ -172,13 +209,11 @@ public class CrosswordManager : MonoBehaviour
         if (currentIndex < 0)
             return;
 
-        int previousIndex =
-            currentIndex - 1;
+        int previousIndex = currentIndex - 1;
 
         if (previousIndex < 0)
         {
-            previousIndex =
-                editableCells.Count - 1;
+            previousIndex = editableCells.Count - 1;
         }
 
         FocusCell(editableCells[previousIndex]);
@@ -215,14 +250,43 @@ public class CrosswordManager : MonoBehaviour
 
     private void GenerateGrid()
     {
+        // Validate dimensions before generating anything.
+        if (gridRows != crosswordPattern.GetLength(0) ||
+            gridSize != crosswordPattern.GetLength(1) ||
+            answerGrid.GetLength(0) != gridRows ||
+            answerGrid.GetLength(1) != gridSize ||
+            givenLetters.GetLength(0) != gridRows ||
+            givenLetters.GetLength(1) != gridSize)
+        {
+            Debug.LogError(
+                "CROSSWORD GRID CONFIGURATION ERROR! " +
+                "Expected 10 rows and 6 columns. " +
+                "Grid Rows: " + gridRows +
+                ", Grid Columns: " + gridSize
+            );
+
+            return;
+        }
+
+        if (crosswordCellPrefab == null)
+        {
+            Debug.LogError(
+                "Crossword Cell Prefab is NOT assigned!"
+            );
+
+            return;
+        }
+
         editableCells.Clear();
 
+        // Remove previously generated grid cells.
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
         }
 
-        for (int row = 0; row < gridSize; row++)
+        // Generate 10 rows and 6 columns.
+        for (int row = 0; row < gridRows; row++)
         {
             for (int col = 0; col < gridSize; col++)
             {
@@ -231,6 +295,15 @@ public class CrosswordManager : MonoBehaviour
                         crosswordCellPrefab,
                         transform
                     );
+
+                if (cell == null)
+                {
+                    Debug.LogError(
+                        "Failed to instantiate crossword cell."
+                    );
+
+                    return;
+                }
 
                 Image cellImage =
                     cell.GetComponent<Image>();
@@ -250,9 +323,9 @@ public class CrosswordManager : MonoBehaviour
                 bool blocked =
                     crosswordPattern[row, col] == 1;
 
-                // =================================================
+                // =============================================
                 // BLOCKED CELL
-                // =================================================
+                // =============================================
 
                 if (blocked)
                 {
@@ -273,12 +346,22 @@ public class CrosswordManager : MonoBehaviour
                     }
                 }
 
-                // =================================================
+                // =============================================
                 // PLAYABLE CELL
-                // =================================================
+                // =============================================
 
                 else
                 {
+                    if (crosswordCell == null)
+                    {
+                        Debug.LogError(
+                            "CrosswordCell component missing at row " +
+                            row + ", column " + col
+                        );
+
+                        continue;
+                    }
+
                     if (cellImage != null)
                     {
                         cellImage.color =
@@ -290,36 +373,44 @@ public class CrosswordManager : MonoBehaviour
                         input.gameObject.SetActive(true);
                     }
 
-                    if (crosswordCell != null)
-                    {
-                        crosswordCell.enabled = true;
+                    crosswordCell.enabled = true;
 
-                        crosswordCell.SetCorrectLetter(
+                    crosswordCell.SetCorrectLetter(
+                        answerGrid[row, col]
+                    );
+
+                    if (givenLetters[row, col])
+                    {
+                        crosswordCell.SetGivenLetter(
                             answerGrid[row, col]
                         );
-
-                        if (givenLetters[row, col])
-                        {
-                            crosswordCell.SetGivenLetter(
-                                answerGrid[row, col]
-                            );
-                        }
-                        else
-                        {
-                            editableCells.Add(
-                                crosswordCell
-                            );
-                        }
+                    }
+                    else
+                    {
+                        editableCells.Add(
+                            crosswordCell
+                        );
                     }
                 }
             }
         }
 
-        // =========================================================
+        // =============================================
         // SET CELL NAVIGATION
-        // =========================================================
+        // =============================================
 
         SetupTabNavigation();
+
+        Debug.Log(
+            "=================================\n" +
+            "CROSSWORD GRID GENERATED!\n" +
+            "Rows: " + gridRows + "\n" +
+            "Columns: " + gridSize + "\n" +
+            "Answers: 10\n" +
+            "Total Cells: " + (gridRows * gridSize) + "\n" +
+            "Editable Cells: " + editableCells.Count + "\n" +
+            "================================="
+        );
     }
 
     // =========================================================
@@ -341,9 +432,7 @@ public class CrosswordManager : MonoBehaviour
             else if (editableCells.Count > 0)
             {
                 previousCell =
-                    editableCells[
-                        editableCells.Count - 1
-                    ];
+                    editableCells[editableCells.Count - 1];
             }
 
             if (i < editableCells.Count - 1)
@@ -353,8 +442,7 @@ public class CrosswordManager : MonoBehaviour
             }
             else if (editableCells.Count > 0)
             {
-                nextCell =
-                    editableCells[0];
+                nextCell = editableCells[0];
             }
 
             editableCells[i].SetNavigation(
@@ -388,7 +476,7 @@ public class CrosswordManager : MonoBehaviour
 
         foreach (CrosswordCell cell in cells)
         {
-            if (!cell.enabled)
+            if (cell == null || !cell.enabled)
                 continue;
 
             if (cell.IsEmpty())
@@ -411,9 +499,9 @@ public class CrosswordManager : MonoBehaviour
             }
         }
 
-        // =====================================================
+        // =============================================
         // WRONG ANSWERS
-        // =====================================================
+        // =============================================
 
         if (hasWrong)
         {
@@ -423,10 +511,6 @@ public class CrosswordManager : MonoBehaviour
                     "SOME ANSWERS ARE INCORRECT. -10 SECONDS";
             }
 
-            // =========================================
-            // PLAY WRONG ANSWER SOUND
-            // =========================================
-
             if (wrongAnswerAudio != null &&
                 wrongAnswerSound != null)
             {
@@ -435,10 +519,7 @@ public class CrosswordManager : MonoBehaviour
                 );
             }
 
-            // =========================================
-            // REMOVE 10 SECONDS
-            // =========================================
-
+            // Preserve existing timer deduction.
             if (Room2ChallengeTimer.Instance != null)
             {
                 Room2ChallengeTimer.Instance.WrongAnswer();
@@ -447,9 +528,9 @@ public class CrosswordManager : MonoBehaviour
             return;
         }
 
-        // =====================================================
+        // =============================================
         // EMPTY BOXES
-        // =====================================================
+        // =============================================
 
         if (hasEmpty)
         {
@@ -462,9 +543,9 @@ public class CrosswordManager : MonoBehaviour
             return;
         }
 
-        // =====================================================
+        // =============================================
         // EVERYTHING CORRECT
-        // =====================================================
+        // =============================================
 
         if (allCorrect)
         {
