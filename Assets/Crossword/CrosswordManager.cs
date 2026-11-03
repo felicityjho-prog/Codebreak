@@ -33,6 +33,17 @@ public class CrosswordManager : MonoBehaviour
     [Header("Completion Controller")]
     public CrosswordPanelController crosswordPanelController;
 
+    [Header("Crossword Hints")]
+    [Min(0)] public int maxHints = 2;
+    public Button hintButton;
+    public TMP_Text hintButtonText;
+
+    private int hintsRemaining;
+
+    // Keeps a direct reference to each generated cell so hints can
+    // randomly reveal one playable letter anywhere in the crossword.
+    private CrosswordCell[,] generatedCells;
+
     // =========================================================
     // TAB NAVIGATION
     // =========================================================
@@ -109,6 +120,10 @@ public class CrosswordManager : MonoBehaviour
 
     private void Start()
     {
+        hintsRemaining = Mathf.Max(0, maxHints);
+        SetupHintButton();
+        UpdateHintUI();
+
         GenerateGrid();
 
         // Disable automatic UI navigation.
@@ -121,6 +136,172 @@ public class CrosswordManager : MonoBehaviour
         if (resultText != null)
         {
             resultText.text = "";
+        }
+    }
+
+    // =========================================================
+    // HINT BUTTON SETUP AND UI
+    // =========================================================
+
+    private void SetupHintButton()
+    {
+        if (hintButton != null)
+        {
+            if (hintButtonText == null)
+            {
+                hintButtonText =
+                    hintButton.GetComponentInChildren<TMP_Text>(true);
+            }
+
+            // Prevent duplicate runtime listeners.
+            hintButton.onClick.RemoveListener(UseHint);
+            hintButton.onClick.AddListener(UseHint);
+        }
+        else
+        {
+            Debug.LogWarning(
+                "CrosswordManager: Hint Button is not assigned.",
+                this
+            );
+        }
+    }
+
+    private void UpdateHintUI()
+    {
+        if (hintButtonText != null)
+        {
+            hintButtonText.text =
+                "HINT (" + hintsRemaining + " LEFT)";
+        }
+
+        if (hintButton != null)
+        {
+            hintButton.interactable =
+                hintsRemaining > 0 && !challengeCompleted;
+        }
+    }
+
+    // =========================================================
+    // USE HINT
+    // Randomly reveals ONE correct letter in an unanswered cell.
+    // Each successful reveal consumes exactly one hint.
+    // =========================================================
+
+    public void UseHint()
+    {
+        if (challengeCompleted || hintsRemaining <= 0)
+        {
+            UpdateHintUI();
+            return;
+        }
+
+        if (generatedCells == null)
+        {
+            Debug.LogWarning(
+                "CrosswordManager: Crossword grid is not ready for hints.",
+                this
+            );
+            return;
+        }
+
+        // Build a list of cells that still need an answer.
+        // Correct entries and pre-filled letters are not candidates.
+        List<CrosswordCell> availableCells =
+            new List<CrosswordCell>();
+
+        for (int row = 0; row < gridRows; row++)
+        {
+            for (int col = 0; col < gridSize; col++)
+            {
+                if (crosswordPattern[row, col] != 0)
+                    continue;
+
+                CrosswordCell cell = generatedCells[row, col];
+
+                if (cell == null)
+                    continue;
+
+                if (cell.CanEdit() && !cell.IsCorrect())
+                {
+                    availableCells.Add(cell);
+                }
+            }
+        }
+
+        // No unanswered cells remain. Do not spend a hint.
+        if (availableCells.Count == 0)
+        {
+            if (AreAllPlayableCellsCorrect())
+            {
+                CompleteChallenge();
+            }
+            else
+            {
+                Debug.LogWarning(
+                    "Crossword hint: No editable incorrect cells were found. " +
+                    "The hint was not consumed.",
+                    this
+                );
+            }
+
+            UpdateHintUI();
+            return;
+        }
+
+        // Choose a random eligible cell from anywhere in the grid.
+        int randomIndex = Random.Range(0, availableCells.Count);
+        CrosswordCell targetCell = availableCells[randomIndex];
+
+        // Reveal only that cell's correct letter and lock it.
+        string correctLetter = targetCell.GetCorrectLetter();
+        targetCell.RevealHintLetter(correctLetter);
+
+        // Consume a hint only after a successful reveal.
+        hintsRemaining--;
+        UpdateHintUI();
+
+        Debug.Log(
+            "Crossword hint used. One random letter was revealed. " +
+            "Remaining hints: " + hintsRemaining,
+            this
+        );
+
+        // Do not call CheckAnswer() here: unfinished or wrong entries
+        // must not trigger the existing wrong-answer timer penalty.
+        if (AreAllPlayableCellsCorrect())
+        {
+            CompleteChallenge();
+        }
+    }
+
+    private bool AreAllPlayableCellsCorrect()
+    {
+        if (generatedCells == null)
+            return false;
+
+        for (int row = 0; row < gridRows; row++)
+        {
+            for (int col = 0; col < gridSize; col++)
+            {
+                if (crosswordPattern[row, col] != 0)
+                    continue;
+
+                CrosswordCell cell =
+                    generatedCells[row, col];
+
+                if (cell == null || !cell.IsCorrect())
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void OnDestroy()
+    {
+        if (hintButton != null)
+        {
+            hintButton.onClick.RemoveListener(UseHint);
         }
     }
 
@@ -184,17 +365,10 @@ public class CrosswordManager : MonoBehaviour
         int currentIndex =
             editableCells.IndexOf(currentCell);
 
-        if (currentIndex < 0)
+        if (currentIndex < 0 || editableCells.Count == 0)
             return;
 
-        int nextIndex = currentIndex + 1;
-
-        if (nextIndex >= editableCells.Count)
-        {
-            nextIndex = 0;
-        }
-
-        FocusCell(editableCells[nextIndex]);
+        FocusNextAvailableCell(currentIndex, 1);
     }
 
     // =========================================================
@@ -206,17 +380,37 @@ public class CrosswordManager : MonoBehaviour
         int currentIndex =
             editableCells.IndexOf(currentCell);
 
-        if (currentIndex < 0)
+        if (currentIndex < 0 || editableCells.Count == 0)
             return;
 
-        int previousIndex = currentIndex - 1;
+        FocusNextAvailableCell(currentIndex, -1);
+    }
 
-        if (previousIndex < 0)
+    private void FocusNextAvailableCell(
+        int currentIndex,
+        int direction)
+    {
+        int count = editableCells.Count;
+
+        // Search at most one full cycle. Hint-revealed and
+        // already-correct cells are skipped because they are locked.
+        for (int step = 1; step <= count; step++)
         {
-            previousIndex = editableCells.Count - 1;
-        }
+            int candidateIndex =
+                (currentIndex + direction * step) % count;
 
-        FocusCell(editableCells[previousIndex]);
+            if (candidateIndex < 0)
+                candidateIndex += count;
+
+            CrosswordCell candidate =
+                editableCells[candidateIndex];
+
+            if (candidate != null && candidate.CanEdit())
+            {
+                FocusCell(candidate);
+                return;
+            }
+        }
     }
 
     // =========================================================
@@ -278,6 +472,8 @@ public class CrosswordManager : MonoBehaviour
         }
 
         editableCells.Clear();
+        generatedCells =
+            new CrosswordCell[gridRows, gridSize];
 
         // Remove previously generated grid cells.
         foreach (Transform child in transform)
@@ -319,6 +515,12 @@ public class CrosswordManager : MonoBehaviour
 
                 CrosswordCell crosswordCell =
                     cell.GetComponent<CrosswordCell>();
+
+                if (crosswordCell != null)
+                {
+                    generatedCells[row, col] =
+                        crosswordCell;
+                }
 
                 bool blocked =
                     crosswordPattern[row, col] == 1;
@@ -566,6 +768,7 @@ public class CrosswordManager : MonoBehaviour
     private void CompleteChallenge()
     {
         challengeCompleted = true;
+        UpdateHintUI();
 
         Debug.Log(
             "CROSSWORD CHALLENGE COMPLETED!"
@@ -599,6 +802,9 @@ public class CrosswordManager : MonoBehaviour
         Debug.Log("=================================");
 
         challengeCompleted = false;
+
+        hintsRemaining = Mathf.Max(0, maxHints);
+        UpdateHintUI();
 
         if (resultText != null)
         {

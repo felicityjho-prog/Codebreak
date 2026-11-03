@@ -671,7 +671,7 @@ public class Room3CodingChallengeManager : MonoBehaviour
         {
             box2QuestionText.text =
                 "Complete both missing parts so the loop prints " +
-                "all even numbers from 2 to 6.";
+                "numbers from 5 to 10.";
         }
 
         if (box2HintMessageText != null)
@@ -862,10 +862,10 @@ public class Room3CodingChallengeManager : MonoBehaviour
             string condition = NormalizeAnswer(box2AnswerInput1.text);
 
             box2ConditionCorrect =
-                condition == "number<=6" ||
-                condition == "number<7" ||
-                condition == "6>=number" ||
-                condition == "7>number";
+                condition == "number<=10" ||
+                condition == "number<11" ||
+                condition == "10>=number" ||
+                condition == "11>number";
         }
 
         if (!box2IncrementCorrect)
@@ -875,9 +875,11 @@ public class Room3CodingChallengeManager : MonoBehaviour
             );
 
             box2IncrementCorrect =
-                increment == "number+=2" ||
-                increment == "number=number+2" ||
-                increment == "number=2+number";
+                increment == "number++" ||
+                increment == "++number" ||
+                increment == "number+=1" ||
+                increment == "number=number+1" ||
+                increment == "number=1+number";
         }
 
         ApplyBox2InputStates();
@@ -1256,20 +1258,20 @@ public class Room3CodingChallengeManager : MonoBehaviour
         {
             case 1:
                 box2CurrentHint =
-                    "HINT 1: The variable starts at 2 and changes " +
-                    "after every loop iteration.";
+                    "HINT 1: The variable is named number, and it starts at 5. " +
+                    "It changes after every loop iteration.";
                 break;
 
             case 2:
                 box2CurrentHint =
-                    "HINT 2: The loop must include 2, 4 and 6, " +
-                    "then stop before printing another number.";
+                    "HINT 2: The loop must still run when number is 10. " +
+                    "Think about a condition that includes 10.";
                 break;
 
             case 3:
                 box2CurrentHint =
-                    "HINT 3: The update must increase number by 2. " +
-                    "The condition must still allow the value 6.";
+                    "HINT 3: Increase number by 1 after each loop. " +
+                    "The shorthand update statement uses ++.";
                 break;
         }
 

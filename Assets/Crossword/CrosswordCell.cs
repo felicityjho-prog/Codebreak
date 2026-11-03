@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -26,6 +27,7 @@ public class CrosswordCell : MonoBehaviour
         new Color(1f, 0.3f, 0.3f);
 
     private bool isGivenLetter = false;
+    private bool isHintLetter = false;
 
     private Image cellImage;
     private Graphic inputBackground;
@@ -107,8 +109,10 @@ public class CrosswordCell : MonoBehaviour
 
     private void OnLetterChanged(string value)
     {
-        // Do nothing if this cell is already locked
-        if (letterInput == null || isGivenLetter)
+        // Do nothing if this cell is already locked.
+        if (letterInput == null ||
+            isGivenLetter ||
+            isHintLetter)
             return;
 
         if (string.IsNullOrEmpty(value))
@@ -168,6 +172,7 @@ public class CrosswordCell : MonoBehaviour
             return;
 
         isGivenLetter = true;
+        isHintLetter = false;
 
         letterInput.SetTextWithoutNotify(
             letter.ToUpper()
@@ -176,6 +181,34 @@ public class CrosswordCell : MonoBehaviour
         // GIVEN LETTER = PERMANENTLY NOT EDITABLE
         letterInput.interactable = false;
 
+        ApplyLockedLetterAppearance();
+    }
+
+    // =========================================================
+    // HINT-REVEALED LETTER
+    // =========================================================
+
+    public void RevealHintLetter(string letter)
+    {
+        if (letterInput == null ||
+            string.IsNullOrEmpty(letter) ||
+            isGivenLetter)
+            return;
+
+        isHintLetter = true;
+
+        letterInput.SetTextWithoutNotify(
+            letter.ToUpper()
+        );
+
+        // A revealed hint letter stays locked until reset.
+        letterInput.interactable = false;
+
+        ApplyLockedLetterAppearance();
+    }
+
+    private void ApplyLockedLetterAppearance()
+    {
         if (cellImage != null)
         {
             cellImage.color =
@@ -193,6 +226,11 @@ public class CrosswordCell : MonoBehaviour
             inputText.color =
                 givenLetterTextColor;
         }
+    }
+
+    public string GetCorrectLetter()
+    {
+        return correctLetter;
     }
 
     public bool IsGivenLetter()
@@ -237,7 +275,7 @@ public class CrosswordCell : MonoBehaviour
 
     public void ShowCorrect()
     {
-        if (isGivenLetter)
+        if (isGivenLetter || isHintLetter)
             return;
 
         // Turn cell green
@@ -256,7 +294,7 @@ public class CrosswordCell : MonoBehaviour
 
     public void ShowWrong()
     {
-        if (isGivenLetter)
+        if (isGivenLetter || isHintLetter)
             return;
 
         // Wrong cells must remain editable
@@ -274,27 +312,11 @@ public class CrosswordCell : MonoBehaviour
 
     public void ResetColor()
     {
-        // Given letter
-        if (isGivenLetter)
+        // Original given letters and hint-revealed letters
+        // keep their locked appearance.
+        if (isGivenLetter || isHintLetter)
         {
-            if (cellImage != null)
-            {
-                cellImage.color =
-                    normalColor;
-            }
-
-            if (inputBackground != null)
-            {
-                inputBackground.color =
-                    normalColor;
-            }
-
-            if (inputText != null)
-            {
-                inputText.color =
-                    givenLetterTextColor;
-            }
-
+            ApplyLockedLetterAppearance();
             return;
         }
 
@@ -333,16 +355,19 @@ public class CrosswordCell : MonoBehaviour
 
     public void ClearLetter()
     {
-        if (letterInput != null &&
-            !isGivenLetter)
-        {
-            // Unlock again when crossword is reset
-            letterInput.interactable = true;
+        // Original puzzle-given letters must remain.
+        if (letterInput == null || isGivenLetter)
+            return;
 
-            letterInput.SetTextWithoutNotify("");
+        // Hint-revealed letters become editable again
+        // when the crossword is reset.
+        isHintLetter = false;
 
-            ResetColor();
-        }
+        letterInput.interactable = true;
+
+        letterInput.SetTextWithoutNotify("");
+
+        ResetColor();
     }
 
     // =========================================================
@@ -351,7 +376,7 @@ public class CrosswordCell : MonoBehaviour
 
     public bool CanEdit()
     {
-        if (isGivenLetter)
+        if (isGivenLetter || isHintLetter)
             return false;
 
         if (letterInput == null)
