@@ -34,6 +34,9 @@ public class Room2GameOverController : MonoBehaviour
     public SudokuPanelController sudokuPanelController;
     public CrosswordPanelController crosswordPanelController;
 
+    [Header("Knowledge Archive")]
+    public KnowledgeArchiveController knowledgeArchiveController;
+
     [Header("Puzzle Managers")]
     public SudokuManager sudokuManager;
     public CrosswordManager crosswordManager;
@@ -41,6 +44,9 @@ public class Room2GameOverController : MonoBehaviour
 
     [Header("Room 2 Instructions")]
     public Room2InstructionManager instructionManager;
+
+    [Header("Room 2 Instruction Panel Controller")]
+    public Room2InstructionPanel instructionPanelController;
 
     [Header("Room 2 Voice")]
     public Room2VoiceSubtitleManager room2VoiceManager;
@@ -69,7 +75,6 @@ public class Room2GameOverController : MonoBehaviour
         if (room2Timer != null)
             room2Timer.StopTimer();
 
-        // Close Sudoku.
         if (sudokuPanelController != null)
         {
             sudokuPanelController.ForceCloseSudoku();
@@ -79,7 +84,6 @@ public class Room2GameOverController : MonoBehaviour
             sudokuPanel.SetActive(false);
         }
 
-        // Close Crossword.
         if (crosswordPanelController != null)
         {
             crosswordPanelController.ForceCloseCrossword();
@@ -89,18 +93,15 @@ public class Room2GameOverController : MonoBehaviour
             crosswordPanel.SetActive(false);
         }
 
-        // Hide interaction prompts.
         if (sudokuInteractPrompt != null)
             sudokuInteractPrompt.SetActive(false);
 
         if (crosswordInteractPrompt != null)
             crosswordInteractPrompt.SetActive(false);
 
-        // Ensure Room 2 canvas is visible.
         if (room2Canvas != null)
             room2Canvas.SetActive(true);
 
-        // Show Game Over panel.
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
@@ -121,15 +122,12 @@ public class Room2GameOverController : MonoBehaviour
             Debug.LogError("GAME OVER PANEL IS NOT ASSIGNED!");
         }
 
-        // Freeze player movement.
         if (playerMovement != null)
             playerMovement.enabled = false;
 
-        // Disable camera look.
         if (playerLook != null)
             playerLook.DisableLook();
 
-        // Unlock cursor for Game Over buttons.
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
@@ -150,7 +148,6 @@ public class Room2GameOverController : MonoBehaviour
         Time.timeScale = 1f;
         AudioListener.pause = false;
 
-        // Reset Game Over state.
         gameOverShown = false;
 
         // Hide Game Over panel.
@@ -163,21 +160,44 @@ public class Room2GameOverController : MonoBehaviour
             ChallengeProgressManager.Instance.ResetRoom2Progress();
         }
 
-        // Close Sudoku.
+        // RESET NEW KNOWLEDGE ARCHIVE.
+        if (knowledgeArchiveController != null)
+        {
+            knowledgeArchiveController.ResetForRoomRestart();
+
+            Debug.Log(
+                "KNOWLEDGE ARCHIVE RESET FOR ROOM RESTART!"
+            );
+        }
+        else
+        {
+            Debug.LogWarning(
+                "KnowledgeArchiveController is NOT assigned!"
+            );
+        }
+
+        // Close and reset Sudoku.
         if (sudokuPanelController != null)
             sudokuPanelController.ForceCloseSudoku();
 
         if (sudokuPanel != null)
             sudokuPanel.SetActive(false);
 
-        // Close Crossword.
+        // Close and reset Crossword.
         if (crosswordPanelController != null)
+        {
             crosswordPanelController.ForceCloseCrossword();
+
+            // Reset completion state so Crossword can be solved again.
+            crosswordPanelController.ResetForRoomRestart();
+
+            Debug.Log("CROSSWORD CONTROLLER RESET!");
+        }
 
         if (crosswordPanel != null)
             crosswordPanel.SetActive(false);
 
-        // Reset Word Scrabble interaction after Try Again.
+        // Reset Word Shuffle interaction.
         WordPuzzleInteraction wordInteraction =
             FindFirstObjectByType<WordPuzzleInteraction>();
 
@@ -201,7 +221,7 @@ public class Room2GameOverController : MonoBehaviour
         if (crosswordInteractPrompt != null)
             crosswordInteractPrompt.SetActive(false);
 
-        // Reset Sudoku.
+        // Reset Sudoku puzzle.
         if (sudokuManager != null)
         {
             sudokuManager.ResetPuzzle();
@@ -211,7 +231,7 @@ public class Room2GameOverController : MonoBehaviour
             Debug.LogWarning("SudokuManager is NOT assigned!");
         }
 
-        // Reset Crossword.
+        // Reset Crossword answers and hints.
         if (crosswordManager != null)
         {
             crosswordManager.ResetCrossword();
@@ -221,7 +241,7 @@ public class Room2GameOverController : MonoBehaviour
             Debug.LogWarning("CrosswordManager is NOT assigned!");
         }
 
-        // Reset Word Scrabble with a new random round.
+        // Reset Word Shuffle with a new random round.
         if (wordPuzzleManager != null)
         {
             wordPuzzleManager.RestartPuzzle();
@@ -275,8 +295,8 @@ public class Room2GameOverController : MonoBehaviour
             playerLook.EnableLook();
         }
 
-        // Reset timer but do NOT start it yet.
-        // GOT IT starts it through OnGotItClicked().
+        // Reset timer, but do NOT start it yet.
+        // START / GOT IT will start it through OnGotItClicked().
         if (room2Timer != null)
         {
             room2Timer.ResetTimer();
@@ -286,18 +306,31 @@ public class Room2GameOverController : MonoBehaviour
             );
         }
 
-        // Reset and show the main instruction panel again.
+        // Reset instruction text and hide persistent top message.
         if (instructionManager != null)
         {
             instructionManager.ResetForTryAgain();
-            instructionManager.ShowInstruction();
-
-            Debug.Log("ROOM 2 INSTRUCTION PANEL SHOWN AGAIN.");
         }
         else
         {
             Debug.LogWarning(
                 "Room2InstructionManager is NOT assigned!"
+            );
+        }
+
+        // Freeze player movement and camera for the instruction panel.
+        if (instructionPanelController != null)
+        {
+            instructionPanelController.ShowInstruction();
+
+            Debug.Log(
+                "ROOM 2 INSTRUCTION SHOWN - PLAYER MOVEMENT AND CAMERA FROZEN!"
+            );
+        }
+        else
+        {
+            Debug.LogError(
+                "Room2InstructionPanel Controller is NOT assigned!"
             );
         }
 
@@ -315,7 +348,7 @@ public class Room2GameOverController : MonoBehaviour
             );
         }
 
-        // Keep cursor visible so the player can click GOT IT.
+        // Show cursor for the Start / Got It button.
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 

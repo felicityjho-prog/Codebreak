@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using TMPro;
 
@@ -45,6 +46,7 @@ public class Room2ChallengeTimer : MonoBehaviour
     public AudioClip completionSound;
 
     private float timeRemaining;
+
     private bool timerRunning = false;
     private bool timerFinished = false;
     private bool completionSoundPlayed = false;
@@ -102,24 +104,16 @@ public class Room2ChallengeTimer : MonoBehaviour
         }
 
         if (gameOverPanel != null)
-        {
             gameOverPanel.SetActive(false);
-        }
 
         if (sudokuPanel != null)
-        {
             sudokuPanel.SetActive(false);
-        }
 
         if (crosswordPanel != null)
-        {
             crosswordPanel.SetActive(false);
-        }
 
         if (wordScrabblePanel != null)
-        {
             wordScrabblePanel.SetActive(false);
-        }
 
         UpdateTimerDisplay();
     }
@@ -130,7 +124,6 @@ public class Room2ChallengeTimer : MonoBehaviour
 
     private void Update()
     {
-        // Check the completion panel even if the timer has stopped.
         CheckCompletionPanelSound();
 
         if (!timerRunning || timerFinished)
@@ -141,8 +134,11 @@ public class Room2ChallengeTimer : MonoBehaviour
         if (timeRemaining <= 0f)
         {
             timeRemaining = 0f;
+
             UpdateTimerDisplay();
+
             TimeUp();
+
             return;
         }
 
@@ -161,14 +157,12 @@ public class Room2ChallengeTimer : MonoBehaviour
 
         bool panelIsVisible = taskCompletePanel.activeInHierarchy;
 
-        // Play once when the completion panel becomes visible.
         if (panelIsVisible && !completionSoundPlayed)
         {
             completionSoundPlayed = true;
 
-            // Use the dedicated AudioSource if assigned.
-            // Otherwise, use the Game Over AudioSource.
-            AudioSource soundSource = completionAudioSource != null
+            AudioSource soundSource =
+                completionAudioSource != null
                 ? completionAudioSource
                 : gameOverAudioSource;
 
@@ -182,15 +176,13 @@ public class Room2ChallengeTimer : MonoBehaviour
             {
                 Debug.LogWarning(
                     "Room 2 completion sound is not fully assigned. " +
-                    "Assign Task Complete Panel and Completion Sound " +
-                    "in the Room2ChallengeTimer Inspector. " +
-                    "Assign Completion Audio Source or Game Over Audio Source."
+                    "Check Task Complete Panel, Completion Sound, " +
+                    "and Audio Source in the Inspector."
                 );
             }
         }
         else if (!panelIsVisible)
         {
-            // Allow the sound to play again on a later attempt.
             completionSoundPlayed = false;
         }
     }
@@ -219,9 +211,7 @@ public class Room2ChallengeTimer : MonoBehaviour
             timerAudioSource.pitch = normalTickPitch;
 
             if (!timerAudioSource.isPlaying)
-            {
                 timerAudioSource.Play();
-            }
         }
 
         UpdateTimerDisplay();
@@ -238,11 +228,75 @@ public class Room2ChallengeTimer : MonoBehaviour
         timerRunning = false;
 
         if (timerAudioSource != null)
-        {
             timerAudioSource.Stop();
-        }
 
         Debug.Log("ROOM 2 TIMER STOPPED!");
+    }
+
+    // ==========================================
+    // PAUSE TIMER
+    // KNOWLEDGE ARCHIVE
+    // ==========================================
+
+    public void PauseTimer()
+    {
+        if (timerFinished)
+        {
+            Debug.Log(
+                "TIMER CANNOT PAUSE - TIMER ALREADY FINISHED!"
+            );
+
+            return;
+        }
+
+        timerRunning = false;
+
+        if (timerAudioSource != null)
+            timerAudioSource.Stop();
+
+        Debug.Log(
+            "ROOM 2 TIMER PAUSED! REMAINING TIME: " +
+            timeRemaining
+        );
+    }
+
+    // ==========================================
+    // RESUME TIMER
+    // AFTER CLOSING KNOWLEDGE ARCHIVE
+    // ==========================================
+
+    public void ResumeTimer()
+    {
+        if (timerFinished)
+        {
+            Debug.Log(
+                "TIMER CANNOT RESUME - GAME OVER ALREADY OCCURRED!"
+            );
+
+            return;
+        }
+
+        timerRunning = true;
+
+        if (timerText != null)
+            timerText.gameObject.SetActive(true);
+
+        UpdateTimerWarning();
+        UpdateTimerDisplay();
+
+        if (timerAudioSource != null && tickingSound != null)
+        {
+            timerAudioSource.clip = tickingSound;
+            timerAudioSource.loop = true;
+
+            if (!timerAudioSource.isPlaying)
+                timerAudioSource.Play();
+        }
+
+        Debug.Log(
+            "ROOM 2 TIMER RESUMED! REMAINING TIME: " +
+            timeRemaining
+        );
     }
 
     // ==========================================
@@ -257,9 +311,7 @@ public class Room2ChallengeTimer : MonoBehaviour
         timeRemaining -= wrongAnswerPenalty;
 
         if (timeRemaining < 0f)
-        {
             timeRemaining = 0f;
-        }
 
         UpdateTimerDisplay();
         UpdateTimerWarning();
@@ -271,9 +323,7 @@ public class Room2ChallengeTimer : MonoBehaviour
         );
 
         if (timeRemaining <= 0f)
-        {
             TimeUp();
-        }
     }
 
     // ==========================================
@@ -285,25 +335,17 @@ public class Room2ChallengeTimer : MonoBehaviour
         if (timerText != null)
         {
             if (timeRemaining <= redTimeThreshold)
-            {
                 timerText.color = Color.red;
-            }
             else
-            {
                 timerText.color = normalTimerColor;
-            }
         }
 
         if (timerAudioSource != null)
         {
             if (timeRemaining <= fastTickThreshold)
-            {
                 timerAudioSource.pitch = fastTickPitch;
-            }
             else
-            {
                 timerAudioSource.pitch = normalTickPitch;
-            }
         }
     }
 
@@ -344,7 +386,6 @@ public class Room2ChallengeTimer : MonoBehaviour
             Debug.Log("CROSSWORD PANEL CLOSED!");
         }
 
-        // Close Word Scrabble before Game Over.
         if (wordScrabblePanel != null)
         {
             wordScrabblePanel.SetActive(false);
@@ -371,25 +412,19 @@ public class Room2ChallengeTimer : MonoBehaviour
         timerFinished = true;
         timerRunning = false;
 
-        // Stop ticking sound.
         if (timerAudioSource != null)
         {
             timerAudioSource.Stop();
             timerAudioSource.pitch = normalTickPitch;
         }
 
-        // Make timer red.
         if (timerText != null)
-        {
             timerText.color = Color.red;
-        }
 
         Debug.Log("ROOM 2 TIME UP!");
 
-        // Close every puzzle before showing Game Over.
         ClosePuzzlePanels();
 
-        // Hide Pause button and Pause Menu.
         if (pauseMenuController != null)
         {
             pauseMenuController.HidePauseMenuForGameOver();
@@ -397,19 +432,17 @@ public class Room2ChallengeTimer : MonoBehaviour
         else
         {
             Debug.LogWarning(
-                "Pause Menu Controller is not assigned " +
-                "in Room2ChallengeTimer Inspector!"
+                "Pause Menu Controller is not assigned!"
             );
         }
 
-        // Play Game Over sound.
         if (gameOverAudioSource != null && gameOverSound != null)
         {
             gameOverAudioSource.PlayOneShot(gameOverSound);
+
             Debug.Log("GAME OVER SOUND PLAYED!");
         }
 
-        // Show Game Over panel on top of other UI.
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
@@ -424,7 +457,6 @@ public class Room2ChallengeTimer : MonoBehaviour
             );
         }
 
-        // Unlock cursor for Game Over buttons.
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
@@ -453,39 +485,29 @@ public class Room2ChallengeTimer : MonoBehaviour
 
     public void ResetTimer()
     {
-        // Reset timer state.
         timeRemaining = startingTime;
         timerRunning = false;
         timerFinished = false;
 
-        // Reset timer text.
         if (timerText != null)
         {
             timerText.color = normalTimerColor;
             timerText.gameObject.SetActive(false);
         }
 
-        // Stop ticking and restore normal pitch.
         if (timerAudioSource != null)
         {
             timerAudioSource.Stop();
             timerAudioSource.pitch = normalTickPitch;
         }
 
-        // Hide Game Over.
         if (gameOverPanel != null)
-        {
             gameOverPanel.SetActive(false);
-        }
 
-        // Ensure all puzzle panels are closed after reset.
         ClosePuzzlePanels();
 
-        // Restore Pause button after restart.
         if (pauseMenuController != null)
-        {
             pauseMenuController.ShowPauseButton();
-        }
 
         UpdateTimerDisplay();
 

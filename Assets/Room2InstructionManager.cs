@@ -27,16 +27,27 @@ public class Room2InstructionManager : MonoBehaviour
     private Coroutine fadeCoroutine;
     private Coroutine persistentFadeCoroutine;
 
-    // Text belonging to the persistent top instruction.
     private TMP_Text persistentInstructionText;
 
     private const string InitialInstruction =
         "CHALLENGE 1 AWAITS — PROCEED TO TABLE 1";
 
+    // =========================================================
+    // AWAKE
+    // =========================================================
+
     private void Awake()
     {
         CachePersistentInstructionText();
     }
+
+    // =========================================================
+    // START
+    // IMPORTANT:
+    // Do not hide the large instruction panel here.
+    // Room2InstructionPanel.OnEnable handles its visibility
+    // and freezes the player when the panel becomes active.
+    // =========================================================
 
     private void Start()
     {
@@ -47,9 +58,18 @@ public class Room2InstructionManager : MonoBehaviour
             persistentInstructionText.text = InitialInstruction;
         }
 
-        HideLargeInstructionImmediately();
+        // Hide only the persistent top instruction.
         HidePersistentInstructionImmediately();
+
+        Debug.Log(
+            "ROOM 2 INSTRUCTION MANAGER READY. " +
+            "Large instruction visibility is controlled separately."
+        );
     }
+
+    // =========================================================
+    // CACHE PERSISTENT INSTRUCTION TEXT
+    // =========================================================
 
     private void CachePersistentInstructionText()
     {
@@ -60,12 +80,12 @@ public class Room2InstructionManager : MonoBehaviour
         }
 
         persistentInstructionText =
-            persistentInstructionCanvasGroup.GetComponentInChildren<TMP_Text>(true);
+            persistentInstructionCanvasGroup
+            .GetComponentInChildren<TMP_Text>(true);
     }
 
     // =========================================================
     // SHOW INITIAL LARGE INSTRUCTION PANEL
-    // Used by the initial instruction and Try Again / Restart.
     // =========================================================
 
     public void ShowInstruction()
@@ -94,10 +114,12 @@ public class Room2InstructionManager : MonoBehaviour
         }
 
         FadeTo(1f);
+
+        Debug.Log("ROOM 2 LARGE INSTRUCTION SHOWN.");
     }
 
     // =========================================================
-    // GOT IT
+    // GOT IT / START BUTTON
     // =========================================================
 
     public void OnGotItClicked()
@@ -122,6 +144,7 @@ public class Room2InstructionManager : MonoBehaviour
         if (Room2ChallengeTimer.Instance != null)
         {
             Room2ChallengeTimer.Instance.StartTimer();
+
             Debug.Log("ROOM 2 TIMER STARTED AFTER GOT IT.");
         }
         else
@@ -202,8 +225,10 @@ public class Room2InstructionManager : MonoBehaviour
             persistentInstructionText.text = InitialInstruction;
         }
 
+        // Hide persistent top message.
         HidePersistentInstructionImmediately();
 
+        // Hide gameplay controls while instructions are open.
         if (controlsPanel != null)
         {
             controlsPanel.SetActive(false);
@@ -214,6 +239,7 @@ public class Room2InstructionManager : MonoBehaviour
             centerDot.SetActive(false);
         }
 
+        // Activate the large instruction panel.
         if (instructionPanelRoot != null)
         {
             instructionPanelRoot.SetActive(true);
@@ -231,8 +257,10 @@ public class Room2InstructionManager : MonoBehaviour
             instructionCanvasGroup.blocksRaycasts = true;
         }
 
+        // Fade the large instruction panel in.
         ShowInstruction();
 
+        // Allow the player to click Start / Got It.
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
@@ -256,20 +284,6 @@ public class Room2InstructionManager : MonoBehaviour
             StopCoroutine(persistentFadeCoroutine);
             persistentFadeCoroutine = null;
         }
-    }
-
-    // =========================================================
-    // HIDE LARGE INSTRUCTION IMMEDIATELY
-    // =========================================================
-
-    private void HideLargeInstructionImmediately()
-    {
-        if (instructionCanvasGroup == null)
-            return;
-
-        instructionCanvasGroup.alpha = 0f;
-        instructionCanvasGroup.interactable = false;
-        instructionCanvasGroup.blocksRaycasts = false;
     }
 
     // =========================================================
@@ -302,13 +316,13 @@ public class Room2InstructionManager : MonoBehaviour
                 "Check the Persistent Instruction CanvasGroup assignment.",
                 this
             );
+
             return;
         }
 
-        // Update the TMP text under the persistent top instruction.
         persistentInstructionText.text = message;
 
-        // Keep the large challenge panel hidden.
+        // Hide the large challenge panel.
         if (instructionPanelRoot != null)
         {
             instructionPanelRoot.SetActive(false);
@@ -321,7 +335,7 @@ public class Room2InstructionManager : MonoBehaviour
             instructionCanvasGroup.blocksRaycasts = false;
         }
 
-        // Fade the top instruction back in.
+        // Show the persistent top instruction.
         if (persistentInstructionCanvasGroup != null)
         {
             if (!persistentInstructionCanvasGroup.gameObject.activeSelf)
@@ -345,7 +359,7 @@ public class Room2InstructionManager : MonoBehaviour
     }
 
     // =========================================================
-    // AFTER TABLE 1 — UPDATE TOP TEXT ONLY
+    // AFTER TABLE 1
     // =========================================================
 
     public void ShowChallengeCleared()
@@ -356,7 +370,7 @@ public class Room2InstructionManager : MonoBehaviour
     }
 
     // =========================================================
-    // NEXT TABLE — UPDATE TOP TEXT ONLY
+    // NEXT TABLE
     // =========================================================
 
     public void ShowNextTableInstruction()
@@ -367,7 +381,7 @@ public class Room2InstructionManager : MonoBehaviour
     }
 
     // =========================================================
-    // TABLE 3 — UPDATE TOP TEXT ONLY
+    // TABLE 3
     // =========================================================
 
     public void ShowFinalChallengeInstruction()
@@ -392,7 +406,8 @@ public class Room2InstructionManager : MonoBehaviour
             fadeCoroutine = null;
         }
 
-        fadeCoroutine = StartCoroutine(FadeCoroutine(targetAlpha));
+        fadeCoroutine =
+            StartCoroutine(FadeCoroutine(targetAlpha));
     }
 
     private IEnumerator FadeCoroutine(float targetAlpha)

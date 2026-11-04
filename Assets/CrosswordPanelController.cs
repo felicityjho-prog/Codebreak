@@ -9,6 +9,10 @@ public class CrosswordPanelController : MonoBehaviour
 
     [Header("Knowledge Archive")]
     public GameObject knowledgeArchivePanel;
+    public GameObject knowledgeArchiveButton;
+
+    [Header("New Knowledge Archive System")]
+    public KnowledgeArchiveController archiveController;
 
     [Header("Completion Banner")]
     public GameObject completionBanner;
@@ -36,6 +40,16 @@ public class CrosswordPanelController : MonoBehaviour
     private bool knowledgeArchiveOpen = false;
     private bool challengeFinished = false;
 
+    // Table 3 is unlocked only once.
+    private bool table3Unlocked = false;
+
+    // Previous player state before opening Archive.
+    private bool playerMovementWasEnabled;
+    private bool playerLookWasEnabled;
+
+    // Timer state before opening Archive.
+    private bool timerWasRunningBeforeArchive;
+
     private Quaternion savedCameraRotation;
 
     public bool IsCrosswordOpen
@@ -49,7 +63,7 @@ public class CrosswordPanelController : MonoBehaviour
     }
 
     // ==========================================
-    // FIND KNOWLEDGE ARCHIVE AUTOMATICALLY
+    // FIND KNOWLEDGE ARCHIVE
     // ==========================================
 
     private void FindKnowledgeArchive()
@@ -70,8 +84,7 @@ public class CrosswordPanelController : MonoBehaviour
                 knowledgeArchivePanel = obj;
 
                 Debug.Log(
-                    "Knowledge Archive found automatically: " +
-                    obj.name
+                    "Knowledge Archive found: " + obj.name
                 );
 
                 return;
@@ -79,7 +92,7 @@ public class CrosswordPanelController : MonoBehaviour
         }
 
         Debug.LogError(
-            "KnowledgeArchivePanel could not be found in the scene!"
+            "KnowledgeArchivePanel could not be found!"
         );
     }
 
@@ -92,6 +105,7 @@ public class CrosswordPanelController : MonoBehaviour
         crosswordOpen = false;
         knowledgeArchiveOpen = false;
         challengeFinished = false;
+        table3Unlocked = false;
 
         FindKnowledgeArchive();
 
@@ -100,6 +114,9 @@ public class CrosswordPanelController : MonoBehaviour
 
         if (knowledgeArchivePanel != null)
             knowledgeArchivePanel.SetActive(false);
+
+        if (knowledgeArchiveButton != null)
+            knowledgeArchiveButton.SetActive(false);
     }
 
     // ==========================================
@@ -144,10 +161,7 @@ public class CrosswordPanelController : MonoBehaviour
     private void RestorePlayer()
     {
         if (playerCamera != null)
-        {
-            playerCamera.localRotation =
-                savedCameraRotation;
-        }
+            playerCamera.localRotation = savedCameraRotation;
 
         if (playerMovement != null)
             playerMovement.enabled = true;
@@ -157,6 +171,46 @@ public class CrosswordPanelController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        Debug.Log("PLAYER RESTORED - CURSOR LOCKED AND HIDDEN!");
+    }
+
+    // ==========================================
+    // RESTORE PREVIOUS PLAYER STATE
+    // KEEP WORD SHUFFLE STATE
+    // ==========================================
+
+    private void RestorePreviousPlayerState()
+    {
+        if (playerCamera != null)
+            playerCamera.localRotation = savedCameraRotation;
+
+        // Restore previous movement state.
+        if (playerMovement != null)
+        {
+            playerMovement.enabled =
+                playerMovementWasEnabled;
+        }
+
+        // Restore previous camera look state.
+        if (playerLook != null)
+        {
+            if (playerLookWasEnabled)
+                playerLook.EnableLook();
+            else
+                playerLook.DisableLook();
+        }
+
+        // IMPORTANT:
+        // Always hide and lock the mouse after closing Archive.
+        // Do not restore the previous visible cursor state.
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        Debug.Log(
+            "PREVIOUS PLAYER STATE RESTORED - " +
+            "CURSOR LOCKED AND HIDDEN!"
+        );
     }
 
     // ==========================================
@@ -173,10 +227,7 @@ public class CrosswordPanelController : MonoBehaviour
         crosswordOpen = true;
 
         if (playerCamera != null)
-        {
-            savedCameraRotation =
-                playerCamera.localRotation;
-        }
+            savedCameraRotation = playerCamera.localRotation;
 
         if (crosswordPanel != null)
             crosswordPanel.SetActive(true);
@@ -226,6 +277,9 @@ public class CrosswordPanelController : MonoBehaviour
         if (completionBanner != null)
             completionBanner.SetActive(false);
 
+        if (knowledgeArchiveButton != null)
+            knowledgeArchiveButton.SetActive(false);
+
         if (interactPrompt != null)
             interactPrompt.SetActive(false);
 
@@ -247,7 +301,6 @@ public class CrosswordPanelController : MonoBehaviour
 
         Debug.Log("CROSSWORD COMPLETED!");
 
-        // Close crossword but keep player frozen.
         crosswordOpen = false;
 
         if (crosswordPanel != null)
@@ -255,11 +308,9 @@ public class CrosswordPanelController : MonoBehaviour
 
         FreezePlayer();
 
-        // Play success audio.
         if (successAudio != null)
             successAudio.Play();
 
-        // Show completion banner.
         ShowCompletionBanner();
     }
 
@@ -288,9 +339,22 @@ public class CrosswordPanelController : MonoBehaviour
         if (completionBanner != null)
             completionBanner.SetActive(false);
 
-        Debug.Log("OPENING KNOWLEDGE ARCHIVE");
+        Debug.Log("CROSSWORD COMPLETION BANNER FINISHED.");
 
-        OpenKnowledgeArchive();
+        // Use the new Archive system when assigned.
+        if (archiveController != null)
+        {
+            Debug.Log("OPENING NEW KNOWLEDGE ARCHIVE SYSTEM!");
+
+            archiveController.OpenArchive();
+        }
+        else
+        {
+            // Preserve the old behavior in MainGame.
+            Debug.Log("USING EXISTING KNOWLEDGE ARCHIVE SYSTEM!");
+
+            OpenKnowledgeArchive();
+        }
     }
 
     // ==========================================
@@ -299,61 +363,169 @@ public class CrosswordPanelController : MonoBehaviour
 
     public void OpenKnowledgeArchive()
     {
-        if (!challengeFinished)
-            return;
+        Debug.Log("KNOWLEDGE ARCHIVE OPEN REQUEST RECEIVED!");
 
-        // Try finding the panel again.
+        if (knowledgeArchiveOpen)
+        {
+            Debug.Log("Knowledge Archive is already open.");
+            return;
+        }
+
         FindKnowledgeArchive();
 
         if (knowledgeArchivePanel == null)
         {
             Debug.LogError(
-                "Knowledge Archive is still missing! " +
-                "Table 3 will NOT be unlocked."
+                "Knowledge Archive Panel is missing!"
             );
 
             return;
         }
 
+        // Save previous player movement state.
+        if (playerMovement != null)
+        {
+            playerMovementWasEnabled =
+                playerMovement.enabled;
+        }
+
+        // Save previous camera look state.
+        if (playerLook != null)
+        {
+            playerLookWasEnabled =
+                playerLook.IsLookEnabled;
+        }
+
+        // Save camera rotation.
+        if (playerCamera != null)
+            savedCameraRotation = playerCamera.localRotation;
+
+        // Pause Room 2 timer.
+        timerWasRunningBeforeArchive = false;
+
+        if (Room2ChallengeTimer.Instance != null)
+        {
+            timerWasRunningBeforeArchive =
+                Room2ChallengeTimer.Instance.IsTimerRunning();
+
+            Debug.Log(
+                "TIMER BEFORE ARCHIVE: " +
+                timerWasRunningBeforeArchive
+            );
+
+            if (timerWasRunningBeforeArchive)
+                Room2ChallengeTimer.Instance.PauseTimer();
+        }
+        else
+        {
+            Debug.LogError(
+                "Room2ChallengeTimer Instance is NULL!"
+            );
+        }
+
         knowledgeArchiveOpen = true;
 
+        // Hide the persistent button while Archive is open.
+        if (knowledgeArchiveButton != null)
+            knowledgeArchiveButton.SetActive(false);
+
+        // Open Archive on top of other panels.
         knowledgeArchivePanel.SetActive(true);
+        knowledgeArchivePanel.transform.SetAsLastSibling();
 
         FreezePlayer();
 
         Debug.Log(
-            "KNOWLEDGE ARCHIVE OPENED - PLAYER MUST READ"
+            "KNOWLEDGE ARCHIVE SUCCESSFULLY OPENED!"
         );
     }
 
     // ==========================================
     // CLOSE KNOWLEDGE ARCHIVE
-    // CONNECT THIS TO CLOSE / CONTINUE BUTTON
     // ==========================================
+
+
 
     public void CloseKnowledgeArchive()
     {
         Debug.Log("CLOSE KNOWLEDGE ARCHIVE BUTTON CLICKED!");
 
-        // Close the archive regardless of the current state.
-        knowledgeArchiveOpen = false;
-
-        if (knowledgeArchivePanel != null)
+        if (knowledgeArchivePanel == null)
         {
-            knowledgeArchivePanel.SetActive(false);
-            Debug.Log("KNOWLEDGE ARCHIVE PANEL CLOSED!");
-        }
-        else
-        {
-            Debug.LogError("Knowledge Archive Panel reference is NULL!");
+            Debug.LogError(
+                "Knowledge Archive Panel reference is NULL!"
+            );
             return;
         }
 
-        FinishArchiveAndUnlockNextTable();
+        if (!knowledgeArchivePanel.activeInHierarchy)
+        {
+            Debug.LogWarning(
+                "Knowledge Archive Panel is already closed!"
+            );
+            return;
+        }
+
+        knowledgeArchiveOpen = false;
+        knowledgeArchivePanel.SetActive(false);
+
+        Debug.Log("KNOWLEDGE ARCHIVE PANEL CLOSED!");
+
+        // Always resume the Room 2 timer after closing Archive.
+        if (Room2ChallengeTimer.Instance != null)
+        {
+            Room2ChallengeTimer.Instance.ResumeTimer();
+
+            Debug.Log(
+                "TIMER RESUME CHECK: " +
+                Room2ChallengeTimer.Instance.IsTimerRunning()
+            );
+        }
+        else
+        {
+            Debug.LogError(
+                "ROOM 2 TIMER INSTANCE IS NULL!"
+            );
+        }
+
+        // FIRST CLOSE: Unlock Table 3 only once.
+        if (!table3Unlocked)
+        {
+            table3Unlocked = true;
+
+            FinishArchiveAndUnlockNextTable();
+
+            Debug.Log("FIRST ARCHIVE CLOSE - TABLE 3 UNLOCKED!");
+        }
+        else
+        {
+            // Preserve Word Shuffle and restore previous player controls.
+            RestorePreviousPlayerState();
+
+            Debug.Log(
+                "ARCHIVE CLOSED - GAMEPLAY CONTROLS RESTORED!"
+            );
+        }
+
+        // Restore persistent Archive button.
+        if (knowledgeArchiveButton != null)
+        {
+            knowledgeArchiveButton.SetActive(true);
+            knowledgeArchiveButton.transform.SetAsLastSibling();
+        }
+
+        // Always return to normal FPS cursor behavior.
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        Debug.Log("ARCHIVE CLOSE FINISHED - CURSOR HIDDEN!");
     }
 
+
+
     // ==========================================
-    // FINISH ARCHIVE AND UNLOCK NEXT TABLE
+    // FIRST CLOSE ONLY
+    // UNLOCK NEXT TABLE
     // ==========================================
 
     private void FinishArchiveAndUnlockNextTable()
@@ -364,7 +536,9 @@ public class CrosswordPanelController : MonoBehaviour
         {
             ChallengeProgressManager.Instance.CompleteTable(2);
 
-            Debug.Log("TABLE 2 COMPLETED - NEXT TABLE UNLOCKED");
+            Debug.Log(
+                "TABLE 2 COMPLETED - NEXT TABLE UNLOCKED!"
+            );
         }
         else
         {
@@ -383,5 +557,53 @@ public class CrosswordPanelController : MonoBehaviour
                 "Room2InstructionManager is NOT assigned!"
             );
         }
+
+        // Final cursor check.
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        Debug.Log(
+            "FIRST ARCHIVE CLOSE - CURSOR LOCKED AND HIDDEN!"
+        );
     }
+
+
+    // ==========================================
+    // RESET FOR ROOM 2 TRY AGAIN
+    // ==========================================
+
+    public void ResetForRoomRestart()
+    {
+        Debug.Log("RESETTING CROSSWORD PANEL CONTROLLER...");
+
+        StopAllCoroutines();
+
+        // Reset completion and Archive states.
+        crosswordOpen = false;
+        knowledgeArchiveOpen = false;
+        challengeFinished = false;
+        table3Unlocked = false;
+
+        // Hide Crossword UI.
+        if (crosswordPanel != null)
+            crosswordPanel.SetActive(false);
+
+        if (completionBanner != null)
+            completionBanner.SetActive(false);
+
+        // Hide legacy Archive references if assigned.
+        if (knowledgeArchivePanel != null)
+            knowledgeArchivePanel.SetActive(false);
+
+        if (knowledgeArchiveButton != null)
+            knowledgeArchiveButton.SetActive(false);
+
+        if (interactPrompt != null)
+            interactPrompt.SetActive(false);
+
+        Debug.Log(
+            "CROSSWORD PANEL CONTROLLER RESET COMPLETE!"
+        );
+    }
+
 }

@@ -21,7 +21,6 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        // Preserve the Inspector value as the base sensitivity.
         baseMouseSensitivity = mouseSensitivity;
     }
 
@@ -41,15 +40,12 @@ public class PlayerController : MonoBehaviour
 
         LockCursor();
 
-        // Get current camera rotation.
         if (cameraTransform != null)
         {
             xRotation = cameraTransform.localEulerAngles.x;
 
             if (xRotation > 180f)
-            {
                 xRotation -= 360f;
-            }
         }
         else
         {
@@ -74,8 +70,6 @@ public class PlayerController : MonoBehaviour
     {
         multiplier = Mathf.Clamp(multiplier, 0.5f, 3f);
 
-        // Always calculate from the original base value.
-        // This prevents multiplying an already-multiplied value.
         mouseSensitivity = baseMouseSensitivity * multiplier;
 
         Debug.Log(
@@ -92,13 +86,13 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        // Toggle cursor with F.
+        // Press F to show the cursor.
         if (Input.GetKeyDown(KeyCode.F))
         {
             UnlockCursor();
         }
 
-        // Lock cursor only when clicking outside the UI.
+        // Lock cursor when clicking outside UI.
         if (Input.GetMouseButtonDown(0) &&
             !cursorLocked &&
             lookEnabled)
@@ -111,7 +105,6 @@ public class PlayerController : MonoBehaviour
                     EventSystem.current.IsPointerOverGameObject();
             }
 
-            // Do not lock the cursor when clicking a UI element.
             if (!pointerOverUI)
             {
                 LockCursor();
@@ -151,6 +144,26 @@ public class PlayerController : MonoBehaviour
             transform.Rotate(
                 Vector3.up * mouseX
             );
+        }
+    }
+
+    // =====================================================
+    // LATE UPDATE
+    // KEEP CURSOR HIDDEN DURING NORMAL GAMEPLAY
+    // =====================================================
+
+    private void LateUpdate()
+    {
+        // Only enforce the hidden cursor when:
+        // 1. Camera look is enabled.
+        // 2. The player has not unlocked the cursor using F.
+        //
+        // UI panels can still show the cursor while look is disabled.
+
+        if (lookEnabled && cursorLocked)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
     }
 
@@ -207,9 +220,7 @@ public class PlayerController : MonoBehaviour
         xRotation = rotation.eulerAngles.x;
 
         if (xRotation > 180f)
-        {
             xRotation -= 360f;
-        }
     }
 
     // =====================================================
