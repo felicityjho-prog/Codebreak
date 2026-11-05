@@ -30,6 +30,7 @@ public class WordPuzzleInteraction : MonoBehaviour
         "PREVIOUS CHALLENGE REQUIRED\nCOMPLETE TABLE 2 FIRST.";
 
     private Transform player;
+
     private bool isNear;
     private bool isOpen;
 
@@ -98,6 +99,7 @@ public class WordPuzzleInteraction : MonoBehaviour
         );
 
         // PLAYER FAR FROM TABLE
+
         if (distance > interactionDistance)
         {
             isNear = false;
@@ -107,10 +109,9 @@ public class WordPuzzleInteraction : MonoBehaviour
         }
 
         // PLAYER NEAR TABLE
+
         bool unlocked = IsTableUnlocked();
 
-        // Update UI when entering range or when
-        // the table changes from locked to unlocked.
         if (!isNear ||
             !hasPromptState ||
             unlocked != lastKnownUnlocked)
@@ -130,6 +131,7 @@ public class WordPuzzleInteraction : MonoBehaviour
         }
 
         // PRESS INTERACTION KEY
+
         if (Input.GetKeyDown(interactionKey))
         {
             if (IsTableUnlocked())
@@ -207,7 +209,6 @@ public class WordPuzzleInteraction : MonoBehaviour
 
     private void ShowLockedMessage()
     {
-        // The E icon must never appear while locked.
         HidePromptImmediately();
 
         if (lockedMessageText == null)
@@ -270,16 +271,22 @@ public class WordPuzzleInteraction : MonoBehaviour
 
         HideAllPrompts();
 
-        // Hide the Room 2 instruction.
+        // Hide the large and persistent Room 2 instructions.
         Room2InstructionManager instructionManager =
             FindFirstObjectByType<Room2InstructionManager>();
 
         if (instructionManager != null)
         {
             instructionManager.HideInstruction();
+            instructionManager.HidePersistentInstruction();
+
+            Debug.Log(
+                "ROOM 2 INSTRUCTION HIDDEN FOR WORD SHUFFLE."
+            );
         }
 
         // Remember and disable player movement.
+
         if (playerMovement != null)
         {
             movementWasEnabled = playerMovement.enabled;
@@ -287,13 +294,15 @@ public class WordPuzzleInteraction : MonoBehaviour
             playerMovement.enabled = false;
         }
 
-        // Freeze camera look while solving.
+        // Freeze camera look.
+
         if (playerController != null)
         {
             playerController.DisableLook();
         }
 
         // Open Word Scrabble.
+
         wordScrabblePanel.SetActive(true);
 
         Cursor.lockState = CursorLockMode.None;
@@ -321,6 +330,7 @@ public class WordPuzzleInteraction : MonoBehaviour
         }
 
         // Restore previous movement state.
+
         if (playerMovement != null && movementStateSaved)
         {
             playerMovement.enabled = movementWasEnabled;
@@ -329,16 +339,35 @@ public class WordPuzzleInteraction : MonoBehaviour
         movementStateSaved = false;
 
         // Restore camera look.
+
         if (playerController != null)
         {
             playerController.EnableLook();
         }
 
+        // Restore persistent instruction only if
+        // Table 3 has not yet been completed.
+
+        if (!IsTableCompleted())
+        {
+            Room2InstructionManager instructionManager =
+                FindFirstObjectByType<Room2InstructionManager>();
+
+            if (instructionManager != null)
+            {
+                instructionManager.ShowPersistentInstruction();
+
+                Debug.Log(
+                    "WORD SHUFFLE CLOSED - STATUS INSTRUCTION RESTORED."
+                );
+            }
+        }
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        // The next Update will determine which prompt
-        // should be shown based on distance and progress.
+        // Let the next Update determine the correct prompt.
+
         isNear = false;
         hasPromptState = false;
 

@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using System.Collections;
 
 public class KnowledgeArchiveController : MonoBehaviour
 {
@@ -16,7 +17,25 @@ public class KnowledgeArchiveController : MonoBehaviour
     [Header("Room 2 Instructions")]
     public Room2InstructionManager instructionManager;
 
+    [Header("Transition Settings")]
+    [Min(0.01f)]
+    public float fadeInDuration = 0.3f;
+
+    [Min(0.01f)]
+    public float fadeOutDuration = 0.25f;
+
+    [Range(0.8f, 1f)]
+    public float startingScaleMultiplier = 0.96f;
+
+    private CanvasGroup archiveCanvasGroup;
+    private RectTransform archiveRectTransform;
+
+    private Vector3 originalScale;
+
+    private Coroutine archiveTransitionCoroutine;
+
     private bool archiveOpen = false;
+    private bool isTransitioning = false;
     private bool firstArchiveCloseCompleted = false;
 
     private bool previousMovementState;
@@ -28,16 +47,70 @@ public class KnowledgeArchiveController : MonoBehaviour
     private Quaternion previousCameraRotation;
 
     // ==========================================
+    // AWAKE
+    // ==========================================
+
+    private void Awake()
+    {
+        CacheArchiveComponents();
+    }
+
+    // ==========================================
+    // CACHE ARCHIVE COMPONENTS
+    // ==========================================
+
+    private void CacheArchiveComponents()
+    {
+        if (knowledgeArchivePanel == null)
+        {
+            Debug.LogError(
+                "KnowledgeArchivePanel is not assigned!",
+                this
+            );
+
+            return;
+        }
+
+        archiveCanvasGroup =
+            knowledgeArchivePanel.GetComponent<CanvasGroup>();
+
+        // Automatically add CanvasGroup if missing.
+        if (archiveCanvasGroup == null)
+        {
+            archiveCanvasGroup =
+                knowledgeArchivePanel.AddComponent<CanvasGroup>();
+
+            Debug.LogWarning(
+                "CanvasGroup was automatically added to KnowledgeArchivePanel.",
+                this
+            );
+        }
+
+        archiveRectTransform =
+            knowledgeArchivePanel.GetComponent<RectTransform>();
+
+        if (archiveRectTransform != null)
+        {
+            originalScale = archiveRectTransform.localScale;
+        }
+    }
+
+    // ==========================================
     // START
     // ==========================================
 
     private void Start()
     {
         archiveOpen = false;
+        isTransitioning = false;
         firstArchiveCloseCompleted = false;
 
         if (knowledgeArchivePanel != null)
+        {
+            ResetArchiveVisuals();
+
             knowledgeArchivePanel.SetActive(false);
+        }
 
         if (knowledgeArchiveButton != null)
             knowledgeArchiveButton.SetActive(false);
@@ -46,12 +119,31 @@ public class KnowledgeArchiveController : MonoBehaviour
     }
 
     // ==========================================
+    // RESET ARCHIVE VISUALS
+    // ==========================================
+
+    private void ResetArchiveVisuals()
+    {
+        if (archiveCanvasGroup != null)
+        {
+            archiveCanvasGroup.alpha = 1f;
+            archiveCanvasGroup.interactable = true;
+            archiveCanvasGroup.blocksRaycasts = true;
+        }
+
+        if (archiveRectTransform != null)
+        {
+            archiveRectTransform.localScale = originalScale;
+        }
+    }
+
+    // ==========================================
     // OPEN ARCHIVE
     // ==========================================
 
     public void OpenArchive()
     {
-        if (archiveOpen)
+        if (archiveOpen || isTransitioning)
             return;
 
         if (knowledgeArchivePanel == null)
@@ -60,10 +152,12 @@ public class KnowledgeArchiveController : MonoBehaviour
                 "KnowledgeArchivePanel is not assigned!",
                 this
             );
+
             return;
         }
 
         // Save previous gameplay states.
+
         previousMovementState =
             playerMovement != null &&
             playerMovement.enabled;
@@ -77,9 +171,15 @@ public class KnowledgeArchiveController : MonoBehaviour
             centerDot.activeSelf;
 
         if (playerCamera != null)
-            previousCameraRotation = playerCamera.localRotation;
+        {
+            previousCameraRotation =
+                playerCamera.localRotation;
+        }
 
-        // Pause Room 2 timer only if currently running.
+        // ======================================
+        // PAUSE ROOM 2 TIMER
+        // ======================================
+
         timerWasRunning = false;
 
         if (Room2ChallengeTimer.Instance != null)
@@ -88,7 +188,9 @@ public class KnowledgeArchiveController : MonoBehaviour
                 Room2ChallengeTimer.Instance.IsTimerRunning();
 
             if (timerWasRunning)
+            {
                 Room2ChallengeTimer.Instance.PauseTimer();
+            }
         }
         else
         {
@@ -98,33 +200,65 @@ public class KnowledgeArchiveController : MonoBehaviour
             );
         }
 
-        // Hide persistent Archive button.
+        // ======================================
+        // HIDE ARCHIVE BUTTON
+        // ======================================
+
         if (knowledgeArchiveButton != null)
             knowledgeArchiveButton.SetActive(false);
 
-        // Hide center dot while Archive is open.
+        // ======================================
+        // HIDE CENTER DOT
+        // ======================================
+
         if (centerDot != null)
             centerDot.SetActive(false);
 
-        // Freeze player movement.
+        // ======================================
+        // FREEZE PLAYER
+        // ======================================
+
         if (playerMovement != null)
             playerMovement.enabled = false;
 
-        // Freeze camera look.
         if (playerController != null)
             playerController.DisableLook();
 
-        // Show Archive.
+        // ======================================
+        // PREPARE ARCHIVE OPENING
+        // ======================================
+
         archiveOpen = true;
+        isTransitioning = true;
 
         knowledgeArchivePanel.SetActive(true);
+
         knowledgeArchivePanel.transform.SetAsLastSibling();
+
+        if (archiveCanvasGroup != null)
+        {
+            archiveCanvasGroup.alpha = 0f;
+            archiveCanvasGroup.interactable = false;
+            archiveCanvasGroup.blocksRaycasts = true;
+        }
+
+        if (archiveRectTransform != null)
+        {
+            archiveRectTransform.localScale =
+                originalScale * startingScaleMultiplier;
+        }
 
         // Allow mouse interaction.
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        Debug.Log("KNOWLEDGE ARCHIVE OPENED!");
+        // Start smooth fade-in.
+        archiveTransitionCoroutine =
+            StartCoroutine(AnimateArchive(true));
+
+        Debug.Log(
+            "KNOWLEDGE ARCHIVE OPENING ANIMATION STARTED!"
+        );
     }
 
     // ==========================================
@@ -133,12 +267,13 @@ public class KnowledgeArchiveController : MonoBehaviour
 
     public void CloseArchive()
     {
-        if (!archiveOpen)
+        if (!archiveOpen || isTransitioning)
         {
             Debug.LogWarning(
-                "Knowledge Archive is not currently open!",
+                "Knowledge Archive is not open or is transitioning!",
                 this
             );
+
             return;
         }
 
@@ -148,20 +283,163 @@ public class KnowledgeArchiveController : MonoBehaviour
                 "KnowledgeArchivePanel is missing!",
                 this
             );
+
             return;
         }
 
-        archiveOpen = false;
+        isTransitioning = true;
 
-        knowledgeArchivePanel.SetActive(false);
+        // Prevent clicking buttons during fade-out.
+        if (archiveCanvasGroup != null)
+        {
+            archiveCanvasGroup.interactable = false;
+            archiveCanvasGroup.blocksRaycasts = true;
+        }
 
+        // Start smooth fade-out.
+        archiveTransitionCoroutine =
+            StartCoroutine(AnimateArchive(false));
+
+        Debug.Log(
+            "KNOWLEDGE ARCHIVE CLOSING ANIMATION STARTED!"
+        );
+    }
+
+    // ==========================================
+    // ARCHIVE ANIMATION
+    // OPEN / CLOSE
+    // ==========================================
+
+    private IEnumerator AnimateArchive(bool opening)
+    {
+        float duration = opening
+            ? fadeInDuration
+            : fadeOutDuration;
+
+        duration = Mathf.Max(0.01f, duration);
+
+        float startAlpha =
+            archiveCanvasGroup != null
+                ? archiveCanvasGroup.alpha
+                : 1f;
+
+        float targetAlpha = opening ? 1f : 0f;
+
+        Vector3 startScale =
+            archiveRectTransform != null
+                ? archiveRectTransform.localScale
+                : originalScale;
+
+        Vector3 targetScale = opening
+            ? originalScale
+            : originalScale * startingScaleMultiplier;
+
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+
+            float t = Mathf.Clamp01(elapsed / duration);
+
+            // Smooth animation curve.
+            float smoothT = Mathf.SmoothStep(0f, 1f, t);
+
+            // Fade animation.
+            if (archiveCanvasGroup != null)
+            {
+                archiveCanvasGroup.alpha =
+                    Mathf.Lerp(
+                        startAlpha,
+                        targetAlpha,
+                        smoothT
+                    );
+            }
+
+            // Scale animation.
+            if (archiveRectTransform != null)
+            {
+                archiveRectTransform.localScale =
+                    Vector3.Lerp(
+                        startScale,
+                        targetScale,
+                        smoothT
+                    );
+            }
+
+            yield return null;
+        }
+
+        // Apply exact final values.
+        if (archiveCanvasGroup != null)
+        {
+            archiveCanvasGroup.alpha = targetAlpha;
+        }
+
+        if (archiveRectTransform != null)
+        {
+            archiveRectTransform.localScale = targetScale;
+        }
+
+        archiveTransitionCoroutine = null;
+        isTransitioning = false;
+
+        // ======================================
+        // OPENING FINISHED
+        // ======================================
+
+        if (opening)
+        {
+            if (archiveCanvasGroup != null)
+            {
+                archiveCanvasGroup.interactable = true;
+                archiveCanvasGroup.blocksRaycasts = true;
+            }
+
+            Debug.Log(
+                "KNOWLEDGE ARCHIVE OPENING COMPLETE!"
+            );
+        }
+
+        // ======================================
+        // CLOSING FINISHED
+        // ======================================
+
+        else
+        {
+            // Only deactivate after fade-out completes.
+            knowledgeArchivePanel.SetActive(false);
+
+            archiveOpen = false;
+
+            FinishArchiveClose();
+
+            Debug.Log(
+                "KNOWLEDGE ARCHIVE CLOSING COMPLETE!"
+            );
+        }
+    }
+
+    // ==========================================
+    // FINISH ARCHIVE CLOSE
+    // EXISTING GAMEPLAY LOGIC
+    // ==========================================
+
+    private void FinishArchiveClose()
+    {
         Debug.Log("KNOWLEDGE ARCHIVE CLOSED!");
 
         // Resume only if the timer was running before opening.
         if (timerWasRunning)
         {
             if (Room2ChallengeTimer.Instance != null)
+            {
                 Room2ChallengeTimer.Instance.ResumeTimer();
+
+                Debug.Log(
+                    "ROOM 2 TIMER RESUMED AFTER ARCHIVE."
+                );
+            }
         }
 
         timerWasRunning = false;
@@ -200,11 +478,17 @@ public class KnowledgeArchiveController : MonoBehaviour
                 );
             }
 
-            Debug.Log("FIRST ARCHIVE READING COMPLETED!");
+            Debug.Log(
+                "FIRST ARCHIVE READING COMPLETED!"
+            );
         }
+
+        // ======================================
+        // REUSABLE ARCHIVE CLOSE
+        // ======================================
+
         else
         {
-            // Reopening Archive must preserve Word Shuffle.
             RestorePreviousGameplayState();
 
             Debug.Log(
@@ -216,10 +500,10 @@ public class KnowledgeArchiveController : MonoBehaviour
         if (knowledgeArchiveButton != null)
         {
             knowledgeArchiveButton.SetActive(true);
+
             knowledgeArchiveButton.transform.SetAsLastSibling();
         }
 
-        // Always return to normal cursor mode.
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -246,7 +530,10 @@ public class KnowledgeArchiveController : MonoBehaviour
             centerDot.SetActive(true);
 
         if (playerCamera != null)
-            playerCamera.localRotation = previousCameraRotation;
+        {
+            playerCamera.localRotation =
+                previousCameraRotation;
+        }
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -262,7 +549,10 @@ public class KnowledgeArchiveController : MonoBehaviour
     private void RestorePreviousGameplayState()
     {
         if (playerMovement != null)
-            playerMovement.enabled = previousMovementState;
+        {
+            playerMovement.enabled =
+                previousMovementState;
+        }
 
         if (playerController != null)
         {
@@ -275,12 +565,16 @@ public class KnowledgeArchiveController : MonoBehaviour
         }
 
         if (centerDot != null)
+        {
             centerDot.SetActive(previousCenterDotState);
+        }
 
         if (playerCamera != null)
-            playerCamera.localRotation = previousCameraRotation;
+        {
+            playerCamera.localRotation =
+                previousCameraRotation;
+        }
 
-        // Hide the cursor after closing Archive.
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -299,19 +593,31 @@ public class KnowledgeArchiveController : MonoBehaviour
         return firstArchiveCloseCompleted;
     }
 
-
     // ==========================================
     // RESET ARCHIVE FOR ROOM 2 RESTART
     // ==========================================
 
     public void ResetForRoomRestart()
     {
+        Debug.Log("RESETTING KNOWLEDGE ARCHIVE...");
+
+        if (archiveTransitionCoroutine != null)
+        {
+            StopCoroutine(archiveTransitionCoroutine);
+            archiveTransitionCoroutine = null;
+        }
+
         archiveOpen = false;
+        isTransitioning = false;
         firstArchiveCloseCompleted = false;
         timerWasRunning = false;
 
         if (knowledgeArchivePanel != null)
+        {
+            ResetArchiveVisuals();
+
             knowledgeArchivePanel.SetActive(false);
+        }
 
         if (knowledgeArchiveButton != null)
             knowledgeArchiveButton.SetActive(false);
@@ -320,5 +626,4 @@ public class KnowledgeArchiveController : MonoBehaviour
             "KNOWLEDGE ARCHIVE RESET - BUTTON HIDDEN!"
         );
     }
-
 }

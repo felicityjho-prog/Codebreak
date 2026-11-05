@@ -15,6 +15,9 @@ public class Room2CompletionHudController : MonoBehaviour
     [Header("Room 3 Instruction Gate")]
     [SerializeField] private GameObject room3InstructionPanel;
 
+    [Header("Knowledge Archive")]
+    [SerializeField] private GameObject knowledgeArchiveButton;
+
     private RoomSwitcher roomSwitcherToWatch;
 
     private bool hiddenForRoom2Completion;
@@ -32,6 +35,11 @@ public class Room2CompletionHudController : MonoBehaviour
         if (hiddenForRoom2Completion)
         {
             roomSwitcherToWatch = roomSwitcher;
+
+            // Keep Knowledge Archive hidden after completion.
+            if (knowledgeArchiveButton != null)
+                knowledgeArchiveButton.SetActive(false);
+
             return;
         }
 
@@ -58,8 +66,19 @@ public class Room2CompletionHudController : MonoBehaviour
             room2TimerText.SetActive(false);
         }
 
+        // Hide Knowledge Archive button.
+        if (knowledgeArchiveButton != null)
+        {
+            knowledgeArchiveButton.SetActive(false);
+
+            Debug.Log(
+                "KNOWLEDGE ARCHIVE BUTTON HIDDEN - ROOM 2 COMPLETED.",
+                this
+            );
+        }
+
         Debug.Log(
-            "ROOM 2 COMPLETED: HUD and Room 2 Timer hidden.",
+            "ROOM 2 COMPLETED: HUD, Archive Button, and Room 2 Timer hidden.",
             this
         );
 
@@ -169,7 +188,11 @@ public class Room2CompletionHudController : MonoBehaviour
             pauseButtonRoom1.SetActive(pauseButtonWasActive);
 
         // IMPORTANT:
-        // Do not restore Room 2 timer in Room 3.
+        // Do not restore Room 2 timer or Knowledge Archive
+        // button in Room 3.
+
+        if (knowledgeArchiveButton != null)
+            knowledgeArchiveButton.SetActive(false);
 
         hiddenForRoom2Completion = false;
         roomSwitcherToWatch = null;
@@ -177,7 +200,7 @@ public class Room2CompletionHudController : MonoBehaviour
 
         Debug.Log(
             "ROOM 3 INSTRUCTION CLOSED: Global HUD restored. " +
-            "Room 2 Timer remains hidden.",
+            "Room 2 Timer and Knowledge Archive remain hidden.",
             this
         );
     }

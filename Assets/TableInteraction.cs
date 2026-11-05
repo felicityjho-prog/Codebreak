@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using System.Collections;
 
@@ -49,9 +50,7 @@ public class TableInteraction : MonoBehaviour
 
     void Update()
     {
-        // ==========================================
         // TABLE ALREADY COMPLETED
-        // ==========================================
 
         if (IsTableCompleted())
         {
@@ -60,9 +59,7 @@ public class TableInteraction : MonoBehaviour
             return;
         }
 
-        // ==========================================
         // SUDOKU IS OPEN
-        // ==========================================
 
         if (IsSudokuOpen())
         {
@@ -71,9 +68,7 @@ public class TableInteraction : MonoBehaviour
             return;
         }
 
-        // ==========================================
         // NO PLAYER
-        // ==========================================
 
         if (player == null)
             return;
@@ -83,9 +78,7 @@ public class TableInteraction : MonoBehaviour
             player.position
         );
 
-        // ==========================================
         // PLAYER NEAR TABLE
-        // ==========================================
 
         if (distance <= interactionDistance)
         {
@@ -102,9 +95,7 @@ public class TableInteraction : MonoBehaviour
             }
         }
 
-        // ==========================================
         // PLAYER FAR FROM TABLE
-        // ==========================================
 
         else
         {
@@ -195,17 +186,14 @@ public class TableInteraction : MonoBehaviour
         if (promptCanvasGroup == null)
             yield break;
 
-        float startAlpha =
-            promptCanvasGroup.alpha;
-
+        float startAlpha = promptCanvasGroup.alpha;
         float elapsed = 0f;
 
         while (elapsed < fadeDuration)
         {
             elapsed += Time.deltaTime;
 
-            float t =
-                elapsed / fadeDuration;
+            float t = elapsed / fadeDuration;
 
             promptCanvasGroup.alpha =
                 Mathf.Lerp(
@@ -217,8 +205,7 @@ public class TableInteraction : MonoBehaviour
             yield return null;
         }
 
-        promptCanvasGroup.alpha =
-            targetAlpha;
+        promptCanvasGroup.alpha = targetAlpha;
 
         if (targetAlpha > 0f &&
             !IsSudokuOpen() &&
@@ -278,26 +265,30 @@ public class TableInteraction : MonoBehaviour
         if (IsTableCompleted())
             return;
 
-        // Hide E prompt
+        // Hide E interaction prompt.
         HidePrompt();
 
         isNear = false;
 
-        // ==========================================
-        // HIDE ROOM INSTRUCTION
-        // ==========================================
+        // HIDE ROOM 2 INSTRUCTIONS
 
         Room2InstructionManager instructionManager =
             FindFirstObjectByType<Room2InstructionManager>();
 
         if (instructionManager != null)
         {
+            // Hide the large instruction panel.
             instructionManager.HideInstruction();
+
+            // Fade out the persistent instruction at the top.
+            instructionManager.HidePersistentInstruction();
+
+            Debug.Log(
+                "ROOM 2 INSTRUCTION TEXT HIDDEN FOR SUDOKU."
+            );
         }
 
-        // ==========================================
         // OPEN SUDOKU
-        // ==========================================
 
         if (sudokuPanelController != null)
         {
@@ -307,9 +298,7 @@ public class TableInteraction : MonoBehaviour
         {
             puzzlePanel.SetActive(true);
 
-            Cursor.lockState =
-                CursorLockMode.None;
-
+            Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
     }
