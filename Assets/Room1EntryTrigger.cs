@@ -43,13 +43,10 @@ public class RoomEntryTrigger : MonoBehaviour
     private bool controlsOriginalState;
     private bool centerDotOriginalState;
 
-    // =====================================================
-    // START
-    // =====================================================
-
+    // Start the hallway sequence when needed.
     private void Start()
     {
-        // Do not affect Room 1 HUD during Room 2 Test Mode.
+        // Skip the Room 1 setup during Room 2 testing.
         if (roomSwitcher != null && roomSwitcher.testRoom2)
         {
             if (voiceOver != null)
@@ -68,7 +65,7 @@ public class RoomEntryTrigger : MonoBehaviour
             return;
         }
 
-        // The opening cinematic will start the hallway sequence later.
+        // Wait for the opening cinematic before showing the hallway intro.
         if (openingCinematic != null &&
             openingCinematic.ShouldDelayHallwaySequence)
         {
@@ -84,7 +81,6 @@ public class RoomEntryTrigger : MonoBehaviour
             if (instructionPanel != null)
                 instructionPanel.SetActive(false);
 
-            // Hide the HUD immediately during the cinematic.
             SetHallwayUIHidden(true);
             return;
         }
@@ -92,15 +88,10 @@ public class RoomEntryTrigger : MonoBehaviour
         BeginHallwaySequence();
     }
 
-    // =====================================================
-    // UPDATE
-    // Detect when the opening cinematic or hallway sequence
-    // requires the HUD and pause menu to stay hidden.
-    // =====================================================
-
+    // Keep the HUD hidden while the intro is active.
     private void Update()
     {
-        // Room 2 Test Mode must not use Room 1 HUD locking.
+        // Room 2 testing should not use the Room 1 HUD lock.
         if (roomSwitcher != null && roomSwitcher.testRoom2)
         {
             SetHallwayUIHidden(false);
@@ -136,10 +127,7 @@ public class RoomEntryTrigger : MonoBehaviour
         SetHallwayUIHidden(shouldHideHUD);
     }
 
-    // =====================================================
-    // HIDE / RESTORE HUD
-    // =====================================================
-
+    // Hide or restore the player's HUD.
     private void SetHallwayUIHidden(bool hide)
     {
         if (hallwayUIHidden == hide)
@@ -149,7 +137,7 @@ public class RoomEntryTrigger : MonoBehaviour
 
         if (hide)
         {
-            // Cache the original HUD visibility only once.
+            // Save the current HUD state before hiding it.
             if (!hudStatesCached)
             {
                 controlsOriginalState =
@@ -163,15 +151,12 @@ public class RoomEntryTrigger : MonoBehaviour
                 hudStatesCached = true;
             }
 
-            // Hide the keyboard and mouse control labels.
             if (playerControlsUI != null)
                 playerControlsUI.SetActive(false);
 
-            // Hide the center dot / crosshair.
             if (centerDotUI != null)
                 centerDotUI.SetActive(false);
 
-            // Hide and lock the pause menu.
             if (pauseMenuController != null)
                 pauseMenuController.SetCinematicLock(true);
 
@@ -181,7 +166,7 @@ public class RoomEntryTrigger : MonoBehaviour
         }
         else
         {
-            // Restore the same visibility states as before.
+            // Bring the HUD back to its previous state.
             if (hudStatesCached)
             {
                 if (playerControlsUI != null)
@@ -193,7 +178,6 @@ public class RoomEntryTrigger : MonoBehaviour
                 hudStatesCached = false;
             }
 
-            // Allow the pause menu to work again.
             if (pauseMenuController != null)
                 pauseMenuController.SetCinematicLock(false);
 
@@ -203,10 +187,7 @@ public class RoomEntryTrigger : MonoBehaviour
         }
     }
 
-    // =====================================================
-    // BEGIN HALLWAY SEQUENCE
-    // =====================================================
-
+    // Show the hallway intro and play its voice-over.
     public void BeginHallwaySequence()
     {
         if (roomSwitcher != null && roomSwitcher.testRoom2)
@@ -215,7 +196,6 @@ public class RoomEntryTrigger : MonoBehaviour
         if (triggered)
             return;
 
-        // Avoid multiple welcome voice coroutines.
         StopAllCoroutines();
 
         if (hallwayInstruction != null)
@@ -227,7 +207,6 @@ public class RoomEntryTrigger : MonoBehaviour
         if (instructionPanel != null)
             instructionPanel.SetActive(false);
 
-        // Hide the HUD before the voice begins.
         SetHallwayUIHidden(true);
 
         if (voiceOver != null)
@@ -242,10 +221,7 @@ public class RoomEntryTrigger : MonoBehaviour
         }
     }
 
-    // =====================================================
-    // WAIT FOR WELCOME VOICE
-    // =====================================================
-
+    // Hide the hallway message after the voice-over ends.
     private IEnumerator WaitForVoiceToFinish()
     {
         while (voiceOver != null && voiceOver.isPlaying)
@@ -253,15 +229,9 @@ public class RoomEntryTrigger : MonoBehaviour
 
         if (!triggered && hallwayInstruction != null)
             hallwayInstruction.SetActive(false);
-
-        // Update() will restore the HUD when the cinematic
-        // and any active hallway instruction visuals are done.
     }
 
-    // =====================================================
-    // ENTER ROOM 1
-    // =====================================================
-
+    // Start the Room 1 challenge when the player enters.
     private void OnTriggerEnter(Collider other)
     {
         if (triggered)
@@ -270,7 +240,7 @@ public class RoomEntryTrigger : MonoBehaviour
         if (!other.CompareTag("Player"))
             return;
 
-        // Prevent entry during the opening cinematic.
+        // Do not let the player enter while the opening cinematic is active.
         if (openingCinematic != null &&
             openingCinematic.ShouldDelayHallwaySequence)
         {
@@ -290,7 +260,6 @@ public class RoomEntryTrigger : MonoBehaviour
         if (voiceOver != null && voiceOver.isPlaying)
             voiceOver.Stop();
 
-        // Restore HUD and unlock pause functionality.
         SetHallwayUIHidden(false);
 
         if (challengeUI != null)
@@ -306,10 +275,7 @@ public class RoomEntryTrigger : MonoBehaviour
             room1Interaction.EnableRoom1Interactions();
     }
 
-    // =====================================================
-    // RESET HALLWAY SEQUENCE
-    // =====================================================
-
+    // Reset the hallway and Room 1 setup.
     public void ResetForHallwayRestart()
     {
         if (roomSwitcher != null && roomSwitcher.testRoom2)
@@ -334,7 +300,6 @@ public class RoomEntryTrigger : MonoBehaviour
         if (instructionPanel != null)
             instructionPanel.SetActive(false);
 
-        // Hide HUD again during the restarted sequence.
         SetHallwayUIHidden(true);
 
         if (voiceOver != null)

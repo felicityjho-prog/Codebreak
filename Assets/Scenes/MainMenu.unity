@@ -334,7 +334,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
-  m_EffectColor: {r: 0.72, g: 0.54, b: 0.29, a: 0.54}
+  m_EffectColor: {r: 0.72, g: 0.54, b: 0.29, a: 1}
   m_EffectDistance: {x: 1.6, y: 1.6}
   m_UseGraphicAlpha: 1
 --- !u!95 &17476875
@@ -3212,7 +3212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
-  m_EffectColor: {r: 0.83, g: 0.65, b: 0.36, a: 0.68}
+  m_EffectColor: {r: 0.72, g: 0.54, b: 0.29, a: 1}
   m_EffectDistance: {x: 1.6, y: 1.6}
   m_UseGraphicAlpha: 1
 --- !u!95 &1155463968
@@ -4161,7 +4161,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
-  m_EffectColor: {r: 0.72, g: 0.54, b: 0.29, a: 0.54}
+  m_EffectColor: {r: 0.72, g: 0.54, b: 0.29, a: 1}
   m_EffectDistance: {x: 1.6, y: 1.6}
   m_UseGraphicAlpha: 1
 --- !u!95 &1287547293
@@ -4768,7 +4768,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
-  m_EffectColor: {r: 0.72, g: 0.54, b: 0.29, a: 0.54}
+  m_EffectColor: {r: 0.72, g: 0.54, b: 0.29, a: 1}
   m_EffectDistance: {x: 1.6, y: 1.6}
   m_UseGraphicAlpha: 1
 --- !u!95 &1596641709

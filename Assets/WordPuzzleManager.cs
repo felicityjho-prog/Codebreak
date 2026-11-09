@@ -72,6 +72,21 @@ public class WordPuzzleManager : MonoBehaviour
         new PuzzleWord("WIFI",
             "Lets devices connect to the internet without a cable."),
 
+        new PuzzleWord("CODE",
+            "Instructions written by a programmer to create software."),
+
+        new PuzzleWord("DATA",
+            "Information processed or stored by a computer."),
+
+        new PuzzleWord("BYTE",
+            "A unit of digital information consisting of 8 bits."),
+
+        new PuzzleWord("SCRIPT",
+            "A set of instructions written to perform a specific task."),
+
+        new PuzzleWord("DOMAIN",
+            "The unique name used to identify a website."),
+
         new PuzzleWord("ARRAY",
             "A collection of values stored under one variable name."),
 

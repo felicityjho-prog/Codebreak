@@ -32,7 +32,9 @@ public class MenuUIController : MonoBehaviour
 
     public void PlayGame()
     {
-        SceneManager.LoadScene("MainGame");
+        Debug.Log("Loading Main Game...");
+
+        SceneManager.LoadScene("Main Game");
     }
 
     public void OpenSettings()
