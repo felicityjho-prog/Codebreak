@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class Room3InstructionManager : MonoBehaviour
@@ -47,20 +48,16 @@ public class Room3InstructionManager : MonoBehaviour
             return;
         }
 
-        // Stop the timer while instructions are open.
         if (room3Timer != null)
             room3Timer.StopTimer();
 
-        // Hide gameplay UI.
         SetGameplayUIVisible(false);
 
-        // Keep pause menu closed.
         if (pauseOverlay != null)
             pauseOverlay.SetActive(false);
 
         instructionPanel.SetActive(true);
 
-        // Play the instruction voice once per opening.
         if (!voicePlayedForCurrentInstructions)
         {
             if (instructionVoice != null &&
@@ -83,13 +80,11 @@ public class Room3InstructionManager : MonoBehaviour
             }
         }
 
-        // Freeze player movement.
         if (playerMovement != null)
             playerMovement.enabled = false;
         else
             Debug.LogError("PlayerMovement is not assigned.", this);
 
-        // Freeze camera look.
         if (playerController != null)
         {
             playerController.DisableLook();
@@ -100,7 +95,6 @@ public class Room3InstructionManager : MonoBehaviour
             Debug.LogError("PlayerController is not assigned.", this);
         }
 
-        // Allow cursor movement and UI interaction.
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
@@ -112,45 +106,28 @@ public class Room3InstructionManager : MonoBehaviour
         if (instructionPanel != null)
             instructionPanel.SetActive(false);
 
-        // IMPORTANT:
-        // Do not stop the AudioSource here.
-        // The AI voice will continue playing after
-        // the instruction panel is closed.
+        // Keep the AI voice playing after the panel closes.
 
-        // Allow the voice to play again if instructions
-        // are opened another time.
         voicePlayedForCurrentInstructions = false;
 
-        // Restore gameplay UI.
         SetGameplayUIVisible(true);
 
-        // Keep pause menu closed.
         if (pauseOverlay != null)
             pauseOverlay.SetActive(false);
 
-        // Restore player movement.
         if (playerMovement != null)
             playerMovement.enabled = true;
 
-        // Restore camera look.
         if (playerController != null)
         {
             playerController.enabled = true;
             playerController.EnableLook();
         }
 
-        // Lock cursor for gameplay.
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        // Start timer after instructions are closed.
-        if (room3Timer != null)
-            room3Timer.StartTimer();
-        else
-            Debug.LogWarning(
-                "Room3ChallengeTimer is not assigned.",
-                this
-            );
+        // The box challenge manager now controls the timer.
 
         Debug.Log("ROOM 3 INSTRUCTIONS CLOSED.");
     }

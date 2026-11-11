@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -24,6 +25,17 @@ public class Room3CodingChallengeManager : MonoBehaviour
 
     [Header("Room 3 Instruction Manager")]
     public Room3InstructionManager instructionManager;
+
+    [Header("Box Lesson Instructions")]
+    public Room3BoxInstructionManager boxInstructionManager;
+
+    [Header("UI Transition Settings")]
+    [Min(0.05f)] public float panelTransitionDuration = 0.22f;
+    [Range(0.90f, 1f)] public float panelStartScale = 0.97f;
+    [Min(0f)] public float panelSlideDistance = 12f;
+
+    private Coroutine activePanelTransition;
+    private Coroutine hintHistoryTransition;
 
     [Header("Room 3 and Challenge Boxes")]
     public GameObject room3Root;
@@ -208,6 +220,11 @@ public class Room3CodingChallengeManager : MonoBehaviour
     {
         CacheBox2InputColors();
         CacheBox3InputColors();
+
+        InitializeTransitionPanel(codingPanel);
+        InitializeTransitionPanel(codingPanelBox2);
+        InitializeTransitionPanel(codingPanelBox3);
+        InitializeTransitionPanel(hintHistoryPanel);
 
         SetPanelActive(codingPanel, false);
         SetPanelActive(codingPanelBox2, false);
@@ -445,6 +462,109 @@ public class Room3CodingChallengeManager : MonoBehaviour
             panel.SetActive(active);
     }
 
+    private CanvasGroup GetOrAddCanvasGroup(GameObject panel)
+    {
+        if (panel == null)
+            return null;
+
+        CanvasGroup group = panel.GetComponent<CanvasGroup>();
+
+        if (group == null)
+            group = panel.AddComponent<CanvasGroup>();
+
+        return group;
+    }
+
+    private void InitializeTransitionPanel(GameObject panel)
+    {
+        if (panel == null)
+            return;
+
+        CanvasGroup group = GetOrAddCanvasGroup(panel);
+        group.alpha = 0f;
+        group.interactable = false;
+        group.blocksRaycasts = false;
+    }
+
+    private IEnumerator AnimateUIPanel(GameObject panel, bool show)
+    {
+        if (panel == null)
+            yield break;
+
+        CanvasGroup group = GetOrAddCanvasGroup(panel);
+        RectTransform rect = panel.GetComponent<RectTransform>();
+        float duration = Mathf.Max(0.05f, panelTransitionDuration);
+
+        Vector3 homeScale = rect != null ? rect.localScale : Vector3.one;
+        Vector2 homePosition = rect != null ? rect.anchoredPosition : Vector2.zero;
+
+        if (show)
+        {
+            panel.SetActive(true);
+            panel.transform.SetAsLastSibling();
+            group.alpha = 0f;
+            group.interactable = false;
+            group.blocksRaycasts = false;
+
+            if (rect != null)
+            {
+                rect.localScale = homeScale * panelStartScale;
+                rect.anchoredPosition = homePosition + new Vector2(0f, -panelSlideDistance);
+            }
+        }
+        else
+        {
+            group.interactable = false;
+            group.blocksRaycasts = false;
+        }
+
+        float startAlpha = group.alpha;
+        float endAlpha = show ? 1f : 0f;
+        Vector3 startScale = rect != null ? rect.localScale : homeScale;
+        Vector3 endScale = show ? homeScale : homeScale * panelStartScale;
+        Vector2 startPosition = rect != null ? rect.anchoredPosition : homePosition;
+        Vector2 endPosition = show
+            ? homePosition
+            : homePosition + new Vector2(0f, -panelSlideDistance);
+
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float eased = Mathf.SmoothStep(0f, 1f, t);
+
+            group.alpha = Mathf.Lerp(startAlpha, endAlpha, eased);
+
+            if (rect != null)
+            {
+                rect.localScale = Vector3.Lerp(startScale, endScale, eased);
+                rect.anchoredPosition = Vector2.Lerp(startPosition, endPosition, eased);
+            }
+
+            yield return null;
+        }
+
+        group.alpha = endAlpha;
+
+        if (rect != null)
+        {
+            rect.localScale = homeScale;
+            rect.anchoredPosition = homePosition;
+        }
+
+        if (show)
+        {
+            group.interactable = true;
+            group.blocksRaycasts = true;
+        }
+        else
+        {
+            panel.SetActive(false);
+        }
+    }
+
     private bool IsHitObject(
         Transform hitTransform,
         GameObject target)
@@ -491,7 +611,7 @@ public class Room3CodingChallengeManager : MonoBehaviour
     }
 
     // =====================================================
-    // OPEN CHALLENGE — ONE BOX ONLY
+    // OPEN CHALLENGE — SHOW THE LESSON FIRST
     // =====================================================
 
     private void OpenChallenge(ChallengeType challenge)
@@ -508,7 +628,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
                 "Choose TRY AGAIN to select a different box.",
                 this
             );
-
             return;
         }
 
@@ -521,6 +640,18 @@ public class Room3CodingChallengeManager : MonoBehaviour
         if (challenge == ChallengeType.Box3 && box3Completed)
             return;
 
+        if (boxInstructionManager == null)
+        {
+            Debug.LogError(
+                "Room3BoxInstructionManager is not assigned.",
+                this
+            );
+            return;
+        }
+
+        if (!boxInstructionManager.CanOpenBox((int)challenge))
+            return;
+
         GameObject selectedPanel = GetPanel(challenge);
 
         if (selectedPanel == null)
@@ -530,7 +661,6 @@ public class Room3CodingChallengeManager : MonoBehaviour
                 " is not assigned in the Inspector.",
                 this
             );
-
             return;
         }
 
@@ -547,71 +677,19 @@ public class Room3CodingChallengeManager : MonoBehaviour
 
         ApplySelectedBoxVisibility();
 
-        activeChallenge = challenge;
+        // Keep the timer stopped while the player is viewing the box lesson.
+        if (room3Timer != null)
+            room3Timer.StopTimer();
 
         SetPanelActive(hintHistoryPanel, false);
+        SetPanelActive(codingPanel, false);
+        SetPanelActive(codingPanelBox2, false);
+        SetPanelActive(codingPanelBox3, false);
 
-        SetPanelActive(
-            codingPanel,
-            challenge == ChallengeType.Box1
-        );
-
-        SetPanelActive(
-            codingPanelBox2,
-            challenge == ChallengeType.Box2
-        );
-
-        SetPanelActive(
-            codingPanelBox3,
-            challenge == ChallengeType.Box3
-        );
-
-        switch (challenge)
-        {
-            case ChallengeType.Box1:
-                SetBox1Content();
-
-                if (answerInput != null)
-                    answerInput.interactable = !box1Completed;
-
-                ShowFeedback(
-                    "Enter your answer above. Try your best!",
-                    Color.white
-                );
-                break;
-
-            case ChallengeType.Box2:
-                SetBox2Content();
-                ApplyBox2InputStates();
-
-                ShowFeedback(
-                    "Complete both blanks, then click SUBMIT.",
-                    Color.white
-                );
-                break;
-
-            case ChallengeType.Box3:
-                SetBox3Content();
-                ApplyBox3InputStates();
-
-                ShowFeedback(
-                    "Complete both blanks, then click SUBMIT.",
-                    Color.white
-                );
-                break;
-        }
-
-        UpdateHintsRemainingUI();
-
-        SetPanelActive(centerDot, false);
-
-        SetPlayerControls(false);
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        boxInstructionManager.OpenForBox((int)challenge);
 
         Debug.Log(
-            "BOX " + (int)challenge + " CODING PANEL OPENED.",
+            "BOX " + (int)challenge + " LESSON PANEL OPENED.",
             this
         );
     }
@@ -632,6 +710,146 @@ public class Room3CodingChallengeManager : MonoBehaviour
             default:
                 return null;
         }
+    }
+
+    // =====================================================
+    // START OR RESUME THE SELECTED CHALLENGE
+    // =====================================================
+
+    public bool BeginSelectedChallenge()
+    {
+        if (gameCompleted || selectedChallenge == ChallengeType.None)
+        {
+            Debug.LogWarning("No selected Room 3 challenge.", this);
+            return false;
+        }
+
+        GameObject selectedPanel = GetPanel(selectedChallenge);
+
+        if (selectedPanel == null)
+        {
+            Debug.LogError("The selected coding panel is missing.", this);
+            return false;
+        }
+
+        bool firstStart = activeChallenge == ChallengeType.None;
+
+        if (!firstStart && activeChallenge != selectedChallenge)
+        {
+            Debug.LogError(
+                "The active challenge does not match the selected box.",
+                this
+            );
+            return false;
+        }
+
+        if (firstStart)
+        {
+            activeChallenge = selectedChallenge;
+
+            switch (selectedChallenge)
+            {
+                case ChallengeType.Box1:
+                    SetBox1Content();
+                    if (answerInput != null)
+                        answerInput.interactable = !box1Completed;
+                    ShowFeedback("Enter your answer above. Try your best!", Color.white);
+                    break;
+
+                case ChallengeType.Box2:
+                    SetBox2Content();
+                    ApplyBox2InputStates();
+                    ShowFeedback("Complete both blanks, then click SUBMIT.", Color.white);
+                    break;
+
+                case ChallengeType.Box3:
+                    SetBox3Content();
+                    ApplyBox3InputStates();
+                    ShowFeedback("Complete both blanks, then click SUBMIT.", Color.white);
+                    break;
+            }
+        }
+
+        if (activePanelTransition != null)
+            StopCoroutine(activePanelTransition);
+
+        SetPanelActive(hintHistoryPanel, false);
+        SetPanelActive(codingPanel, false);
+        SetPanelActive(codingPanelBox2, false);
+        SetPanelActive(codingPanelBox3, false);
+
+        UpdateHintsRemainingUI();
+
+        SetPanelActive(centerDot, false);
+        SetPanelActive(controlsPanel, true);
+        SetPanelActive(pauseButton, true);
+        SetPanelActive(pauseMenu, false);
+        SetPlayerControls(false);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        activePanelTransition = StartCoroutine(ShowSelectedChallengeRoutine(selectedPanel));
+
+        Debug.Log(
+            "BOX " + (int)selectedChallenge +
+            " CODING CHALLENGE START/RESUME REQUESTED.",
+            this
+        );
+
+        return true;
+    }
+
+    private IEnumerator ShowSelectedChallengeRoutine(GameObject selectedPanel)
+    {
+        yield return AnimateUIPanel(selectedPanel, true);
+
+        if (!gameCompleted && activeChallenge == selectedChallenge &&
+            room3Timer != null)
+        {
+            room3Timer.StartTimer();
+        }
+        else if (room3Timer == null)
+        {
+            Debug.LogWarning("Room3ChallengeTimer is not assigned.", this);
+        }
+
+        activePanelTransition = null;
+    }
+
+    // =====================================================
+    // PAUSE THE CHALLENGE FOR LESSON REVIEW
+    // =====================================================
+
+    public IEnumerator PauseSelectedChallengeForInstructions()
+    {
+        if (gameCompleted || activeChallenge == ChallengeType.None)
+            yield break;
+
+        if (room3Timer != null)
+            room3Timer.StopTimer();
+
+        if (activePanelTransition != null)
+        {
+            StopCoroutine(activePanelTransition);
+            activePanelTransition = null;
+        }
+
+        if (hintHistoryTransition != null)
+        {
+            StopCoroutine(hintHistoryTransition);
+            hintHistoryTransition = null;
+        }
+
+        if (hintHistoryPanel != null && hintHistoryPanel.activeSelf)
+            yield return AnimateUIPanel(hintHistoryPanel, false);
+
+        GameObject activePanel = GetPanel(activeChallenge);
+
+        if (activePanel != null && activePanel.activeSelf)
+            yield return AnimateUIPanel(activePanel, false);
+
+        Debug.Log("CHALLENGE PAUSED FOR INSTRUCTION REVIEW.", this);
     }
 
     // =====================================================
@@ -1454,8 +1672,10 @@ public class Room3CodingChallengeManager : MonoBehaviour
                 string.Join("\n\n", history);
         }
 
-        hintHistoryPanel.SetActive(true);
-        hintHistoryPanel.transform.SetAsLastSibling();
+        if (hintHistoryTransition != null)
+            StopCoroutine(hintHistoryTransition);
+
+        hintHistoryTransition = StartCoroutine(AnimateUIPanel(hintHistoryPanel, true));
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -1463,8 +1683,13 @@ public class Room3CodingChallengeManager : MonoBehaviour
 
     public void CloseHintHistory()
     {
-        if (hintHistoryPanel != null)
-            hintHistoryPanel.SetActive(false);
+        if (hintHistoryPanel != null && hintHistoryPanel.activeSelf)
+        {
+            if (hintHistoryTransition != null)
+                StopCoroutine(hintHistoryTransition);
+
+            hintHistoryTransition = StartCoroutine(AnimateUIPanel(hintHistoryPanel, false));
+        }
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -1612,11 +1837,22 @@ public class Room3CodingChallengeManager : MonoBehaviour
 
     public void ResetForRoomRestart()
     {
+        if (activePanelTransition != null)
+            StopCoroutine(activePanelTransition);
+        activePanelTransition = null;
+
+        if (hintHistoryTransition != null)
+            StopCoroutine(hintHistoryTransition);
+        hintHistoryTransition = null;
+
         activeChallenge = ChallengeType.None;
 
         // Allow the player to choose a new box.
         selectedChallenge = ChallengeType.None;
         ApplySelectedBoxVisibility();
+
+        if (boxInstructionManager != null)
+            boxInstructionManager.ResetForRoomRestart();
 
         gameCompleted = false;
 
@@ -1736,6 +1972,14 @@ public class Room3CodingChallengeManager : MonoBehaviour
 
     public void HideCodingPanelsForGameOver()
     {
+        if (activePanelTransition != null)
+            StopCoroutine(activePanelTransition);
+        activePanelTransition = null;
+
+        if (hintHistoryTransition != null)
+            StopCoroutine(hintHistoryTransition);
+        hintHistoryTransition = null;
+
         SetPanelActive(codingPanel, false);
         SetPanelActive(codingPanelBox2, false);
         SetPanelActive(codingPanelBox3, false);
@@ -1775,21 +2019,40 @@ public class Room3CodingChallengeManager : MonoBehaviour
 
     public void ClosePanel()
     {
-        if (gameCompleted)
+        if (gameCompleted || activePanelTransition != null)
             return;
 
-        HideCodingPanelsForGameOver();
-        SetPanelActive(hintHistoryPanel, false);
+        // Pause the countdown when the player leaves the coding challenge view.
+        if (room3Timer != null)
+            room3Timer.StopTimer();
+
+        activePanelTransition = StartCoroutine(CloseChallengePanelRoutine());
+    }
+
+    private IEnumerator CloseChallengePanelRoutine()
+    {
+        GameObject activePanel = GetPanel(activeChallenge);
+
+        if (activePanel != null && activePanel.activeSelf)
+            yield return AnimateUIPanel(activePanel, false);
+
+        if (hintHistoryPanel != null && hintHistoryPanel.activeSelf)
+            yield return AnimateUIPanel(hintHistoryPanel, false);
 
         SetPanelActive(centerDot, true);
+        SetPanelActive(controlsPanel, true);
+        SetPanelActive(pauseButton, true);
+        SetPanelActive(pauseMenu, false);
 
         SetPlayerControls(true);
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
+        activePanelTransition = null;
+
         Debug.Log(
-            "Coding panel closed. Selected box remains locked for this attempt.",
+            "Coding panel closed. The selected challenge state is preserved.",
             this
         );
     }
@@ -1875,6 +2138,9 @@ public class Room3CodingChallengeManager : MonoBehaviour
 
         if (playerController == null)
             Debug.LogError("Assign PlayerController.", this);
+
+        if (boxInstructionManager == null)
+            Debug.LogError("Assign Room3BoxInstructionManager.", this);
 
         if (codeText == null)
             Debug.LogError("Assign Box 1 CodeText.", this);
