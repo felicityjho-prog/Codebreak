@@ -32,22 +32,24 @@ public class Room3GameOverController : MonoBehaviour
     public Button tryAgainButton;
     public Button mainMenuButton;
 
+    [Header("Game Over Audio")]
+    public AudioSource gameOverAudioSource;
+    public AudioClip gameOverSound;
+    [Range(0f, 1f)]
+    public float gameOverVolume = 1f;
+
     [Header("Main Menu")]
     public string mainMenuSceneName = "MainMenu";
 
     private bool gameOverShown;
 
-    // =====================================================
-    // INITIALIZATION
-    // =====================================================
-
     private void Awake()
     {
-        // Hide the panel at startup.
+        if (gameOverAudioSource == null)
+            gameOverAudioSource = GetComponent<AudioSource>();
+
         if (gameOverPanel != null)
-        {
             gameOverPanel.SetActive(false);
-        }
     }
 
     private void OnEnable()
@@ -68,19 +70,13 @@ public class Room3GameOverController : MonoBehaviour
     private void OnDisable()
     {
         if (tryAgainButton != null)
-        {
             tryAgainButton.onClick.RemoveListener(TryAgain);
-        }
 
         if (mainMenuButton != null)
-        {
             mainMenuButton.onClick.RemoveListener(MainMenu);
-        }
     }
 
-    // =====================================================
     // SHOW GAME OVER
-    // =====================================================
 
     public void ShowGameOver()
     {
@@ -96,50 +92,38 @@ public class Room3GameOverController : MonoBehaviour
             return;
         }
 
-        // Restore normal time/audio before showing the panel.
         Time.timeScale = 1f;
         AudioListener.pause = false;
 
-        // Stop and hide the Room 3 timer.
         if (room3Timer != null)
         {
             room3Timer.StopTimer();
             room3Timer.HideTimerDisplay();
         }
 
-        // Close the coding panel.
         if (codingChallengeManager != null &&
             codingChallengeManager.codingPanel != null)
         {
             codingChallengeManager.codingPanel.SetActive(false);
         }
 
-        // Activate the panel FIRST.
         gameOverPanel.SetActive(true);
         gameOverPanel.transform.SetAsLastSibling();
 
-        // Ensure the parent Canvas is enabled.
         Canvas parentCanvas =
             gameOverPanel.GetComponentInParent<Canvas>();
 
         if (parentCanvas != null)
-        {
             parentCanvas.enabled = true;
-        }
 
-        // Give the Game Over panel its own sorting order.
         Canvas panelCanvas = gameOverPanel.GetComponent<Canvas>();
 
         if (panelCanvas == null)
-        {
             panelCanvas = gameOverPanel.AddComponent<Canvas>();
-        }
 
         panelCanvas.overrideSorting = true;
         panelCanvas.sortingOrder = 500;
 
-        // Restore visibility and interaction for every CanvasGroup
-        // inside the Game Over panel.
         CanvasGroup[] groups =
             gameOverPanel.GetComponentsInChildren<CanvasGroup>(true);
 
@@ -150,9 +134,7 @@ public class Room3GameOverController : MonoBehaviour
             group.blocksRaycasts = true;
         }
 
-        // Make the panel background visible.
-        UnityEngine.UI.Image panelImage =
-            gameOverPanel.GetComponent<UnityEngine.UI.Image>();
+        Image panelImage = gameOverPanel.GetComponent<Image>();
 
         if (panelImage != null)
         {
@@ -163,7 +145,6 @@ public class Room3GameOverController : MonoBehaviour
             panelImage.raycastTarget = true;
         }
 
-        // Verify the GameObject is active before hiding gameplay UI.
         if (!gameOverPanel.activeInHierarchy)
         {
             Debug.LogError(
@@ -175,11 +156,10 @@ public class Room3GameOverController : MonoBehaviour
 
         gameOverShown = true;
 
-        // Hide the ordinary pause UI.
+        PlayGameOverSound();
+
         if (pauseMenuController != null)
-        {
             pauseMenuController.HidePauseMenuForGameOver();
-        }
 
         if (pauseButton != null)
             pauseButton.SetActive(false);
@@ -187,15 +167,12 @@ public class Room3GameOverController : MonoBehaviour
         if (pauseOverlay != null)
             pauseOverlay.SetActive(false);
 
-        // Hide gameplay controls ONLY after the Game Over panel
-        // has been activated and its visibility settings restored.
         if (centerDot != null)
             centerDot.SetActive(false);
 
         if (controlsPanel != null)
             controlsPanel.SetActive(false);
 
-        // Freeze the player.
         if (playerMovement != null)
             playerMovement.enabled = false;
 
@@ -205,7 +182,6 @@ public class Room3GameOverController : MonoBehaviour
             playerController.enabled = false;
         }
 
-        // Unlock the cursor for the Game Over buttons.
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
@@ -219,24 +195,52 @@ public class Room3GameOverController : MonoBehaviour
         );
     }
 
-    // =====================================================
+    // GAME OVER SOUND
+
+    private void PlayGameOverSound()
+    {
+        if (gameOverSound == null)
+        {
+            Debug.LogWarning(
+                "Room 3 Game Over Sound is not assigned.",
+                this
+            );
+            return;
+        }
+
+        if (gameOverAudioSource == null)
+            gameOverAudioSource = GetComponent<AudioSource>();
+
+        if (gameOverAudioSource == null)
+        {
+            Debug.LogWarning(
+                "Game Over Audio Source is not assigned.",
+                this
+            );
+            return;
+        }
+
+        gameOverAudioSource.PlayOneShot(
+            gameOverSound,
+            gameOverVolume
+        );
+
+        Debug.Log("ROOM 3 GAME OVER SOUND PLAYED.", this);
+    }
+
     // TRY AGAIN
-    // =====================================================
 
     public void TryAgain()
     {
         RestartRoom3();
     }
 
-    // =====================================================
-    // RESTART ROOM 3 FROM THE BEGINNING
-    // =====================================================
+    // RESTART ROOM 3
 
     public void RestartRoom3()
     {
         Debug.Log("RESTARTING ROOM 3 FROM THE BEGINNING.");
 
-        // Validate the required objects before resetting.
         if (player == null)
         {
             Debug.LogError(
@@ -269,11 +273,11 @@ public class Room3GameOverController : MonoBehaviour
         Time.timeScale = 1f;
         AudioListener.pause = false;
 
-        // Hide pause and Game Over UI.
+        if (gameOverAudioSource != null)
+            gameOverAudioSource.Stop();
+
         if (pauseMenuController != null)
-        {
             pauseMenuController.HidePauseMenuForGameOver();
-        }
 
         if (pauseOverlay != null)
             pauseOverlay.SetActive(false);
@@ -283,14 +287,9 @@ public class Room3GameOverController : MonoBehaviour
 
         gameOverShown = false;
 
-        // Keep Room 3 active.
-        if (room3Root != null &&
-            !room3Root.activeSelf)
-        {
+        if (room3Root != null && !room3Root.activeSelf)
             room3Root.SetActive(true);
-        }
 
-        // Teleport the player to the Room 3 spawn point.
         CharacterController characterController =
             player.GetComponent<CharacterController>();
 
@@ -305,7 +304,6 @@ public class Room3GameOverController : MonoBehaviour
         if (characterController != null)
             characterController.enabled = true;
 
-        // Reset answer, hints and completion state.
         if (codingChallengeManager != null)
         {
             codingChallengeManager.ResetForRoomRestart();
@@ -318,11 +316,9 @@ public class Room3GameOverController : MonoBehaviour
             );
         }
 
-        // Reset the timer. It starts after the player clicks OKAY.
         if (room3Timer != null)
             room3Timer.ResetTimer();
 
-        // Restore the gameplay HUD.
         if (centerDot != null)
             centerDot.SetActive(true);
 
@@ -332,7 +328,6 @@ public class Room3GameOverController : MonoBehaviour
         if (pauseButton != null)
             pauseButton.SetActive(true);
 
-        // Reopen the instruction panel and freeze controls.
         instructionManager.ShowInstructions();
 
         Cursor.lockState = CursorLockMode.None;
@@ -345,14 +340,15 @@ public class Room3GameOverController : MonoBehaviour
         );
     }
 
-    // =====================================================
     // MAIN MENU
-    // =====================================================
 
     public void MainMenu()
     {
         Time.timeScale = 1f;
         AudioListener.pause = false;
+
+        if (gameOverAudioSource != null)
+            gameOverAudioSource.Stop();
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;

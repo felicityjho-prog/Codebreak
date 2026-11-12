@@ -16,6 +16,8 @@ public class WordPuzzleManager : MonoBehaviour
     public Button clearButton;
     public Button shuffleButton;
     public Button submitButton;
+    public Button hintButton;
+    public TMP_Text hintButtonText;
 
     [Header("Puzzle Settings")]
     [Min(1)]
@@ -126,6 +128,11 @@ public class WordPuzzleManager : MonoBehaviour
     private bool hasStartedRound;
     private bool room2CompletionShown;
 
+    private const int TotalHints = 3;
+
+    private int hintsRemaining = TotalHints;
+    private int lastHintedPosition = -1;
+
     // =========================================================
     // START
     // =========================================================
@@ -222,6 +229,11 @@ public class WordPuzzleManager : MonoBehaviour
         completedWords = 0;
         isComplete = false;
         room2CompletionShown = false;
+
+        hintsRemaining = TotalHints;
+        lastHintedPosition = -1;
+
+        UpdateHintUI();
 
         selectedButtonIndices.Clear();
 
@@ -446,6 +458,22 @@ public class WordPuzzleManager : MonoBehaviour
             submitButton.onClick.AddListener(SubmitAnswer);
         else
             Debug.LogWarning("Submit Button is not assigned.");
+
+        if (hintButton != null)
+        {
+            if (hintButtonText == null)
+            {
+                hintButtonText =
+                    hintButton.GetComponentInChildren<TMP_Text>(true);
+            }
+
+            hintButton.onClick.RemoveListener(RevealHint);
+            hintButton.onClick.AddListener(RevealHint);
+        }
+        else
+        {
+            Debug.LogWarning("Hint Button is not assigned.");
+        }
     }
 
     // =========================================================
@@ -489,6 +517,7 @@ public class WordPuzzleManager : MonoBehaviour
             return;
         }
 
+        lastHintedPosition = -1;
         ClearAnswer();
 
         // Add random distractor letters to fill the wheel.
@@ -635,23 +664,190 @@ public class WordPuzzleManager : MonoBehaviour
     }
 
     // =========================================================
+    // HINT SYSTEM
+    // =========================================================
+
+    private void RevealHint()
+    {
+        if (isComplete || currentWordIndex >= roundWords.Count)
+            return;
+
+        if (hintsRemaining <= 0)
+        {
+            ShowResult("No hints remaining!");
+            UpdateHintUI();
+            return;
+        }
+
+        string correctAnswer =
+            roundWords[currentWordIndex].answer;
+
+        int targetPosition = 0;
+
+        // Find the first incorrect or empty answer position.
+        for (int i = 0;
+             i < selectedButtonIndices.Count &&
+             i < correctAnswer.Length;
+             i++)
+        {
+            int buttonIndex = selectedButtonIndices[i];
+
+            if (buttonIndex < 0 ||
+                buttonIndex >= letterButtons.Length ||
+                letterButtons[buttonIndex] == null)
+            {
+                targetPosition = i;
+                break;
+            }
+
+            TMP_Text letterText =
+                letterButtons[buttonIndex]
+                .GetComponentInChildren<TMP_Text>(true);
+
+            if (letterText == null ||
+                string.IsNullOrEmpty(letterText.text) ||
+                char.ToUpperInvariant(letterText.text[0])
+                != correctAnswer[i])
+            {
+                targetPosition = i;
+                break;
+            }
+
+            targetPosition = i + 1;
+        }
+
+        // Do not consume a hint if all letters are already correct.
+        if (targetPosition >= correctAnswer.Length)
+        {
+            ShowResult("All letters are already correct!");
+            return;
+        }
+
+        // Remove incorrect selections from the target position onward.
+        for (int i = selectedButtonIndices.Count - 1;
+             i >= targetPosition;
+             i--)
+        {
+            int buttonIndex = selectedButtonIndices[i];
+
+            if (buttonIndex >= 0 &&
+                buttonIndex < letterButtons.Length &&
+                letterButtons[buttonIndex] != null)
+            {
+                letterButtons[buttonIndex].interactable = true;
+            }
+
+            selectedButtonIndices.RemoveAt(i);
+        }
+
+        // Find an available wheel button containing the correct letter.
+        char requiredLetter = correctAnswer[targetPosition];
+        int matchingButtonIndex = -1;
+
+        for (int i = 0; i < letterButtons.Length; i++)
+        {
+            Button button = letterButtons[i];
+
+            if (button == null ||
+                !button.gameObject.activeSelf ||
+                !button.interactable)
+            {
+                continue;
+            }
+
+            TMP_Text letterText =
+                button.GetComponentInChildren<TMP_Text>(true);
+
+            if (letterText == null ||
+                string.IsNullOrEmpty(letterText.text))
+            {
+                continue;
+            }
+
+            if (char.ToUpperInvariant(letterText.text[0])
+                == requiredLetter)
+            {
+                matchingButtonIndex = i;
+                break;
+            }
+        }
+
+        if (matchingButtonIndex == -1)
+        {
+            RefreshAnswerSlots();
+            ShowResult("Correct letter is unavailable. Try again.");
+            return;
+        }
+
+        // Place the correct letter into the answer.
+        selectedButtonIndices.Add(matchingButtonIndex);
+
+        letterButtons[matchingButtonIndex].interactable = false;
+
+        // Lock this answer position.
+        lastHintedPosition = targetPosition;
+
+        // Deduct one hint from the total round allowance.
+        hintsRemaining--;
+
+        RefreshAnswerSlots();
+        UpdateHintUI();
+
+        ShowResult("Hint revealed: " + requiredLetter);
+    }
+
+
+    // =========================================================
+    // UPDATE HINT DISPLAY
+    // =========================================================
+
+    private void UpdateHintUI()
+    {
+        if (hintButtonText != null)
+        {
+            hintButtonText.text =
+                "HINT (" + hintsRemaining + "/" + TotalHints + ")";
+        }
+
+        if (hintButton != null)
+        {
+            hintButton.interactable =
+                hintsRemaining > 0 && !isComplete;
+        }
+    }
+
+    // =========================================================
     // CLEAR ANSWER
     // =========================================================
 
     public void ClearAnswer()
     {
-        selectedButtonIndices.Clear();
+        // Keep all selections up to the last hinted position.
+        int keepCount = Mathf.Clamp(
+            lastHintedPosition + 1,
+            0,
+            selectedButtonIndices.Count
+        );
 
-        if (letterButtons != null)
+        // Remove only letters after the locked hint.
+        for (int i = selectedButtonIndices.Count - 1;
+             i >= keepCount;
+             i--)
         {
-            foreach (Button button in letterButtons)
+            int buttonIndex = selectedButtonIndices[i];
+
+            if (buttonIndex >= 0 &&
+                buttonIndex < letterButtons.Length &&
+                letterButtons[buttonIndex] != null)
             {
-                if (button != null && button.gameObject.activeSelf)
-                    button.interactable = true;
+                letterButtons[buttonIndex].interactable = true;
             }
+
+            selectedButtonIndices.RemoveAt(i);
         }
 
         RefreshAnswerSlots();
+        ShowResult("");
     }
 
     // =========================================================
@@ -673,8 +869,12 @@ public class WordPuzzleManager : MonoBehaviour
 
         foreach (Button button in letterButtons)
         {
-            if (button == null || !button.gameObject.activeSelf)
+            if (button == null ||
+                !button.gameObject.activeSelf ||
+                !button.interactable)
+            {
                 continue;
+            }
 
             TMP_Text text =
                 button.GetComponentInChildren<TMP_Text>(true);
@@ -860,6 +1060,7 @@ public class WordPuzzleManager : MonoBehaviour
             return;
 
         isComplete = true;
+        UpdateHintUI();
 
         ClearAnswer();
 
